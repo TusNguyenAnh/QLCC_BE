@@ -28,6 +28,7 @@ class User extends Authenticatable
         'phone_number',
         'address',
         'status',
+        'refresh_token',
     ];
 
     /**
@@ -49,6 +50,16 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
 
     protected static function boot()
     {
