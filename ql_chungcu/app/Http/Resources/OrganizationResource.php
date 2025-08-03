@@ -23,6 +23,7 @@ class OrganizationResource extends JsonResource
             'status' => $this->status,
             'level' => $this->level,
             'child' => OrganizationResource::collection($this->whenLoaded('children')),
+            'building' => $this->buildings->pluck('building_id')->toArray()
         ];
     }
 }

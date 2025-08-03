@@ -23,7 +23,7 @@ Route::group([
         Route::get('', [OrganizationController::class, 'index']);
         Route::get('/getAllWithoutChild/{parent_org_id}', [OrganizationController::class, 'getAllWithoutChild']);
         Route::post('/create', [OrganizationController::class, 'store']);
-        Route::post('/update/{comment_id}', [OrganizationController::class, 'update']);
+        Route::post('/update/{org_id}', [OrganizationController::class, 'update']);
         Route::post('/delete', [OrganizationController::class, 'destroy']);
     });
 

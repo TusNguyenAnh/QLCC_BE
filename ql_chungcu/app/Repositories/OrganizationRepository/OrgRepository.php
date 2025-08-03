@@ -9,7 +9,7 @@ class OrgRepository implements IOrgRepository
 {
     public function show($perPage = 10)
     {
-        return Organization::with(['children'])
+        return Organization::with(['children','buildings'])
             ->whereNull('parent_org_id') // chỉ bản ghi cha
             ->paginate($perPage);
     }

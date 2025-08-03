@@ -4,23 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
-class Organization extends Model
+class Building extends Model
 {
     use HasFactory;
 
-    protected $table = 'organization';
+    protected $table = 'buildings';
     public $incrementing = false; // Không tự tăng ID
     protected $keyType = 'string'; // Vì UUID là chuỗi
     protected $fillable = [
-        'org_code',
-        'org_name',
-        'parent_org_id',
-        'description',
-        'status',
-        'level',
+        'complex_id',
+        'building_name',
+        'address',
     ];
 
     protected $hidden = [
@@ -40,13 +36,5 @@ class Organization extends Model
                 $model->id = (string)Str::uuid();
             }
         });
-    }
-
-    public function children()
-    {
-        return $this->hasMany(Organization::class, 'parent_org_id')->with('children');
-    }
-    public function buildings() {
-        return $this->hasMany(OrgBuilding::class, 'org_id');
     }
 }
