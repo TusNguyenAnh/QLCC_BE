@@ -19,8 +19,8 @@ Route::group([
 //    'middleware' => 'auth:api',
     'prefix' => '/org'],
     function () {
-//        Route::get('findByFieldId/{field_id}', [\App\Http\Controllers\CommentController::class, 'findByFieldId']);
         Route::get('', [OrganizationController::class, 'index']);
+        Route::get('/findById/{id}', [OrganizationController::class, 'findById']);
         Route::get('/getAllWithoutChild/{parent_org_id}', [OrganizationController::class, 'getAllWithoutChild']);
         Route::post('/create', [OrganizationController::class, 'store']);
         Route::post('/update/{org_id}', [OrganizationController::class, 'update']);

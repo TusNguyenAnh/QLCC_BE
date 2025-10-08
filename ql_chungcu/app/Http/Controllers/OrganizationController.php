@@ -24,6 +24,11 @@ class OrganizationController extends Controller
         return APIResponse::paginated(OrganizationResource::collection($this->orgService->show($perPage)));
     }
 
+    public function findById(string $id)
+    {
+        return APIResponse::success($this->orgService->findById($id));
+    }
+
     public function getAllWithoutChild(string $parentOrgId)
     {
         return APIResponse::success($this->orgService->getAllWithoutChild($parentOrgId));

@@ -8,7 +8,7 @@ interface IOrgRepository
 //    public function getById(string $id);
 //    public function getByBookingId(string $bookingId);
     public function getAllWithoutChild($parentOrgId);
-
+    public function getById(string $id);
     public function store(array $data);
 
     public function update(array $data, string $id);

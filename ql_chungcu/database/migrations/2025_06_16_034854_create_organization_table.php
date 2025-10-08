@@ -15,6 +15,7 @@ return new class extends Migration
             // cac thuoc tinh khac
             $table->string('org_code')->default('');
             $table->string('org_name')->default('');
+            $table->uuid('complex_id')->nullable()->default('');
             $table->uuid('parent_org_id')->nullable()->default('');
             $table->text('description')->nullable();
             $table->integer('status')->default('0');

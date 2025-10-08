@@ -13,24 +13,17 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('org_id');
-            $table->uuid('role_id');
-
             $table->string('username')->unique();
-            $table->string('fullname');
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->string('phone_number')->default('');
-            $table->string('address')->default('');
-            $table->string('refresh_token')->default('');
+            $table->string('password')->default('');
+
+            $table->uuid('res_id');
+            $table->uuid('role_id');
             $table->integer('status')->default('0');
+            $table->string('refresh_token')->default('');
 
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
-
-            $table->foreign('org_id')->references('id')->on('organization');
-            $table->foreign('role_id')->references('id')->on('roles');
 
         });
     }
