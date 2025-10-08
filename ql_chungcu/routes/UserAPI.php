@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => '/user'],
     function () {
-        Route::post('create', [UserController::class,'create']);
-        Route::get('index', [UserController::class,'index']);
+        Route::get('', [UserController::class,'index']);
+        Route::post('create', [UserController::class,'store']);
     });
 

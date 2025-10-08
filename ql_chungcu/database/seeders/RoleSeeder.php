@@ -18,22 +18,22 @@ class RoleSeeder extends Seeder
         DB::table('roles')->insert([
                 [
                     'id' => (string) Str::uuid(),
-                    'role_name' => 'Trưởng ban',
+                    'role_name' => 'leader',
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
                 ],
                 [
                     'id' => (string) Str::uuid(),
-                    'role_name' => 'Phó ban',
+                    'role_name' => 'resident',
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
                 ],
-                [
-                    'id' => (string) Str::uuid(),
-                    'role_name' => 'Thành viên',
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now()
-                ]
+//                [
+//                    'id' => (string) Str::uuid(),
+//                    'role_name' => 'Thành viên',
+//                    'created_at' => Carbon::now(),
+//                    'updated_at' => Carbon::now()
+//                ]
             ]
         );
     }

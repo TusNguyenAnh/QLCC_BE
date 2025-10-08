@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -47,7 +48,7 @@ class Handler extends ExceptionHandler
                 'message' => 'Token không hợp lệ',
                 'code' => '1001'
             ], 401);
-        } catch (Exception $e) {
+        } catch (JWTException $e) {
             return response()->json([
                 'message' => 'Token không được cung cấp hoặc không xác định',
                 'code' => '1002'

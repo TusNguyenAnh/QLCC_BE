@@ -2,6 +2,7 @@
 
 namespace App\Services\UserService;
 
+use App\Models\User;
 use App\Repositories\UserRepository\IUserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -14,20 +15,27 @@ class UserService implements IUserService
     {
         $this->userRepository = $userRepository;
     }
-
-    public function createUser(Request $request)
+    public function show($perPage)
     {
-        $email = $request->email;
-        if ($this->userRepository->findByEmail($email)) {
-            return false;
+        return $this->userRepository->show($perPage);
+    }
+
+    public function add(array $data) : ?User
+    {
+        $username = $data["username"];
+        if ($this->userRepository->findByUsername($username)) {
+            return null;
         }
 
-        $data = [
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'is_admin' => false
-        ];
+//        $data = [
+//            'username' => $request->username,
+//            'fullname' => $request->fullname,
+//            'phone_number' => $request->phone_number,
+//            'address' => $request->address,
+//            'email' => $request->email,
+//            'password' => Hash::make($request->password),
+//            'is_admin' => false
+//        ];
 
         $user = $this->userRepository->store($data);
 

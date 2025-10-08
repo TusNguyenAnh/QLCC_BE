@@ -101,7 +101,7 @@ return [
     |
     */
 
-    'ttl' => env('JWT_TTL', 60),
+    'ttl' => env('JWT_TTL', 1440),
 
     /*
     |--------------------------------------------------------------------------
@@ -251,6 +251,12 @@ return [
     */
 
     'decrypt_cookies' => false,
+    'cookie' => [
+        'name' => 'token', // Access token
+    ],
+    'token' => [
+        'locations' => ['header', 'cookie'], // Thêm cookie
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -295,6 +301,7 @@ return [
         */
 
         'storage' => Tymon\JWTAuth\Providers\Storage\Illuminate::class,
+        'blacklist_enabled' => env('JWT_BLACKLIST_ENABLED', true),
 
     ],
 
