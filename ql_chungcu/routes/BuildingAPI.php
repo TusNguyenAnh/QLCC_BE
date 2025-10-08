@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group([
-//    'middleware' => 'auth:api',
+    'middleware' => 'auth:api',
     'prefix' => '/bd'],
     function () {
         Route::get('', [BuildingController::class, 'index']);

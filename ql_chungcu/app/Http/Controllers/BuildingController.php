@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\BuildingRequest\BuildingRequest;
 use App\Http\Resources\BuildingResource;
 use App\Responses\APIResponse;
-use App\Services\Building\IBuildingService;
+use App\Services\BuildingService\IBuildingService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class BuildingController extends Controller
 {
@@ -17,7 +18,7 @@ class BuildingController extends Controller
         $this->buildingService = $buildingService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $perPage = intval(request('perPage', 50));
         $perPage = max(1, min($perPage, 50));

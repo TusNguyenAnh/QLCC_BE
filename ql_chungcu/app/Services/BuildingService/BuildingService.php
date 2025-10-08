@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Building;
+namespace App\Services\BuildingService;
 
 use App\Models\Building;
 use App\Repositories\BuildingRepository\IBuildingRepository;
