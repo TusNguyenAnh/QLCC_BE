@@ -2,10 +2,32 @@
 
 namespace App\Providers;
 
+use App\Repositories\ApartmentRepository\ApartmentRepository;
+use App\Repositories\ApartmentRepository\IApartmentRepository;
+use App\Repositories\AptResidentRepository\AptResidentRepository;
+use App\Repositories\AptResidentRepository\IAptResidentRepository;
 use App\Repositories\BuildingRepository\BuildingRepository;
 use App\Repositories\BuildingRepository\IBuildingRepository;
-use App\Services\Building\BuildingService;
-use App\Services\Building\IBuildingService;
+use App\Repositories\ResidentRepository\IResidentRepository;
+use App\Repositories\ResidentRepository\ResidentRepository;
+use App\Repositories\UserRepository\IUserRepository;
+use App\Repositories\UserRepository\UserRepository;
+use App\Repositories\WorkflowRepository\IWorkflowRepository;
+use App\Repositories\WorkflowRepository\IWorkflowStepRepository;
+use App\Repositories\WorkflowRepository\WorkflowRepository;
+use App\Repositories\WorkflowRepository\WorkflowStepRepository;
+use App\Services\ApartmentService\ApartmentService;
+use App\Services\ApartmentService\IApartmentService;
+use App\Services\AuthService\AuthService;
+use App\Services\AuthService\IAuthService;
+use App\Services\BuildingService\BuildingService;
+use App\Services\BuildingService\IBuildingService;
+use App\Services\ResidentService\IResidentService;
+use App\Services\ResidentService\ResidentService;
+use App\Services\UserService\IUserService;
+use App\Services\UserService\UserService;
+use App\Services\WorkflowService\IWorkflowService;
+use App\Services\WorkflowService\WorkflowService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -15,9 +37,30 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        //building
         $this->app->bind(IBuildingRepository::class, BuildingRepository::class);
         $this->app->bind(IBuildingService::class, BuildingService::class);
+
+        //apartment
+        $this->app->bind(IApartmentRepository::class, ApartmentRepository::class);
+        $this->app->bind(IApartmentService::class, ApartmentService::class);
+
+        //user
+        $this->app->bind(IUserRepository::class, UserRepository::class);
+        $this->app->bind(IUserService::class, UserService::class);
+
+        //resident
+        $this->app->bind(IResidentRepository::class, ResidentRepository::class);
+        $this->app->bind(IAptResidentRepository::class, AptResidentRepository::class);
+        $this->app->bind(IResidentService::class, ResidentService::class);
+
+        //workflow
+        $this->app->bind(IWorkflowRepository::class, WorkflowRepository::class);
+        $this->app->bind(IWorkflowStepRepository::class, WorkflowStepRepository::class);
+        $this->app->bind(IWorkflowService::class, WorkflowService::class);
+
+        //auth
+        $this->app->bind(IAuthService::class, AuthService::class);
     }
 
     /**

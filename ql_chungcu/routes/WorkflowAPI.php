@@ -1,7 +1,6 @@
 <?php
 
-use App\Http\Controllers\AuthController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\WorkflowController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,12 +15,16 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group([
-    'middleware' => 'auth:api',
-    'prefix' => 'auth'
-], function () {
-    Route::post('logout', [AuthController::class, 'logout']);
-    Route::get('profile', [AuthController::class, 'profile']);
-});
+//    'middleware' => 'auth:api',
+    'prefix' => '/wf'],
+    function () {
+        Route::get('', [WorkflowController::class, 'index']);
+        Route::post('/create', [WorkflowController::class, 'store']);
+        Route::post('/update/{bd_id}', [WorkflowController::class, 'update']);
+        Route::post('/delete', [WorkflowController::class, 'destroy']);
+    });
 
-Route::post('auth/login', [AuthController::class, 'login']);
-Route::post('auth/refresh', [AuthController::class, 'refresh']);
+
+
+
+
