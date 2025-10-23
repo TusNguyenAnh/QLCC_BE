@@ -57,6 +57,18 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('api')
                 ->prefix('api')
                 ->group(base_path('routes/WorkflowAPI.php'));
+
+            Route::middleware('api')
+                ->prefix('api')
+                ->group(base_path('routes/TaskAPI.php'));
+
+            Route::middleware('api')
+                ->prefix('api')
+                ->group(base_path('routes/TaskTypeAPI.php'));
+
+            Route::middleware('api')
+                ->prefix('api')
+                ->group(base_path('routes/PriorityAPI.php'));
         });
     }
 }

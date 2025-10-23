@@ -45,7 +45,7 @@ class ResidentController extends Controller
         return $this->residentService->findResidentByBuildingId($request["building_id"], $perPage);
     }
 
-    public function addResInOrg(Request $request,string $org_id){
-        return $this->residentService->addResInOrg($request["res_id"], $org_id);
+    public function updateResInOrg(Request $request,string $org_id){
+        return $this->residentService->updateResInOrg($request["res_id"], $org_id);
     }
 }

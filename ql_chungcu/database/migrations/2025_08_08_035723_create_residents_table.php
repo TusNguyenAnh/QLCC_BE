@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('cccd')->unique();
             $table->integer('status')->default('0');
 
-            $table->uuid('org_id')->nullable();
+            $table->uuid('org_id')->default('null');
             $table->timestamps();
         });
     }

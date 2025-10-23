@@ -21,6 +21,7 @@ Route::group([
     function () {
         Route::get('', [OrganizationController::class, 'index']);
         Route::get('/findById/{id}', [OrganizationController::class, 'findById']);
+        Route::get('/getTopLevel/{complex_id}', [OrganizationController::class, 'getTopLevel']);
         Route::get('/getAllWithoutChild/{parent_org_id}', [OrganizationController::class, 'getAllWithoutChild']);
         Route::post('/create', [OrganizationController::class, 'store']);
         Route::post('/update/{org_id}', [OrganizationController::class, 'update']);

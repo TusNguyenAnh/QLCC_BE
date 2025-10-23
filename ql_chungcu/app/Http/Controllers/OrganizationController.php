@@ -56,4 +56,9 @@ class OrganizationController extends Controller
 //        return $listOrg;
         $this->orgService->delete($listOrg);
     }
+
+    public function getTopLevel(string $complex_id){
+        return APIResponse::success($this->orgService->getTopLevel($complex_id));
+    }
+
 }

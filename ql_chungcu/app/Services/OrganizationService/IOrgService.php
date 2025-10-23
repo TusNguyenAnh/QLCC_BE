@@ -11,7 +11,7 @@ interface IOrgService
     public function getAllWithoutChild($parentOrgId);
 
     public function findById(string $id): ?Organization;
-
+    public function getTopLevel(string $complex_id);
     public function add(array $data): Organization;
 
     public function update(string $id, array $data): ?Organization;

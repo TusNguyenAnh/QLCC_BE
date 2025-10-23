@@ -26,19 +26,7 @@ class ResidentRepository implements IResidentRepository
         ])->paginate($perPage);
     }
 
-
-    // chua xong
-    public function findByBuildingId($bdId, $perPage)
-    {
-        return Resident::join('apartments', 'residents.apt_id', '=', 'apartments.user_id')
-            ->join('comments', 'posts.id', '=', 'comments.post_id')
-            ->where('users.status', 'active')
-            ->where('comments.approved', true)
-            ->select('users.name', 'posts.title', 'comments.content')
-            ->get();
-    }
-
-    public function addResInOrg(array $id, string $org_id)
+    public function updateResInOrg(array $id, string $org_id)
     {
         Resident::whereIn('id', $id)->update(['org_id' => $org_id]);
     }

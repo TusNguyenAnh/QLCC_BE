@@ -47,8 +47,8 @@ class ResidentService implements IResidentService
         return $this->aptResidentRepository->findResidentByBuildingId($bdId, $perPage);
     }
 
-    public function addResInOrg(array $id, string $org_id)
+    public function updateResInOrg(array $id, string $org_id)
     {
-        return $this->residentRepository->addResInOrg($id, $org_id);
+        return $this->residentRepository->updateResInOrg($id, $org_id);
     }
 }

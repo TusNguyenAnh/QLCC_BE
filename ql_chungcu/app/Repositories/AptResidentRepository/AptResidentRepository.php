@@ -18,6 +18,7 @@ class AptResidentRepository implements IAptResidentRepository
         return AptResident::join('residents', 'residents.id', '=', 'resident_id')
             ->join('apartments', 'apartments.id', '=', 'apt_id')
             ->whereIn('apartments.building_id', $bdId)
+            ->where('residents.org_id', 'null')
             ->select('residents.*') // chỉ lấy các cột của bảng resident
             ->distinct()
             ->paginate($perPage);

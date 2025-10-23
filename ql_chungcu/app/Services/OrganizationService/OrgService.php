@@ -33,6 +33,11 @@ class OrgService implements IOrgService
 
     public function add(array $data): Organization
     {
+        if($data['parent_org_id']){
+            $parentOrg = $this->orgRepository->getById($data['parent_org_id']);
+            $data['level'] = $parentOrg->level + 1;
+        }
+
         $createdOrg = $this->orgRepository->store(Arr::except($data, ['building']));
         $dataOrgBuilding = [];
 
@@ -75,5 +80,10 @@ class OrgService implements IOrgService
     public function getAllWithoutChild($parentOrgId)
     {
         return $this->orgRepository->getAllWithoutChild($parentOrgId);
+    }
+
+    public function getTopLevel(string $complex_id)
+    {
+        return $this->orgRepository->getTopLevel($complex_id);
     }
 }

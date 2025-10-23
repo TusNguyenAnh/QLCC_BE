@@ -20,6 +20,6 @@ Route::group(['prefix' => '/resident'],
         Route::get('findByOrgId/{org_id}', [ResidentController::class, 'findByOrgId']);
         Route::post('findByBuildingId', [ResidentController::class, 'findResidentByBuildingId']);
         Route::post('create', [ResidentController::class, 'store']);
-        Route::post('/addResInOrg/{org_id}', [ResidentController::class, 'addResInOrg']);
+        Route::post('/updateResInOrg/{org_id}', [ResidentController::class, 'updateResInOrg']);
     });
 

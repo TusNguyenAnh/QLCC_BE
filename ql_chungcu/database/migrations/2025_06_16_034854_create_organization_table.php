@@ -19,7 +19,7 @@ return new class extends Migration
             $table->uuid('parent_org_id')->nullable()->default('');
             $table->text('description')->nullable();
             $table->integer('status')->default('0');
-            $table->integer('level')->default('0');
+            $table->integer('level')->default('1');
 
             $table->timestamps();
 

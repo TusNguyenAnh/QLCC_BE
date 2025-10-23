@@ -9,7 +9,7 @@ class OrgRepository implements IOrgRepository
 {
     public function show($perPage = 10)
     {
-        return Organization::with(['children','buildings'])
+        return Organization::with(['children', 'buildings'])
             ->whereNull('parent_org_id') // chỉ bản ghi cha
             ->paginate($perPage);
     }
@@ -37,13 +37,21 @@ class OrgRepository implements IOrgRepository
         FROM organization
         WHERE id NOT IN (SELECT id FROM excluded) AND id <> ? AND status = '0';";
 
-        return DB::select($sql, [$parentOrgId,$parentOrgId]);
+        return DB::select($sql, [$parentOrgId, $parentOrgId]);
     }
 
 
     public function getById(string $id)
     {
         return Organization::where('id', $id)->first();
+    }
+
+    public function getTopLevel(string $complex_id)
+    {
+        return Organization::where('complex_id', $complex_id)
+            ->orderBy('level', 'desc')
+            ->first()
+            ->value('level');
     }
 
     public function store(array $data)
