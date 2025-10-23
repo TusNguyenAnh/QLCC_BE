@@ -8,8 +8,16 @@ use App\Repositories\AptResidentRepository\AptResidentRepository;
 use App\Repositories\AptResidentRepository\IAptResidentRepository;
 use App\Repositories\BuildingRepository\BuildingRepository;
 use App\Repositories\BuildingRepository\IBuildingRepository;
+use App\Repositories\PriorityRepository\IPriorityRepository;
+use App\Repositories\PriorityRepository\PriorityRepository;
 use App\Repositories\ResidentRepository\IResidentRepository;
 use App\Repositories\ResidentRepository\ResidentRepository;
+use App\Repositories\TaskRepository\ITaskHistoryRepository;
+use App\Repositories\TaskRepository\ITaskRepository;
+use App\Repositories\TaskRepository\ITaskTypeRepository;
+use App\Repositories\TaskRepository\TaskHistoryRepository;
+use App\Repositories\TaskRepository\TaskRepository;
+use App\Repositories\TaskRepository\TaskTypeRepository;
 use App\Repositories\UserRepository\IUserRepository;
 use App\Repositories\UserRepository\UserRepository;
 use App\Repositories\WorkflowRepository\IWorkflowRepository;
@@ -22,8 +30,14 @@ use App\Services\AuthService\AuthService;
 use App\Services\AuthService\IAuthService;
 use App\Services\BuildingService\BuildingService;
 use App\Services\BuildingService\IBuildingService;
+use App\Services\PriorityService\IPriorityService;
+use App\Services\PriorityService\PriorityService;
 use App\Services\ResidentService\IResidentService;
 use App\Services\ResidentService\ResidentService;
+use App\Services\TaskService\ITaskService;
+use App\Services\TaskService\ITaskTypeService;
+use App\Services\TaskService\TaskService;
+use App\Services\TaskService\TaskTypeService;
 use App\Services\UserService\IUserService;
 use App\Services\UserService\UserService;
 use App\Services\WorkflowService\IWorkflowService;
@@ -58,6 +72,21 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(IWorkflowRepository::class, WorkflowRepository::class);
         $this->app->bind(IWorkflowStepRepository::class, WorkflowStepRepository::class);
         $this->app->bind(IWorkflowService::class, WorkflowService::class);
+
+        //task
+        $this->app->bind(ITaskRepository::class, TaskRepository::class);
+        $this->app->bind(ITaskService::class, TaskService::class);
+
+        //taskType
+        $this->app->bind(ITaskTypeRepository::class, TaskTypeRepository::class);
+        $this->app->bind(ITaskTypeService::class, TaskTypeService::class);
+
+        //taskHistory
+        $this->app->bind(ITaskHistoryRepository::class, TaskHistoryRepository::class);
+
+        //priority
+        $this->app->bind(IPriorityRepository::class, PriorityRepository::class);
+        $this->app->bind(IPriorityService::class, PriorityService::class);
 
         //auth
         $this->app->bind(IAuthService::class, AuthService::class);

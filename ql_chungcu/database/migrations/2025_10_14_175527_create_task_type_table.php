@@ -11,18 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('task', function (Blueprint $table) {
+        Schema::create('task_type', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('complex_id');
-            $table->uuid('tasktype_id')->default('');
-            $table->uuid('current_org_id');
-
-            $table->uuid('user_id');
-
-            $table->integer('current_step')->nullable();
-            $table->string('task_name');
+            $table->uuid('complex_id')->default('');
+            $table->uuid('workflow_id');
+            $table->uuid('priority_id');
+            $table->string('type_name');
             $table->string('description')->default('');
-            $table->enum('status', ['PENDING', 'APPROVED', 'REJECTED','UNFINISHED'])->default('PENDING');
+            $table->integer('status')->default('0');
 
             $table->timestamps();
         });
@@ -33,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('task');
+        Schema::dropIfExists('task_type');
     }
 };
