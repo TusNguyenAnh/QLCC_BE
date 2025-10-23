@@ -20,9 +20,9 @@ class WorkflowService implements IWorkflowService
         $this->workflowStepRepository = $workflowStepRepository;
     }
 
-    public function show($perPage)
+    public function show($perPage, $complexId)
     {
-        return $this->workflowRepository->show($perPage);
+        return $this->workflowRepository->show($perPage, $complexId);
     }
 
     public function add(array $data)
@@ -33,11 +33,13 @@ class WorkflowService implements IWorkflowService
         foreach ($data["workflow_step"] as $wfs) {
             $dataWorkflowStep[] = [
                 'id' => (string) Str::uuid(),
-                'org_id' => $wfs["org_id"],
+                'org_level' => $wfs["org_level"],
                 'step_order' => $wfs["step_order"],
                 'description' => $wfs["description"],
                 'status' => $wfs["status"],
-                'workflow_id' => $createdWorkflow->id
+                'workflow_id' => $createdWorkflow->id,
+                'created_at' => now(),
+                'updated_at' => now()
             ];
         }
         $this->workflowStepRepository->store($dataWorkflowStep);

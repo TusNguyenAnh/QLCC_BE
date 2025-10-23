@@ -7,9 +7,10 @@ use App\Models\Workflow;
 class WorkflowRepository implements IWorkflowRepository
 {
 
-    public function show($perPage = 10)
+    public function show($perPage, $complexId)
     {
         return Workflow::with('workflowStep')
+            ->where('complex_id', $complexId)
             ->paginate($perPage);
     }
 

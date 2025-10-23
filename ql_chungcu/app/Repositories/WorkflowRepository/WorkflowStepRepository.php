@@ -12,9 +12,12 @@ class WorkflowStepRepository implements IWorkflowStepRepository
         // TODO: Implement show() method.
     }
 
-    public function findById($id)
+    public function findByWorkflowId($wfId)
     {
-        // TODO: Implement findById() method.
+        return WorkflowStep::where('workflow_id', $wfId)
+            ->orderBy('step_order', 'asc')
+            ->get();
+
     }
 
     public function store(array $data)

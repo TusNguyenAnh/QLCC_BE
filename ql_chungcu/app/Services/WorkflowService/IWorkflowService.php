@@ -6,6 +6,6 @@ use App\Models\Workflow;
 
 interface IWorkflowService
 {
-    public function show($perPage);
+    public function show($perPage, $complexId);
     public function add(array $data);
 }

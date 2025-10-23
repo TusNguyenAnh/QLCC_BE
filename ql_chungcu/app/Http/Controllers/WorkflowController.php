@@ -17,11 +17,11 @@ class WorkflowController
         $this->workflowService = $workflowService;
     }
 
-    public function index(Request $request)
+    public function index(Request $request, string $complexId)
     {
         $perPage = intval(request('perPage', 50));
         $perPage = max(1, min($perPage, 50));
-        return APIResponse::paginated(WorkflowResource::collection($this->workflowService->show($perPage)));
+        return APIResponse::paginated(WorkflowResource::collection($this->workflowService->show($perPage, $complexId)));
     }
 
     public function store(WorkflowRequest $workflowRequest)

@@ -18,7 +18,7 @@ Route::group([
 //    'middleware' => 'auth:api',
     'prefix' => '/wf'],
     function () {
-        Route::get('', [WorkflowController::class, 'index']);
+        Route::get('/{complex_id}', [WorkflowController::class, 'index']);
         Route::post('/create', [WorkflowController::class, 'store']);
         Route::post('/update/{bd_id}', [WorkflowController::class, 'update']);
         Route::post('/delete', [WorkflowController::class, 'destroy']);

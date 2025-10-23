@@ -43,4 +43,9 @@ class Workflow extends Model
         return $this->hasMany(WorkflowStep::class, 'workflow_id', 'id')
             ->orderBy('step_order');
     }
+
+    public function taskType()
+    {
+        return $this->hasMany(TaskType::class, 'workflow_id', 'id');
+    }
 }

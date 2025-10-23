@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('workflow_step', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('workflow_id');
-            $table->uuid('org_id');
+            $table->uuid('org_id')->nullable(); // su dung cho viec dinh nghia 1 wf cho cac cap cu the
 
             $table->integer('step_order')->default('1');
+            $table->integer('org_level')->nullable(); // su dung cho viec dinh nghia wf chung cho he thong
             $table->string('description')->default('');
             $table->integer('status')->default('0');
 
