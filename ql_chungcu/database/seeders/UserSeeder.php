@@ -16,10 +16,10 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         DB::table('users')->insert([
-            'id' => (string) Str::uuid(),
+            'id' => (string)Str::uuid(),
             "res_id" => "",
             "username" => "atus",
             "password" => Hash::make("123"),
-            "role_id" => "314bd51a-dde1-4bd5-bfbc-91b269016028"]);
+        ]);
     }
 }

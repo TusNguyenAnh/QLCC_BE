@@ -6,15 +6,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class Role extends Model
+class UserRole extends Model
 {
     use HasFactory;
-    protected $table = 'roles';
+    protected $table = 'user_role';
     public $incrementing = false; // Không tự tăng ID
     protected $keyType = 'string'; // Vì UUID là chuỗi
     protected $fillable = [
-        'role_name',
-        'complex_id',
+        'user_id',
+        'role_id',
     ];
 
     protected $hidden = [
@@ -34,11 +34,5 @@ class Role extends Model
                 $model->id = (string)Str::uuid();
             }
         });
-    }
-
-    // Một role có nhiều user
-    public function users()
-    {
-        return $this->hasMany(User::class);
     }
 }
