@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('role_name');
             $table->integer('status')->default('0');
             $table->uuid('complex_id')->default('');
+            $table->string('description')->default('');
 
             $table->timestamps();
         });

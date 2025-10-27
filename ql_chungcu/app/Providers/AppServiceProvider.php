@@ -6,6 +6,14 @@ use App\Repositories\ApartmentRepository\ApartmentRepository;
 use App\Repositories\ApartmentRepository\IApartmentRepository;
 use App\Repositories\AptResidentRepository\AptResidentRepository;
 use App\Repositories\AptResidentRepository\IAptResidentRepository;
+use App\Repositories\AuthorizationRepository\IPermissionRepository;
+use App\Repositories\AuthorizationRepository\IRolePermissionRepository;
+use App\Repositories\AuthorizationRepository\IRoleRepository;
+use App\Repositories\AuthorizationRepository\IUserRoleRepository;
+use App\Repositories\AuthorizationRepository\PermissionRepository;
+use App\Repositories\AuthorizationRepository\RolePermissionRepository;
+use App\Repositories\AuthorizationRepository\RoleRepository;
+use App\Repositories\AuthorizationRepository\UserRoleRepository;
 use App\Repositories\BuildingRepository\BuildingRepository;
 use App\Repositories\BuildingRepository\IBuildingRepository;
 use App\Repositories\PriorityRepository\IPriorityRepository;
@@ -30,10 +38,14 @@ use App\Services\AuthService\AuthService;
 use App\Services\AuthService\IAuthService;
 use App\Services\BuildingService\BuildingService;
 use App\Services\BuildingService\IBuildingService;
+use App\Services\PermissionService\IPermissionService;
+use App\Services\PermissionService\PermissionService;
 use App\Services\PriorityService\IPriorityService;
 use App\Services\PriorityService\PriorityService;
 use App\Services\ResidentService\IResidentService;
 use App\Services\ResidentService\ResidentService;
+use App\Services\RoleService\IRoleService;
+use App\Services\RoleService\RoleService;
 use App\Services\TaskService\ITaskService;
 use App\Services\TaskService\ITaskTypeService;
 use App\Services\TaskService\TaskService;
@@ -90,6 +102,16 @@ class AppServiceProvider extends ServiceProvider
 
         //auth
         $this->app->bind(IAuthService::class, AuthService::class);
+
+        //role
+        $this->app->bind(IRoleRepository::class, RoleRepository::class);
+        $this->app->bind(IUserRoleRepository::class, UserRoleRepository::class);
+        $this->app->bind(IRoleService::class, RoleService::class);
+
+        //permission
+        $this->app->bind(IPermissionRepository::class, PermissionRepository::class);
+        $this->app->bind(IRolePermissionRepository::class, RolePermissionRepository::class);
+        $this->app->bind(IPermissionService::class, PermissionService::class);
     }
 
     /**

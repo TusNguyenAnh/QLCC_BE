@@ -18,9 +18,9 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => '/tt'],
     function () {
         Route::get('/{complex_id}', [TaskTypeController::class, 'index']);
-        Route::get('findByOrgId/{org_id}', [TaskTypeController::class, 'findByOrgId']);
-        Route::post('findByBuildingId', [TaskTypeController::class, 'findResidentByBuildingId']);
-        Route::post('create', [TaskTypeController::class, 'store']);
+        Route::get('/findByOrgId/{org_id}', [TaskTypeController::class, 'findByOrgId']);
+        Route::post('/findByBuildingId', [TaskTypeController::class, 'findResidentByBuildingId']);
+        Route::post('/create', [TaskTypeController::class, 'store']);
         Route::post('/updateResInOrg/{org_id}', [TaskTypeController::class, 'updateResInOrg']);
     });
 

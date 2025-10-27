@@ -19,9 +19,9 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => '/task'],
     function () {
         Route::get('/taskActionSummary', [TaskController::class, 'taskActionSummary']);
-        Route::get('findByOrgId/{task_status}/{org_id}', [TaskController::class, 'findByOrgId']);
-        Route::get('findWfByTaskId/{task_id}', [TaskController::class, 'findWfByTaskId']);
-        Route::post('create', [TaskController::class, 'store']);
+        Route::get('/findByOrgId/{task_status}/{org_id}', [TaskController::class, 'findByOrgId']);
+        Route::get('/findWfByTaskId/{task_id}', [TaskController::class, 'findWfByTaskId']);
+        Route::post('/create', [TaskController::class, 'store']);
         Route::post('/approveTask/{task_id}', [TaskController::class, 'approveTask']);
         Route::post('/rejectTask/{task_id}', [TaskController::class, 'rejectTask']);
     });
