@@ -14,9 +14,9 @@ class BuildingService implements IBuildingService
         $this->buildingRepository = $buildingRepository;
     }
 
-    public function show($perPage)
+    public function show($complexId,$perPage)
     {
-        return $this->buildingRepository->show($perPage);
+        return $this->buildingRepository->show($complexId,$perPage);
     }
 
     public function findById(string $id): ?Building

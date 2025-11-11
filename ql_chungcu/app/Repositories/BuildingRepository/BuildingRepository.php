@@ -6,9 +6,10 @@ use App\Models\Building;
 
 class BuildingRepository implements IBuildingRepository
 {
-    public function show($perPage = 10)
+    public function show($complexId, $perPage = 10)
     {
-        return Building::paginate($perPage);
+        return Building::where("complex_id", $complexId)
+            ->paginate($perPage);
     }
 
 

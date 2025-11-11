@@ -20,6 +20,8 @@ return new class extends Migration
             $table->enum('action', ['PENDING','APPROVED', 'REJECTED','UNFINISHED'])->default('APPROVED');
             $table->string('comment')->default('');
 
+            $table->timestamps();
+
         });
     }
 

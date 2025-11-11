@@ -19,6 +19,7 @@ class BuildingResource extends JsonResource
             'complex_id' => $this->complex_id,
             'building_name' => $this->building_name,
             'description' => $this->description,
+            'address' => $this->address,
             'status' => $this->status,
         ];
     }

@@ -14,7 +14,7 @@ class OrgRepository implements IOrgRepository
             ->paginate($perPage);
     }
 
-    public function getAllWithoutChild($parentOrgId)
+    public function getAllWithoutChild($parentOrgId, $complexId)
     {
         // Bước 1: Truy vấn CTE đệ quy để lấy ID các con cháu
         $sql = "
@@ -35,9 +35,10 @@ class OrgRepository implements IOrgRepository
         -- Bước 3: Trả ra tất cả tổ chức không nằm trong danh sách bị loại
         SELECT id,org_name
         FROM organization
-        WHERE id NOT IN (SELECT id FROM excluded) AND id <> ? AND status = '0';";
+        WHERE id NOT IN (SELECT id FROM excluded) AND id <> ? AND status = '0' AND complex_id = ?
+        ORDER BY level ASC;";
 
-        return DB::select($sql, [$parentOrgId, $parentOrgId]);
+        return DB::select($sql, [$parentOrgId, $parentOrgId, $complexId]);
     }
 
 
@@ -73,9 +74,4 @@ class OrgRepository implements IOrgRepository
     {
         Organization::whereIn('id', $listOrg)->update(['status' => '1']);
     }
-
-//    public function getByBookingId(string $bookingId){
-//        return BookingCourt::where('booking_id', $bookingId)->get();
-//    }
-
 }

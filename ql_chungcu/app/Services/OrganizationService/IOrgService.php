@@ -8,9 +8,10 @@ use App\Models\Organization;
 interface IOrgService
 {
     public function show($perPage);
-    public function getAllWithoutChild($parentOrgId);
+    public function getAllWithoutChild($parentOrgId,$complexId);
 
     public function findById(string $id): ?Organization;
+    public function getBdIdByParentOrgId(string $complexId,string $parentId);
     public function getTopLevel(string $complex_id);
     public function add(array $data): Organization;
 

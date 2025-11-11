@@ -20,6 +20,17 @@ class OrgBuildingRepository implements IOrgBuildingRepository
         return $listOrgBuilding;
     }
 
+    public function getBdIdByParentOrgId(string $parentId)
+    {
+        return OrgBuilding::join('organization', 'org_building.org_id', '=', 'organization.id')
+            ->where('organization.parent_org_id', $parentId)
+            ->select('org_building.building_id')
+            ->distinct()
+            ->pluck('org_building.building_id')
+            ->toArray();
+    }
+
+
     public function delete(string $orgId)
     {
         OrgBuilding::where('org_id', $orgId)->delete();

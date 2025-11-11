@@ -18,11 +18,11 @@ class BuildingController extends Controller
         $this->buildingService = $buildingService;
     }
 
-    public function index(Request $request)
+    public function index(Request $request,string $complexId)
     {
         $perPage = intval(request('perPage', 50));
         $perPage = max(1, min($perPage, 50));
-        return APIResponse::paginated(BuildingResource::collection($this->buildingService->show($perPage)));
+        return APIResponse::paginated(BuildingResource::collection($this->buildingService->show($complexId,$perPage)));
     }
 
     public function store(BuildingRequest $buildingRequest)

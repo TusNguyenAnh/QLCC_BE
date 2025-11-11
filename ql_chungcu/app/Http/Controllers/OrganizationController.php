@@ -29,9 +29,9 @@ class OrganizationController extends Controller
         return APIResponse::success($this->orgService->findById($id));
     }
 
-    public function getAllWithoutChild(string $parentOrgId)
+    public function getAllWithoutChild(string $parentOrgId, string $complexId)
     {
-        return APIResponse::success($this->orgService->getAllWithoutChild($parentOrgId));
+        return APIResponse::success($this->orgService->getAllWithoutChild($parentOrgId, $complexId));
     }
 
     public function store(OrganizationRequest $organizationRequest)
@@ -57,8 +57,15 @@ class OrganizationController extends Controller
         $this->orgService->delete($listOrg);
     }
 
-    public function getTopLevel(string $complex_id){
+    public function getTopLevel(string $complex_id)
+    {
         return APIResponse::success($this->orgService->getTopLevel($complex_id));
     }
+
+    public function getBdIdByParentOrgId(string $complexId, string $parentId = null)
+    {
+        return APIResponse::success($this->orgService->getBdIdByParentOrgId($complexId, $parentId));
+    }
+
 
 }

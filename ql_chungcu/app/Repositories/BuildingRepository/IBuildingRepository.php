@@ -4,7 +4,7 @@ namespace App\Repositories\BuildingRepository;
 
 interface IBuildingRepository
 {
-    public function show($perPage);
+    public function show($complexId,$perPage);
 
     public function store(array $data);
 
