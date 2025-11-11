@@ -70,10 +70,10 @@ class TaskService implements ITaskService
         return $newTaskHistory;
     }
 
-    public function findByOrgId(string $orgId, int $taskStatus)
+    public function findByOrgId(array $filters, string $orgId, int $taskStatus,$perPage)
     {
         $taskStatus = ($taskStatus == 2) ? "PENDING" : "REJECTED";
-        return $this->taskRepository->findByOrgId($orgId, $taskStatus);
+        return $this->taskRepository->findByOrgId($filters,$orgId, $taskStatus,$perPage);
     }
 
     public function findWfByTaskId(string $taskId)
@@ -117,5 +117,10 @@ class TaskService implements ITaskService
         $taskUpdateForNextStep = $this->taskHistoryRepository->updateTaskForRejectStep(['action' => 'UNFINISHED'], $task->id, $task->current_step);
         $taskHistory = $this->taskHistoryRepository->update($data, $task->id, $currentOrgId);
         return $this->taskRepository->update(['status' => 'REJECTED'], $id);
+    }
+
+    public function filterTaskApproved(string $orgId, string $taskStatus, array $filters,$perPage)
+    {
+        return $this->taskHistoryRepository->filterTaskApproved($orgId, $taskStatus, $filters,$perPage);
     }
 }

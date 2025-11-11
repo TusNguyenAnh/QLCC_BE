@@ -10,5 +10,5 @@ interface ITaskHistoryRepository
     public function taskActionSummary(string $orgId);
     public function update(array $data, string $taskId, string $orgId);
     public function updateTaskForRejectStep(array $data, string $taskId, string $stepOrder);
-
+    public function filterTaskApproved(string $orgId, string $taskStatus, array $filters,$perPage);
 }

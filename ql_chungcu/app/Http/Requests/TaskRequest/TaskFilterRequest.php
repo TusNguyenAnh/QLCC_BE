@@ -7,7 +7,7 @@ use App\Exceptions\AppException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
-class TaskUpdateRequest extends FormRequest
+class TaskFilterRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,8 +25,13 @@ class TaskUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'action' => 'required',
-            'comment' => 'nullable',
+            'priority_id' => 'nullable|array',
+            'taskType_id' => 'nullable|array',
+            'time_approved_start' => 'nullable|date',
+            'time_approved_end' => 'nullable|date',
+            'time_request_start' => 'nullable|date',
+            'time_request_end' => 'nullable|date',
+            'order' => 'nullable|string',
         ];
     }
 

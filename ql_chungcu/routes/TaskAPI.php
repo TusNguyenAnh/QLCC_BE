@@ -19,10 +19,12 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => '/task'],
     function () {
         Route::get('/taskActionSummary', [TaskController::class, 'taskActionSummary']);
-        Route::get('/findByOrgId/{task_status}/{org_id}', [TaskController::class, 'findByOrgId']);
         Route::get('/findWfByTaskId/{task_id}', [TaskController::class, 'findWfByTaskId']);
+        Route::post('/findByOrgId/{task_status}/{org_id}', [TaskController::class, 'findByOrgId']);
+        Route::post('/filterTaskApproved/{org_id}', [TaskController::class, 'filterTaskApproved']);
         Route::post('/create', [TaskController::class, 'store']);
-        Route::post('/approveTask/{task_id}', [TaskController::class, 'approveTask']);
-        Route::post('/rejectTask/{task_id}', [TaskController::class, 'rejectTask']);
+        Route::post('/approveTask/{task_id}', [TaskController::class, 'approveTask'])->middleware('role_permission:review:task');
+        Route::post('/rejectTask/{task_id}', [TaskController::class, 'rejectTask'])->middleware('role_permission:review:task');
+
     });
 

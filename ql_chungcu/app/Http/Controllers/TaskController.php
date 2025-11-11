@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TaskRequest\TaskFilterRequest;
 use App\Http\Requests\TaskRequest\TaskRequest;
 use App\Http\Requests\TaskRequest\TaskUpdateRequest;
 use App\Http\Resources\TaskActionSummaryResource;
@@ -29,10 +30,13 @@ class TaskController extends Controller
         return APIResponse::success($task);
     }
 
-    public function findByOrgId(int $taskStatus,string $orgId)
+    public function findByOrgId(TaskFilterRequest $taskFilterRequest, int $taskStatus, string $orgId)
     {
-        $task = $this->taskService->findByOrgId($orgId,$taskStatus);
-        return APIResponse::success($task);
+        $perPage = intval(request('perPage', 50));
+        $perPage = max(1, min($perPage, 50));
+        $filters = $taskFilterRequest->validated();
+        $task = $this->taskService->findByOrgId($filters, $orgId, $taskStatus,$perPage);
+        return APIResponse::paginated($task);
     }
 
     public function findWfByTaskId(string $taskId)
@@ -64,5 +68,12 @@ class TaskController extends Controller
         return APIResponse::success($taskUpdate);
     }
 
-
+    public function filterTaskApproved(TaskFilterRequest $taskFilterRequest, string $orgId)
+    {
+        $perPage = intval(request('perPage', 50));
+        $perPage = max(1, min($perPage, 50));
+        $filters = $taskFilterRequest->validated();
+        $taskApproved = $this->taskService->filterTaskApproved($orgId, "APPROVED", $filters,$perPage);
+        return APIResponse::paginated($taskApproved);
+    }
 }

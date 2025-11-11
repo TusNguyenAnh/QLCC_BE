@@ -13,7 +13,6 @@ class TaskHistory extends Model
     protected $table = 'task_history';
     public $incrementing = false; // Không tự tăng ID
     protected $keyType = 'string'; // Vì UUID là chuỗi
-    public $timestamps = false;
 
     protected $fillable = [
         'task_id',
@@ -21,12 +20,12 @@ class TaskHistory extends Model
         'user_id',
         'action',
         'org_id',
-        'comment'
+        'comment',
+        "created_at",
+        "updated_at",
     ];
 
     protected $hidden = [
-        "created_at",
-        "updated_at",
         "deleted_at"
     ];
 

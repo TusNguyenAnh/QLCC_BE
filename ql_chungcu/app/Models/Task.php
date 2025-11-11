@@ -23,10 +23,10 @@ class Task extends Model
         'task_name',
         'status',
         "created_at",
+        "updated_at",
     ];
 
     protected $hidden = [
-        "updated_at",
         "deleted_at"
     ];
 
