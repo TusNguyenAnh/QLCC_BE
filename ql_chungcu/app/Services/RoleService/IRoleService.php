@@ -8,4 +8,5 @@ interface IRoleService
     public function assignRole(array $data);
     public function findByComplexId(string $complexId, string $perPage);
 
+    public function getRoleByUserId($userId);
 }

@@ -41,4 +41,10 @@ class RoleController extends Controller
         return APIResponse::paginated(RoleResource::collection($this->roleService->findByComplexId($complexId, $perPage)));
     }
 
+    public function getRoleByUserId($userId)
+    {
+        return APIResponse::success($this->roleService->getRoleByUserId($userId));
+    }
+
+
 }

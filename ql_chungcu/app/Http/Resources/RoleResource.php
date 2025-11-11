@@ -19,8 +19,10 @@ class RoleResource extends JsonResource
             'role_name' => $this->role_name,
             'description' => $this->description,
             'status' => $this->status,
+            'complex_id' => $this->complex_id,
             'total_permission' => $this->permissions->count(),
             'total_user' => $this->users->count(),
+            'permission' => $this->permissions->pluck('id')->toArray()
         ];
     }
 }

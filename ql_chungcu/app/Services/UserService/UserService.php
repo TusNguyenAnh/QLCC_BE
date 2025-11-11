@@ -41,4 +41,10 @@ class UserService implements IUserService
 
         return $user;
     }
+
+    public function findByOrgId($orgId, $perPage = 10)
+    {
+        $listUser = $this->userRepository->findByOrgId($orgId, $perPage);
+        return $listUser;
+    }
 }

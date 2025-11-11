@@ -20,6 +20,7 @@ Route::group([
     'prefix' => '/role'],
     function () {
         Route::get('/findByComplexId/{complex_id}', [RoleController::class, 'findByComplexId']);
+        Route::get('/getRoleByUserId/{user_id}', [RoleController::class, 'getRoleByUserId']);
         Route::post('/create', [RoleController::class, 'store']);
         Route::post('/assignRole', [RoleController::class, 'assignRole']);
 

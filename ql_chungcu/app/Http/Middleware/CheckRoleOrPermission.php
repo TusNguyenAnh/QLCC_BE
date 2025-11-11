@@ -13,17 +13,15 @@ class CheckRoleOrPermission
      *
      * @param \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response) $next
      */
-    public function handle(Request $request, Closure $next, ...$roles): Response
+    public function handle($request, Closure $next, $permission)
     {
-        $user = $request->user();
-
-        if (!$user || !in_array($user->role, $roles)) {
+        $user = auth()->user();
+        if (!in_array($permission, $user->getJWTCustomClaims()['permissions'] ?? [])) {
             return response()->json([
                 'message' => 'Bạn không có quyền truy cập vào tài nguyên',
                 'code' => '0000'
             ], 403);
         }
-
         return $next($request);
     }
 }

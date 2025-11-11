@@ -29,4 +29,10 @@ class UserController extends Controller
         $user = $this->userService->add($data);
         return APIResponse::success(new UserResource($user));
     }
+
+    public function findByOrgId($orgId){
+        $perPage = intval(request('perPage', 50));
+        $perPage = max(1, min($perPage, 50));
+        return $this->userService->findByOrgId($orgId, $perPage);
+    }
 }

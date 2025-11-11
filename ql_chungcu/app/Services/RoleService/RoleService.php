@@ -4,6 +4,7 @@ namespace App\Services\RoleService;
 
 use App\Repositories\AuthorizationRepository\IRoleRepository;
 use App\Repositories\AuthorizationRepository\IUserRoleRepository;
+use Illuminate\Support\Str;
 
 class RoleService implements IRoleService
 {
@@ -25,12 +26,27 @@ class RoleService implements IRoleService
 
     public function assignRole(array $data)
     {
-        $userRole = $this->userRoleRepository->store($data);
-        return $userRole;
+        $this->userRoleRepository->delete($data["user_id"]);
+
+        $dataUserRole = [];
+        foreach ($data["role"] as $role) {
+            $dataUserRole[] = [
+                'id' => (string)Str::uuid(),
+                'user_id' => $data["user_id"],
+                'role_id' => $role
+            ];
+        }
+
+        return $this->userRoleRepository->store($dataUserRole);
     }
 
     public function findByComplexId(string $complexId, string $perPage)
     {
         return $this->roleRepository->findByComplexId($complexId, $perPage);
+    }
+
+    public function getRoleByUserId($userId)
+    {
+        return $this->userRoleRepository->getRoleByUserId($userId);
     }
 }

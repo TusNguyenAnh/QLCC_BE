@@ -48,4 +48,15 @@ class UserRepository implements IUserRepository
             ->toArray();
     }
 
+    public function findByOrgId($orgId, $perPage = 10)
+    {
+        return User::join('residents', 'users.res_id', '=', 'residents.id')
+            ->where([
+                ['users.status', '=', '0'],
+                ['residents.org_id', '=', $orgId],
+            ])
+            ->select('users.*', 'residents.email', 'residents.phone_number', 'residents.fullname')
+            ->paginate($perPage);
+    }
+
 }

@@ -29,7 +29,6 @@ class PermissionController extends Controller
     public function assignPermission(PermissionAssignRequest $permissionAssignRequest)
     {
         $data = $permissionAssignRequest->validated();
-
         $permissionAssign = $this->permissionService->assignPermission($data);
         return APIResponse::success($permissionAssign);
     }

@@ -27,6 +27,7 @@ class RoleRequest extends FormRequest
         return [
             'role_name' => 'required',
             'complex_id' => 'required',
+            'description' => 'required',
         ];
     }
 

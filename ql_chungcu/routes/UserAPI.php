@@ -19,5 +19,6 @@ Route::group(['prefix' => '/user'],
     function () {
         Route::get('', [UserController::class,'index']);
         Route::post('/create', [UserController::class,'store']);
+        Route::get('findByOrgId/{org_id}', [UserController::class, 'findByOrgId']);
     });
 

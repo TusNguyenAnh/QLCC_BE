@@ -26,7 +26,7 @@ class RoleAssignRequest extends FormRequest
     {
         return [
             'user_id' => 'required',
-            'role_id' => 'required',
+            'role' => 'nullable|array',
         ];
     }
 

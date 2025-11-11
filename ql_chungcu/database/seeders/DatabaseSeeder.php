@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             ComplexSeeder::class,
             PrioritySeeder::class,
             UserSeeder::class,
+            PermissionSeeder::class,
         ]);
     }
 }

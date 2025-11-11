@@ -4,6 +4,7 @@ namespace App\Services\PermissionService;
 
 use App\Repositories\AuthorizationRepository\IPermissionRepository;
 use App\Repositories\AuthorizationRepository\IRolePermissionRepository;
+use Illuminate\Support\Str;
 
 class PermissionService implements IPermissionService
 {
@@ -25,8 +26,19 @@ class PermissionService implements IPermissionService
 
     public function assignPermission(array $data)
     {
-        $rolePermission = $this->rolePermissionRepository->store($data);
-        return $rolePermission;
+        $this->rolePermissionRepository->delete($data["role_id"]);
+
+        $dataRolePerm = [];
+
+        foreach ($data["permission"] as $perm) {
+            $dataRolePerm[] = [
+                'id' => (string)Str::uuid(),
+                'role_id' => $data["role_id"],
+                'permission_id' => $perm
+            ];
+        }
+
+        return $this->rolePermissionRepository->store($dataRolePerm);
     }
 
     public function getAllRole()

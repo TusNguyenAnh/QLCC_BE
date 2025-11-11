@@ -23,6 +23,7 @@ class User extends Authenticatable implements JWTSubject
     public $incrementing = false; // Không tự tăng ID
     protected $keyType = 'string';
     protected $fillable = [
+        'id',
         'username',
         'password',
         'res_id',
@@ -59,8 +60,11 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [
-            'role' => $this->role ? $this->role->role_name : null,   // lấy tên role
+//            'roles' => $this->roles()->pluck('roles.role_name')->toArray(), // hoặc 'name'
             'org_id' => $this->resident ? $this->resident->org_id : null,
+            'permissions' => $this->roles->flatMap(function ($role) {
+                return $role->permissions->pluck('name'); // Hoặc pluck('id') nếu muốn ID
+            })->unique()->values()->toArray(),
 //            'buildings' => $this->getBuildingIdsManage(), // dùng accessor ở trên
         ];
     }
@@ -77,9 +81,9 @@ class User extends Authenticatable implements JWTSubject
         });
     }
 
-    public function role()
+    public function roles()
     {
-        return $this->belongsTo(Role::class);
+        return $this->belongsToMany(Role::class, 'user_role', 'user_id', 'role_id');
     }
 
     public function resident()

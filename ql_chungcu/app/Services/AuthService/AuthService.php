@@ -47,7 +47,19 @@ class AuthService implements IAuthService
     public function profile()
     {
         try {
-            return response()->json(auth()->user()->load(['role','resident']));
+            $user = auth()->user()->load(['resident']);
+
+            $permissions = $user->roles
+                ->flatMap(fn($role) => $role->permissions->pluck('name'))
+                ->unique()
+                ->values();
+
+            unset($user->roles);
+
+            return response()->json([
+                'user' => $user,
+                'permissions' => $permissions,
+            ]);
         } catch (JWTException $ex) {
             throw new AppException(ErrorCode::UNAUTHORIZED);
         }
