@@ -29,7 +29,10 @@ class TaskRequest extends FormRequest
             'tasktype_id' => 'required',
             'building_id' => 'required',
             'task_name' => 'required',
-            'description' => 'required'
+            'description' => 'required',
+            'files' => 'required|array',
+            'files.*' => 'file|mimes:jpeg,png,jpg,gif,webp,mp4,mov,avi|max:51200',
+
         ];
     }
 

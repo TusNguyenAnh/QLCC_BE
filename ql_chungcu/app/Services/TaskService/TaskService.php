@@ -67,7 +67,7 @@ class TaskService implements ITaskService
 
         $this->taskHistoryRepository->store($newTaskHistory);
 
-        return $newTaskHistory;
+        return $newTask;
     }
 
     public function findByOrgId(array $filters, string $orgId, int $taskStatus,$perPage)

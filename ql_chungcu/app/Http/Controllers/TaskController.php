@@ -8,16 +8,19 @@ use App\Http\Requests\TaskRequest\TaskUpdateRequest;
 use App\Http\Resources\TaskActionSummaryResource;
 use App\Http\Resources\TaskResource;
 use App\Responses\APIResponse;
+use App\Services\MediaFileService\IMediaFileService;
 use App\Services\TaskService\ITaskService;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
     protected ITaskService $taskService;
+    protected IMediaFileService $mediaFileService;
 
-    public function __construct(ITaskService $taskService)
+    public function __construct(ITaskService $taskService, IMediaFileService $mediaFileService)
     {
         $this->taskService = $taskService;
+        $this->mediaFileService = $mediaFileService;
     }
 
     public function store(TaskRequest $taskRequest)
@@ -25,8 +28,11 @@ class TaskController extends Controller
         $data = $taskRequest->validated();
         $data["user_id"] = auth()->user()->id;
         $data["res_id"] = auth()->user()->res_id;
+        $data["owner_type"] = "task";
+        $data["files"] = $taskRequest->file('files');
 
         $task = $this->taskService->add($data);
+        $mediaFile = $this->mediaFileService->add($data,$task["id"]);
         return APIResponse::success($task);
     }
 
@@ -35,7 +41,7 @@ class TaskController extends Controller
         $perPage = intval(request('perPage', 50));
         $perPage = max(1, min($perPage, 50));
         $filters = $taskFilterRequest->validated();
-        $task = $this->taskService->findByOrgId($filters, $orgId, $taskStatus,$perPage);
+        $task = $this->taskService->findByOrgId($filters, $orgId, $taskStatus, $perPage);
         return APIResponse::paginated($task);
     }
 
@@ -73,7 +79,7 @@ class TaskController extends Controller
         $perPage = intval(request('perPage', 50));
         $perPage = max(1, min($perPage, 50));
         $filters = $taskFilterRequest->validated();
-        $taskApproved = $this->taskService->filterTaskApproved($orgId, "APPROVED", $filters,$perPage);
+        $taskApproved = $this->taskService->filterTaskApproved($orgId, "APPROVED", $filters, $perPage);
         return APIResponse::paginated($taskApproved);
     }
 }

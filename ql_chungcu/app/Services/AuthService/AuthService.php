@@ -126,7 +126,13 @@ class AuthService implements IAuthService
 //            // 'expires_token' => config('jwt.ttl') * 60
 //        ]);
 
-        return response()->json(['message' => 'Đăng nhập thành công'])
+        return response()->json([
+            'message' => 'Đăng nhập thành công',
+            'access_token' => $token,
+            'refresh_token' => $refreshToken,
+            //thoi gian song tinh theo giay; thay doi: config->jwt->ttl
+            // 'expires_token' => config('jwt.ttl') * 60
+        ])
             ->cookie('token', $token, config('jwt.ttl'), '/', "localhost", false, true, false, "Lax") //name,value,thoi gian song,path,domain,secure,httponly,Giữ nguyên giá trị cookie không encode,samesite
             ->cookie('refresh_token', $refreshToken, config('jwt.refresh_ttl'), '/', "localhost", false, true, false, "Lax");
     }
