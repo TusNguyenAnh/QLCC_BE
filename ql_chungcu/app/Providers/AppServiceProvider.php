@@ -16,6 +16,8 @@ use App\Repositories\AuthorizationRepository\RoleRepository;
 use App\Repositories\AuthorizationRepository\UserRoleRepository;
 use App\Repositories\BuildingRepository\BuildingRepository;
 use App\Repositories\BuildingRepository\IBuildingRepository;
+use App\Repositories\ComplexRepository\ComplexRepository;
+use App\Repositories\ComplexRepository\IComplexRepository;
 use App\Repositories\MediaFileRepository\IMediaFileRepository;
 use App\Repositories\MediaFileRepository\MediaFileRepository;
 use App\Repositories\PriorityRepository\IPriorityRepository;
@@ -40,6 +42,8 @@ use App\Services\AuthService\AuthService;
 use App\Services\AuthService\IAuthService;
 use App\Services\BuildingService\BuildingService;
 use App\Services\BuildingService\IBuildingService;
+use App\Services\ComplexService\ComplexService;
+use App\Services\ComplexService\IComplexService;
 use App\Services\MediaFileService\IMediaFileService;
 use App\Services\MediaFileService\MediaFileService;
 use App\Services\PermissionService\IPermissionService;
@@ -120,6 +124,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(IPermissionRepository::class, PermissionRepository::class);
         $this->app->bind(IRolePermissionRepository::class, RolePermissionRepository::class);
         $this->app->bind(IPermissionService::class, PermissionService::class);
+
+        //complex
+        $this->app->bind(IComplexService::class, ComplexService::class);
+        $this->app->bind(IComplexRepository::class, ComplexRepository::class);
+
     }
 
     /**

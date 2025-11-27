@@ -20,7 +20,7 @@ class PermissionSeeder extends Seeder
                 [
                     'id' => (string)Str::uuid(),
                     'name' => 'view:apartment',
-                    'module' => 'Căn hộ',
+                    'module' => 'apartment',
                     'description' => 'Xem danh sách căn hộ',
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
@@ -28,7 +28,7 @@ class PermissionSeeder extends Seeder
                 [
                     'id' => (string)Str::uuid(),
                     'name' => 'manage:apartment',
-                    'module' => 'Căn hộ',
+                    'module' => 'apartment',
                     'description' => 'Thêm, sửa, xóa thông tin căn hộ',
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
@@ -37,7 +37,7 @@ class PermissionSeeder extends Seeder
                 [
                     'id' => (string)Str::uuid(),
                     'name' => 'view:building',
-                    'module' => 'Tòa nhà',
+                    'module' => 'building',
                     'description' => 'Xem danh sách tòa nhà',
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
@@ -45,7 +45,7 @@ class PermissionSeeder extends Seeder
                 [
                     'id' => (string)Str::uuid(),
                     'name' => 'manage:building',
-                    'module' => 'Tòa nhà',
+                    'module' => 'building',
                     'description' => 'Thêm, sửa, xóa thông tin tòa nhà',
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
@@ -55,7 +55,7 @@ class PermissionSeeder extends Seeder
                 [
                     'id' => (string)Str::uuid(),
                     'name' => 'view:organization',
-                    'module' => 'Cơ cấu tổ chức',
+                    'module' => 'organization',
                     'description' => 'Xem danh sách ban quản trị',
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
@@ -63,7 +63,7 @@ class PermissionSeeder extends Seeder
                 [
                     'id' => (string)Str::uuid(),
                     'name' => 'manage:organization',
-                    'module' => 'Cơ cấu tổ chức',
+                    'module' => 'organization',
                     'description' => 'Thêm, sửa, xóa thông tin ban quản trị',
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
@@ -73,7 +73,7 @@ class PermissionSeeder extends Seeder
                 [
                     'id' => (string)Str::uuid(),
                     'name' => 'view:permission',
-                    'module' => 'Quyền hạn',
+                    'module' => 'permission',
                     'description' => 'Xem danh sách quyền hạn',
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
@@ -81,7 +81,7 @@ class PermissionSeeder extends Seeder
                 [
                     'id' => (string)Str::uuid(),
                     'name' => 'assign:permission',
-                    'module' => 'Quyền hạn',
+                    'module' => 'permission',
                     'description' => 'Gán quyền hạn cho vai trò',
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
@@ -91,7 +91,7 @@ class PermissionSeeder extends Seeder
                 [
                     'id' => (string)Str::uuid(),
                     'name' => 'view:priority',
-                    'module' => 'Độ ưu tiên',
+                    'module' => 'priority',
                     'description' => 'Lấy danh sách độ ưu tiên',
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
@@ -101,7 +101,7 @@ class PermissionSeeder extends Seeder
                 [
                     'id' => (string)Str::uuid(),
                     'name' => 'view:resident',
-                    'module' => 'Cư dân',
+                    'module' => 'resident',
                     'description' => 'Xem danh sách cư dân',
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
@@ -109,7 +109,7 @@ class PermissionSeeder extends Seeder
                 [
                     'id' => (string)Str::uuid(),
                     'name' => 'manage:resident',
-                    'module' => 'Cư dân',
+                    'module' => 'resident',
                     'description' => 'Thêm, sửa, xóa thông tin cư dân',
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
@@ -118,7 +118,7 @@ class PermissionSeeder extends Seeder
                 [
                     'id' => (string)Str::uuid(),
                     'name' => 'view:role',
-                    'module' => 'Vai trò',
+                    'module' => 'role',
                     'description' => 'Xem danh sách vai trò',
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
@@ -126,7 +126,7 @@ class PermissionSeeder extends Seeder
                 [
                     'id' => (string)Str::uuid(),
                     'name' => 'manage:role',
-                    'module' => 'Vai trò',
+                    'module' => 'role',
                     'description' => 'Thêm, sửa, xóa thông tin vai trò',
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
@@ -134,7 +134,7 @@ class PermissionSeeder extends Seeder
                 [
                     'id' => (string)Str::uuid(),
                     'name' => 'assign:role',
-                    'module' => 'Vai trò',
+                    'module' => 'role',
                     'description' => 'Gán vai trò cho cư dân',
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
@@ -144,7 +144,7 @@ class PermissionSeeder extends Seeder
                 [
                     'id' => (string)Str::uuid(),
                     'name' => 'view:task',
-                    'module' => 'Yêu cầu',
+                    'module' => 'task',
                     'description' => 'Xem danh sách yêu cầu',
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
@@ -152,7 +152,7 @@ class PermissionSeeder extends Seeder
                 [
                     'id' => (string)Str::uuid(),
                     'name' => 'manage:task',
-                    'module' => 'Yêu cầu',
+                    'module' => 'task',
                     'description' => 'Thêm, sửa, xóa thông tin yêu cầu',
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
@@ -160,7 +160,7 @@ class PermissionSeeder extends Seeder
                 [
                     'id' => (string)Str::uuid(),
                     'name' => 'review:task',
-                    'module' => 'Yêu cầu',
+                    'module' => 'task',
                     'description' => 'Xét duyệt yêu cầu',
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
@@ -170,7 +170,7 @@ class PermissionSeeder extends Seeder
                 [
                     'id' => (string)Str::uuid(),
                     'name' => 'view:taskType',
-                    'module' => 'Loại yêu cầu',
+                    'module' => 'taskType',
                     'description' => 'Xem danh sách loại yêu cầu',
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
@@ -178,7 +178,7 @@ class PermissionSeeder extends Seeder
                 [
                     'id' => (string)Str::uuid(),
                     'name' => 'manage:taskType',
-                    'module' => 'Loại yêu cầu',
+                    'module' => 'taskType',
                     'description' => 'Thêm, sửa, xóa loại yêu cầu',
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
@@ -188,7 +188,7 @@ class PermissionSeeder extends Seeder
                 [
                     'id' => (string)Str::uuid(),
                     'name' => 'view:user',
-                    'module' => 'Người dùng',
+                    'module' => 'user',
                     'description' => 'Xem danh sách người dùng',
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
@@ -196,7 +196,7 @@ class PermissionSeeder extends Seeder
                 [
                     'id' => (string)Str::uuid(),
                     'name' => 'manage:user',
-                    'module' => 'Người dùng',
+                    'module' => 'user',
                     'description' => 'Thêm, sửa, xóa người dùng',
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
@@ -205,7 +205,7 @@ class PermissionSeeder extends Seeder
                 [
                     'id' => (string)Str::uuid(),
                     'name' => 'view:workflow',
-                    'module' => 'Quy trình nghiệp vụ',
+                    'module' => 'workflow',
                     'description' => 'Xem danh sách quy trình nghiệp vụ',
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
@@ -213,8 +213,32 @@ class PermissionSeeder extends Seeder
                 [
                     'id' => (string)Str::uuid(),
                     'name' => 'manage:workflow',
-                    'module' => 'Quy trình nghiệp vụ',
+                    'module' => 'workflow',
                     'description' => 'Thêm, sửa, xóa quy trình nghiệp vụ',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now()
+                ],
+                [
+                    'id' => (string)Str::uuid(),
+                    'name' => 'view:complex',
+                    'module' => 'complex',
+                    'description' => 'Xem danh sách chung cư',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now()
+                ],
+                [
+                    'id' => (string)Str::uuid(),
+                    'name' => 'manage:complex',
+                    'module' => 'complex',
+                    'description' => 'Thêm, sửa, xóa chung cư',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now()
+                ],
+                [
+                    'id' => (string)Str::uuid(),
+                    'name' => 'review:complex',
+                    'module' => 'complex',
+                    'description' => 'Xét duyệt yêu cầu chung cư',
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
                 ],

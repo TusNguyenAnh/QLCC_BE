@@ -19,6 +19,7 @@ class MediaFileRepository implements IMediaFileRepository
         $default = collect([
             'image' => collect(),
             'video' => collect(),
+            'application' => collect(),
         ]);
 
         $listMediaFile = MediaFile::where('owner_id', $ownerId)

@@ -8,4 +8,6 @@ interface IResidentRepository
     public function store(array $data);
     public function updateResInOrg(array $id,string $org_id);
     public function findByOrgId($orgId,$perPage);
+    public function getComplexId(string $id);
+
 }

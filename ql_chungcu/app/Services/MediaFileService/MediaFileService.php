@@ -23,7 +23,7 @@ class MediaFileService implements IMediaFileService
     public function add(array $data, string $ownerId)
     {
         foreach ($data["files"] as $file) {
-            $fileType = str_contains($file->getMimeType(), 'video') ? 'video' : 'image';
+            $fileType = explode('/', $file->getMimeType())[0];
             $path = $this->saveFileInDisk($file, $data["owner_type"], $fileType); // Lưu từng ảnh và lấy đường dẫn
             $dataMediaFile[] = [
                 'id' => (string)Str::uuid(),

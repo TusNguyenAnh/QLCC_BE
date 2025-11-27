@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -12,6 +13,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -29,6 +31,7 @@ class User extends Authenticatable implements JWTSubject
         'res_id',
         'status',
         'refresh_token',
+        'complex_id'
     ];
 
     /**
@@ -60,8 +63,9 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [
-//            'roles' => $this->roles()->pluck('roles.role_name')->toArray(), // hoặc 'name'
+            'roles' => $this->roles()->pluck('roles.role_name')->toArray(), // hoặc 'name'
             'org_id' => $this->resident ? $this->resident->org_id : null,
+            'complex_id' => $this->complex_id,
             'permissions' => $this->roles->flatMap(function ($role) {
                 return $role->permissions->pluck('name'); // Hoặc pluck('id') nếu muốn ID
             })->unique()->values()->toArray(),

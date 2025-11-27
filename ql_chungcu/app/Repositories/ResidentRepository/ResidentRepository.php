@@ -30,4 +30,15 @@ class ResidentRepository implements IResidentRepository
     {
         Resident::whereIn('id', $id)->update(['org_id' => $org_id]);
     }
+
+    public function getComplexId(string $id)
+    {
+        $query = Resident::join('users', 'residents.id', '=', 'users.res_id')
+            ->where('residents.id', $id)
+            ->select('users.complex_id')
+            ->distinct()
+            ->first();
+
+        return $query->complex_id;
+    }
 }

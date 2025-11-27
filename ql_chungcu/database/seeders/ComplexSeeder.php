@@ -20,6 +20,12 @@ class ComplexSeeder extends Seeder
                     'id' => (string) Str::uuid(),
                     'complex_name' => 'Khu Vinhomes Times City Park Hill',
                     'address' => "22 vinh tuy",
+                    'total_building' => 10,
+                    'total_apartment' => 1000,
+                    'name_contact' => 'Nguyen Van A',
+                    'phone_contact' => '0900517622',
+                    'email_contact' => 'nguyenvana@gmail.com',
+                    'status' => 1,
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
                 ],
@@ -27,16 +33,15 @@ class ComplexSeeder extends Seeder
                     'id' => (string) Str::uuid(),
                     'complex_name' => 'Khu HH Linh Đàm',
                     'address' => "20 linh đàm",
+                    'total_building' => 20,
+                    'total_apartment' => 2000,
+                    'name_contact' => 'Nguyen Van B',
+                    'phone_contact' => '0900517621',
+                    'email_contact' => 'nguyenvanb@gmail.com',
+                    'status' => 1,
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
                 ],
-                [
-                    'id' => (string) Str::uuid(),
-                    'complex_name' => 'Khu Vinhomes Ocean Park',
-                    'address' => "Văn Giang & Văn Lâm, Hưng Yên",
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now()
-                ]
             ]
         );
     }

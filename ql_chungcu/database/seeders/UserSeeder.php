@@ -18,6 +18,7 @@ class UserSeeder extends Seeder
         DB::table('users')->insert([
             'id' => (string)Str::uuid(),
             "res_id" => "",
+            'complex_id' => '',
             "username" => "atus",
             "password" => Hash::make("123"),
         ]);

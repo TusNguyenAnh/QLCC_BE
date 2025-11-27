@@ -17,4 +17,10 @@ class RoleRepository implements IRoleRepository
         return Role::where('complex_id', $complexId)
             ->paginate($perPage);
     }
+
+    public function findByRoleName(string $roleName)
+    {
+        return Role::where('role_name', $roleName)
+            ->first();
+    }
 }

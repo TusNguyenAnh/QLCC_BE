@@ -16,7 +16,16 @@ return new class extends Migration
 
             $table->string('complex_name')->unique();
             $table->string('address')->unique();
-            $table->timestamps();
+            $table->integer('total_building')->default(1);
+            $table->integer('total_apartment')->default(1);
+            $table->string('name_contact');
+            $table->string('phone_contact');
+            $table->string('email_contact');
+            $table->string('description')->default('');
+            $table->integer('status')->default('0');
+
+            $table->timestamps(); // Created_at và updated_at
+            $table->softDeletes(); // Trường để xoá mềm (soft delete)
         });
     }
 
