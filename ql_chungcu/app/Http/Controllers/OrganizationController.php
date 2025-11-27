@@ -26,7 +26,7 @@ class OrganizationController extends Controller
 
     public function findById(string $id)
     {
-        return APIResponse::success($this->orgService->findById($id));
+        return APIResponse::success(new OrganizationResource($this->orgService->findById($id)));
     }
 
     public function getAllWithoutChild(string $parentOrgId, string $complexId)
@@ -37,7 +37,7 @@ class OrganizationController extends Controller
     public function store(OrganizationRequest $organizationRequest)
     {
         $data = $organizationRequest->validated();
-//        $data["user_id"] = auth()->user()->id;
+        $data["complex_id"] = jwt_claim("complex_id");
         $org = $this->orgService->add($data);
         return APIResponse::success(new OrganizationResource($org));
     }

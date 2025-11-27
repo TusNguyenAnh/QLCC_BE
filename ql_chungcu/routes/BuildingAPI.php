@@ -18,7 +18,7 @@ Route::group([
     'middleware' => 'auth:api',
     'prefix' => '/bd'],
     function () {
-        Route::get('/{complex_id}', [BuildingController::class, 'index']);
+        Route::get('', [BuildingController::class, 'index']);
         Route::post('/create', [BuildingController::class, 'store']);
         Route::post('/update/{bd_id}', [BuildingController::class, 'update']);
         Route::post('/delete', [BuildingController::class, 'destroy']);

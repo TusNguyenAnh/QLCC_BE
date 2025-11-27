@@ -10,7 +10,7 @@ class OrgRepository implements IOrgRepository
     public function show($perPage = 10)
     {
         return Organization::with(['children', 'buildings'])
-            ->whereNull('parent_org_id') // chỉ bản ghi cha
+            ->where('parent_org_id',"null") // chỉ bản ghi cha
             ->paginate($perPage);
     }
 
@@ -44,7 +44,8 @@ class OrgRepository implements IOrgRepository
 
     public function getById(string $id)
     {
-        return Organization::where('id', $id)->first();
+        return Organization::with(['children','buildings'])
+            ->where('id', $id)->first();
     }
 
     public function getTopLevel(string $complex_id)
