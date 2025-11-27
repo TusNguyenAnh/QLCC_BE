@@ -15,14 +15,15 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('username')->default('resident');
             $table->string('password')->default('');
-
-            $table->uuid('res_id');
+            $table->uuid('complex_id')->default('');
+            $table->uuid('res_id')->default('');
             $table->integer('status')->default('0');
             $table->string('refresh_token')->default('');
 
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
-            $table->timestamps();
+            $table->timestamps(); // Created_at và updated_at
+            $table->softDeletes(); // Trường để xoá mềm (soft delete)
 
         });
     }

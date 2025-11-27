@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 class Organization extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $table = 'organization';
     public $incrementing = false; // Không tự tăng ID

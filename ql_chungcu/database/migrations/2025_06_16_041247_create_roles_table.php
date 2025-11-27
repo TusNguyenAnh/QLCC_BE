@@ -19,7 +19,8 @@ return new class extends Migration
             $table->uuid('complex_id')->default('');
             $table->string('description')->default('');
 
-            $table->timestamps();
+            $table->timestamps(); // Created_at và updated_at
+            $table->softDeletes(); // Trường để xoá mềm (soft delete)
         });
     }
 

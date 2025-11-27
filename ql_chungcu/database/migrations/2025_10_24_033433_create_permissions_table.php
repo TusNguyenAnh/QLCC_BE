@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('module')->default('');
             $table->string('description')->default('');
 
-            $table->timestamps();
+            $table->timestamps(); // Created_at và updated_at
+            $table->softDeletes(); // Trường để xoá mềm (soft delete)
         });
     }
 

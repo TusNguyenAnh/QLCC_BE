@@ -4,6 +4,7 @@ namespace App\Services\AuthService;
 
 use App\Enums\ErrorCode;
 use App\Exceptions\AppException;
+use App\Repositories\ResidentRepository\IResidentRepository;
 use App\Repositories\UserRepository\IUserRepository;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cookie;
@@ -14,6 +15,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class AuthService implements IAuthService
 {
     protected IUserRepository $userRepository;
+
 
     public function __construct(IUserRepository $userRepository)
     {

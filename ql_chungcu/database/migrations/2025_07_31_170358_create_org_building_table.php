@@ -17,7 +17,8 @@ return new class extends Migration
             $table->uuid('building_id')->default('');
             $table->integer('status')->default('0');
 
-            $table->timestamps();
+            $table->timestamps(); // Created_at và updated_at
+            $table->softDeletes(); // Trường để xoá mềm (soft delete)
         });
     }
 

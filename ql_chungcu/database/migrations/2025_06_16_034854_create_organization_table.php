@@ -16,12 +16,13 @@ return new class extends Migration
             $table->string('org_code')->default('');
             $table->string('org_name')->default('');
             $table->uuid('complex_id')->nullable()->default('');
-            $table->uuid('parent_org_id')->nullable()->default('');
+            $table->uuid('parent_org_id')->default('null');
             $table->text('description')->nullable();
             $table->integer('status')->default('0');
             $table->integer('level')->default('1');
 
-            $table->timestamps();
+            $table->timestamps(); // Created_at và updated_at
+            $table->softDeletes(); // Trường để xoá mềm (soft delete)
 
 //            $table->foreign('parent_org_id')->references('id')->on('organization');
 

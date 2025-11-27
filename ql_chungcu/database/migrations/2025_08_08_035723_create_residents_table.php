@@ -24,7 +24,8 @@ return new class extends Migration
             $table->integer('status')->default('0');
 
             $table->uuid('org_id')->default('null');
-            $table->timestamps();
+            $table->timestamps(); // Created_at và updated_at
+            $table->softDeletes(); // Trường để xoá mềm (soft delete)
         });
     }
 

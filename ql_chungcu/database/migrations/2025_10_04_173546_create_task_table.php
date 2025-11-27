@@ -24,7 +24,8 @@ return new class extends Migration
             $table->string('description')->default('');
             $table->enum('status', ['PENDING', 'APPROVED', 'REJECTED','UNFINISHED'])->default('PENDING');
 
-            $table->timestamps();
+            $table->timestamps(); // Created_at và updated_at
+            $table->softDeletes(); // Trường để xoá mềm (soft delete)
         });
     }
 

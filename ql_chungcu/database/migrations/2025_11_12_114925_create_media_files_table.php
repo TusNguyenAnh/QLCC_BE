@@ -20,7 +20,8 @@ return new class extends Migration
             $table->text('file_url');
             $table->string('mime_type')->nullable();
             $table->bigInteger('size')->nullable();
-            $table->timestamps();
+            $table->timestamps(); // Created_at và updated_at
+            $table->softDeletes(); // Trường để xoá mềm (soft delete)
         });
     }
 

@@ -17,7 +17,8 @@ return new class extends Migration
             $table->uuid('permission_id');
             $table->uuid('role_id');
 
-            $table->timestamps();
+            $table->timestamps(); // Created_at và updated_at
+            $table->softDeletes(); // Trường để xoá mềm (soft delete)
         });
     }
 
