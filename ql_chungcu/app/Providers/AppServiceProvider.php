@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Repositories\AdjustmentTransactionRepository\AdjustmentTransactionRepository;
+use App\Repositories\AdjustmentTransactionRepository\IAdjustmentTransactionRepository;
 use App\Repositories\ApartmentRepository\ApartmentRepository;
 use App\Repositories\ApartmentRepository\IApartmentRepository;
 use App\Repositories\AptResidentRepository\AptResidentRepository;
@@ -18,6 +20,8 @@ use App\Repositories\BuildingRepository\BuildingRepository;
 use App\Repositories\BuildingRepository\IBuildingRepository;
 use App\Repositories\ComplexRepository\ComplexRepository;
 use App\Repositories\ComplexRepository\IComplexRepository;
+use App\Repositories\LedgerRepository\ILedgerSummaryRepository;
+use App\Repositories\LedgerRepository\LedgerSummaryRepository;
 use App\Repositories\MediaFileRepository\IMediaFileRepository;
 use App\Repositories\MediaFileRepository\MediaFileRepository;
 use App\Repositories\PriorityRepository\IPriorityRepository;
@@ -36,6 +40,16 @@ use App\Repositories\WorkflowRepository\IWorkflowRepository;
 use App\Repositories\WorkflowRepository\IWorkflowStepRepository;
 use App\Repositories\WorkflowRepository\WorkflowRepository;
 use App\Repositories\WorkflowRepository\WorkflowStepRepository;
+use App\Repositories\ServiceUnitPriceRepository\IServiceUnitPriceRepository;
+use App\Repositories\ServiceUnitPriceRepository\ServiceUnitPriceRepository;
+use App\Repositories\RevenueRepository\IRevenueRepository;
+use App\Repositories\RevenueRepository\RevenueRepository;
+use App\Repositories\ExpenseRepository\IExpenseRepository;
+use App\Repositories\ExpenseRepository\ExpenseRepository;
+use App\Repositories\LedgerRepository\ILedgerRepository;
+use App\Repositories\LedgerRepository\LedgerRepository;
+use App\Services\AdjustmentTransactionService\AdjustmentTransactionService;
+use App\Services\AdjustmentTransactionService\IAdjustmentTransactionService;
 use App\Services\ApartmentService\ApartmentService;
 use App\Services\ApartmentService\IApartmentService;
 use App\Services\AuthService\AuthService;
@@ -44,6 +58,8 @@ use App\Services\BuildingService\BuildingService;
 use App\Services\BuildingService\IBuildingService;
 use App\Services\ComplexService\ComplexService;
 use App\Services\ComplexService\IComplexService;
+use App\Services\LedgerService\ILedgerSummaryService;
+use App\Services\LedgerService\LedgerSummaryService;
 use App\Services\MediaFileService\IMediaFileService;
 use App\Services\MediaFileService\MediaFileService;
 use App\Services\PermissionService\IPermissionService;
@@ -62,6 +78,14 @@ use App\Services\UserService\IUserService;
 use App\Services\UserService\UserService;
 use App\Services\WorkflowService\IWorkflowService;
 use App\Services\WorkflowService\WorkflowService;
+use App\Services\ServiceUnitPriceService\IServiceUnitPriceService;
+use App\Services\ServiceUnitPriceService\ServiceUnitPriceService;
+use App\Services\RevenueService\IRevenueService;
+use App\Services\RevenueService\RevenueService;
+use App\Services\ExpenseService\IExpenseService;
+use App\Services\ExpenseService\ExpenseService;
+use App\Services\LedgerService\ILedgerService;
+use App\Services\LedgerService\LedgerService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -128,6 +152,30 @@ class AppServiceProvider extends ServiceProvider
         //complex
         $this->app->bind(IComplexService::class, ComplexService::class);
         $this->app->bind(IComplexRepository::class, ComplexRepository::class);
+
+        //service unit price
+        $this->app->bind(IServiceUnitPriceRepository::class, ServiceUnitPriceRepository::class);
+        $this->app->bind(IServiceUnitPriceService::class, ServiceUnitPriceService::class);
+
+        //revenue
+        $this->app->bind(IRevenueRepository::class, RevenueRepository::class);
+        $this->app->bind(IRevenueService::class, RevenueService::class);
+
+        //expense
+        $this->app->bind(IExpenseRepository::class, ExpenseRepository::class);
+        $this->app->bind(IExpenseService::class, ExpenseService::class);
+
+        //ledger
+        $this->app->bind(ILedgerRepository::class, LedgerRepository::class);
+        $this->app->bind(ILedgerService::class, LedgerService::class);
+
+        //adjustment transaction
+        $this->app->bind(IAdjustmentTransactionRepository::class, AdjustmentTransactionRepository::class);
+        $this->app->bind(IAdjustmentTransactionService::class, AdjustmentTransactionService::class);
+
+        //ledger summary
+        $this->app->bind(ILedgerSummaryRepository::class, LedgerSummaryRepository::class);
+        $this->app->bind(ILedgerSummaryService::class, LedgerSummaryService::class);
 
     }
 

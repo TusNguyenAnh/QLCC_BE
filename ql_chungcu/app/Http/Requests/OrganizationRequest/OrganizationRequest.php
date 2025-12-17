@@ -19,7 +19,7 @@ class OrganizationRequest extends FormRequest
         return [
             'org_code' => 'required',
             'org_name' => 'required|min:5|max:30',
-            'parent_org_id' => 'nullable|exists:organization,id',
+            'parent_org_id' => 'nullable',
             'description' => 'nullable|max:100',
             'building' => 'nullable|array',
         ];

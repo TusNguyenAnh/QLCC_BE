@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             RolePermissSeeder::class,
             UserRoleSeeder::class,
+            LedgerSummarySeeder::class,
         ]);
     }
 }

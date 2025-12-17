@@ -16,7 +16,9 @@ class APIResponse
 
     public static function paginated($paginator)
     {
-        return response()->json([
+        $json = $paginator->response()->getData(true);
+
+        $response = [
             'message' => 'Thành công!',
             'data' => $paginator->items(),
             'meta' => [
@@ -31,7 +33,14 @@ class APIResponse
                 'prev' => $paginator->previousPageUrl(),
                 'next' => $paginator->nextPageUrl(),
             ],
-        ], 200);
+
+        ];
+        // Tự động merge summary nếu có
+        if (isset($json['summary'])) {
+            $response['summary'] = $json['summary'];
+        }
+
+        return response()->json($response, 200);
     }
 
     public static function error($message = 'Có lỗi xảy ra', $code = 9999, $data = null)
