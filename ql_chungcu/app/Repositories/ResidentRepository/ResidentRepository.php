@@ -6,15 +6,46 @@ use App\Models\Resident;
 
 class ResidentRepository implements IResidentRepository
 {
-    public function show($perPage = 10)
+    public function show(array $filters, $complexId)
     {
-        return Resident::where('status', 0)
-            ->paginate($perPage);
+        $query = Resident::join('apt_res', 'residents.id', '=', 'apt_res.resident_id')
+            ->join('apartments', 'apt_res.apt_id', '=', 'apartments.id')
+            ->join('buildings', 'apartments.building_id', '=', 'buildings.id')
+            ->where('residents.complex_id', $complexId)
+            ->select('residents.*', 'apartments.floor', 'apartments.apt_number', 'buildings.id');
+
+        //Điều kiện lọc khi có request
+        $query->when(isset($filters['building_id']),
+            fn($q) => $q->where('buildings.id', $filters['building_id'])
+        );
+
+        $query->when(isset($filters['floor']),
+            fn($q) => $q->where('apartments.floor', $filters['floor'])
+        );
+
+        $query->when(isset($filters['apt_number']),
+            fn($q) => $q->where('apartments.apt_number', $filters['apt_number'])
+        );
+
+        $query->when(isset($filters['relationship']),
+            fn($q) => $q->where('residents.relationship', $filters['relationship'])
+        );
+
+        $query->orderBy('residents.created_at', 'desc');
+
+        return $query->get();
+
     }
 
     public function store(array $data)
     {
         $resident = Resident::create($data)->fresh();
+        return $resident;
+    }
+
+    public function storeFromFile(array $data)
+    {
+        $resident = Resident::insert($data);
         return $resident;
     }
 
@@ -31,14 +62,11 @@ class ResidentRepository implements IResidentRepository
         Resident::whereIn('id', $id)->update(['org_id' => $org_id]);
     }
 
-    public function getComplexId(string $id)
+    public function findByCondition($field, $listItem, $complexId)
     {
-        $query = Resident::join('users', 'residents.id', '=', 'users.res_id')
-            ->where('residents.id', $id)
-            ->select('users.complex_id')
-            ->distinct()
-            ->first();
-
-        return $query->complex_id;
+        return Resident::whereIn($field, $listItem)
+            ->where('complex_id', $complexId)
+            ->pluck('id', $field);
     }
+
 }

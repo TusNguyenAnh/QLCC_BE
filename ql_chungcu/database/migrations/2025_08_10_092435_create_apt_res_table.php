@@ -20,6 +20,8 @@ return new class extends Migration
 
             $table->timestamps(); // Created_at và updated_at
             $table->softDeletes(); // Trường để xoá mềm (soft delete)
+
+            $table->unique(['apt_id', 'resident_id']);
         });
     }
 

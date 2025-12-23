@@ -17,7 +17,6 @@ class ResidentResource extends JsonResource
         return [
             'id' => $this->id,
             'org_id' => $this->org_id,
-            'res_id' => $this->res_id,
             'gender' => $this->gender,
             'fullname' => $this->fullname,
             'email' => $this->email,

@@ -13,6 +13,17 @@ class AptResidentRepository implements IAptResidentRepository
         return $aptResident;
     }
 
+    public function storeFromFile(array $data)
+    {
+        $aptResident = AptResident::upsert(
+            $data,
+            ['apt_id', 'resident_id'], // neu cap field nay k co se them moi con co se update
+            ['status', 'updated_at'] //update cac truong nay neu trung cao field tren
+        );
+        return $aptResident;
+    }
+
+
     public function findResidentByBuildingId($bdId, $perPage = 10)
     {
         return AptResident::join('residents', 'residents.id', '=', 'resident_id')

@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('residents', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('res_id');
+            $table->uuid('complex_id');
             $table->string('fullname');
-            $table->integer('gender');
+            $table->integer('gender'); // nam 0 nu 1
             $table->string('email')->unique();
             $table->datetime('birthday')->nullable();
             $table->string('relationship');
@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('cccd')->unique();
             $table->integer('status')->default('0');
 
-            $table->uuid('org_id')->default('null');
+            $table->uuid('org_id')->nullable();
             $table->timestamps(); // Created_at và updated_at
             $table->softDeletes(); // Trường để xoá mềm (soft delete)
         });

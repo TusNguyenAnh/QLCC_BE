@@ -7,7 +7,7 @@ use App\Exceptions\AppException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ResidentRequest extends FormRequest
+class ResidentFilterRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,20 +25,17 @@ class ResidentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'gender' => 'required',
-            'fullname' => 'required',
-            'email' => 'required',
-            'birthday' => 'required',
-            'phone_number' => 'required',
-            'org_id' => 'nullable',
-            'relationship' => 'required',
-            'cccd' => 'required',
+            'building_id' => 'required|string',
+            'floor' => 'nullable',
+            'apt_number' => 'nullable',
+            'relationship' => 'nullable',
         ];
     }
 
     public function messages()
     {
         return [
+            'building_id.required' => 'BUILDING_NOT_EMPTY',
         ];
     }
 

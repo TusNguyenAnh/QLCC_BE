@@ -17,7 +17,7 @@ class Resident extends Model
     protected $keyType = 'string'; // Vì UUID là chuỗi
     protected $fillable = [
         'org_id',
-        'res_id',
+        'complex_id',
         'fullname',
         'gender',
         'email',
@@ -26,12 +26,11 @@ class Resident extends Model
         'status',
         'relationship',
         'cccd',
-        'apt_id'
+        "created_at",
+        "updated_at",
     ];
 
     protected $hidden = [
-        "created_at",
-        "updated_at",
         "deleted_at"
     ];
 

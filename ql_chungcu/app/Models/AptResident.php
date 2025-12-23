@@ -18,12 +18,12 @@ class AptResident extends Model
     protected $fillable = [
         'apt_id',
         'resident_id',
-        'status'
+        'status',
+        "created_at",
+        "updated_at",
     ];
 
     protected $hidden = [
-        "created_at",
-        "updated_at",
         "deleted_at"
     ];
 

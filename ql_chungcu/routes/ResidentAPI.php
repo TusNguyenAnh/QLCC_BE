@@ -14,12 +14,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['prefix' => '/resident'],
+Route::group(
+    [
+        'middleware' => 'auth:api',
+        'prefix' => '/resident'
+    ],
     function () {
-        Route::get('', [ResidentController::class, 'index']);
+        Route::post('getByFilter', [ResidentController::class, 'index']);
         Route::get('findByOrgId/{org_id}', [ResidentController::class, 'findByOrgId']);
         Route::post('findByBuildingId', [ResidentController::class, 'findResidentByBuildingId']);
         Route::post('create', [ResidentController::class, 'store']);
-        Route::post('/updateResInOrg/{org_id}', [ResidentController::class, 'updateResInOrg']);
-    });
-
+        Route::post('import-excel', [ResidentController::class, 'importResExcel']);
+        Route::post('import-excelAptRes', [ResidentController::class, 'importResAptExcel']);
+        Route::post('updateResInOrg/{org_id}', [ResidentController::class, 'updateResInOrg']);
+    }
+);
