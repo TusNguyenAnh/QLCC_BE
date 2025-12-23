@@ -21,6 +21,7 @@ class ApartmentResource extends JsonResource
             'apt_area' => $this->apt_area,
             'apt_type' => $this->apt_type,
             'description' => $this->description,
+            'floor' => $this->floor,
             'status' => $this->status,
         ];
     }

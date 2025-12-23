@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Requests\ApartmentRequest;
+namespace App\Http\Requests\FileRequest;
 
 use App\Enums\ErrorCode;
 use App\Exceptions\AppException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ApartmentRequest extends FormRequest
+class ExcelFileRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,19 +25,17 @@ class ApartmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'building_id' => 'required',
-            'floor' => 'required',
-            'apt_number' => 'required',
-            'apt_area' => 'required',
-            'apt_type' => 'required',
-            'description' => 'nullable',
-
+            'files' => 'required|file|mimes:xlsx,xls|max:51200', // Max 50MB
         ];
     }
 
     public function messages()
     {
         return [
+            'files.required' => 'FILE_REQUIRED',
+            'files.file' => 'FILE_INVALID',
+            'files.mimes' => 'FILE_EXCEL_INVALID_FORMAT',
+            'files.max' => 'FILE_SIZE_EXCEEDED',
         ];
     }
 

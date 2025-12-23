@@ -17,16 +17,18 @@ class Apartment extends Model
     protected $keyType = 'string'; // Vì UUID là chuỗi
     protected $fillable = [
         'building_id',
+        'complex_id',
+        'floor',
         'apt_number',
         'apt_area',
         'apt_type',
         'description',
         'status',
+        "created_at",
+        "updated_at",
     ];
 
     protected $hidden = [
-        "created_at",
-        "updated_at",
         "deleted_at"
     ];
 

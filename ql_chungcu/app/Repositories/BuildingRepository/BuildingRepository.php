@@ -38,4 +38,11 @@ class BuildingRepository implements IBuildingRepository
         Building::whereIn('id', $listBd)->update(['status' => '1']);
     }
 
+    public function findByCondition($field, $listItem, $complexId)
+    {
+        return Building::whereIn($field, $listItem)
+            ->where('complex_id', $complexId)
+            ->pluck('id', $field);
+    }
+
 }

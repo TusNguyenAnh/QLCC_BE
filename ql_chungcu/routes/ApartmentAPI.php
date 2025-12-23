@@ -22,6 +22,7 @@ Route::group([
         Route::post('/create', [ApartmentController::class, 'store']);
         Route::post('/update/{apt_id}', [ApartmentController::class, 'update']);
 //        Route::post('/delete', [BuildingController::class, 'destroy']);
+        Route::post('import-excel', [ApartmentController::class, 'importAptExcel']);
     });
 
 

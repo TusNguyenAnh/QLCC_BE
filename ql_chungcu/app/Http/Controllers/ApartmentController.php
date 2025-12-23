@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ApartmentRequest\ApartmentRequest;
+use App\Http\Requests\FileRequest\ExcelFileRequest;
 use App\Http\Resources\ApartmentResource;
 use App\Models\Apartment;
 use App\Responses\APIResponse;
@@ -28,7 +29,7 @@ class ApartmentController extends Controller
     public function store(ApartmentRequest $apartmentRequest)
     {
         $data = $apartmentRequest->validated();
-//        $data["user_id"] = auth()->user()->id;
+        $data["complex_id"] = jwt_claim('complex_id');
         $apt = $this->apartmentService->add($data);
         return APIResponse::success(new ApartmentResource($apt));
     }
@@ -39,5 +40,18 @@ class ApartmentController extends Controller
 //        $data["user_id"] = auth()->user()->id;
         $aptUpdate = $this->apartmentService->update($id, $data);
         return APIResponse::success(new ApartmentResource($aptUpdate));
+    }
+
+    public function importAptExcel(ExcelFileRequest $request)
+    {
+        $file = $request->file('files');
+
+        $result = $this->apartmentService->importAptFromExcel($file);
+
+        if ($result['success']) {
+            return APIResponse::success($result);
+        } else {
+            return APIResponse::error($result['message'], 400);
+        }
     }
 }

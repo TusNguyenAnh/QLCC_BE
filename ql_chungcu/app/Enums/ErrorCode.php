@@ -108,6 +108,15 @@ enum ErrorCode
     case LEDGER_SUMMARY_EXISTED;
     case LEDGER_SUMMARY_NOT_EXISTED;
 
+    // Excel file validation
+    case FILE_REQUIRED;
+    case FILE_INVALID;
+    case FILE_EXCEL_INVALID_FORMAT;
+    case FILE_SIZE_EXCEEDED;
+
+    //resident
+    case RESIDENT_EXISTED;
+
     public function code(): int
     {
         return match ($this) {
@@ -207,6 +216,15 @@ enum ErrorCode
             self::VOUCHER_NOT_VALID => 5000,
             self::LEDGER_SUMMARY_EXISTED => 5001,
             self::LEDGER_SUMMARY_NOT_EXISTED => 5002,
+
+            //excel file
+            self::FILE_REQUIRED => 6000,
+            self::FILE_INVALID => 6001,
+            self::FILE_EXCEL_INVALID_FORMAT => 6002,
+            self::FILE_SIZE_EXCEEDED => 6003,
+
+            //resident
+            self::RESIDENT_EXISTED => 7000,
         };
     }
 
@@ -306,6 +324,16 @@ enum ErrorCode
             self::VOUCHER_NOT_VALID => "Loại phiếu không hợp lệ. Chỉ chấp nhận PT hoặc PC",
             self::LEDGER_SUMMARY_EXISTED => "Số dư cuối kỳ đã được tạo",
             self::LEDGER_SUMMARY_NOT_EXISTED => "Số dư cuối kỳ chưa được tạo",
+
+            //excel file
+            self::FILE_REQUIRED => "File là bắt buộc",
+            self::FILE_INVALID => "File tải lên không hợp lệ",
+            self::FILE_EXCEL_INVALID_FORMAT => "File phải có định dạng xlsx hoặc xls",
+            self::FILE_SIZE_EXCEEDED => "File không được vượt quá 50MB",
+
+            //resident
+            self::RESIDENT_EXISTED => "Thông tin cư dân đã tồn tại!",
+
         };
     }
 
@@ -403,6 +431,15 @@ enum ErrorCode
             self::VOUCHER_NOT_VALID,
             self::LEDGER_SUMMARY_EXISTED,
             self::LEDGER_SUMMARY_NOT_EXISTED,
+
+                //excel file
+            self::FILE_REQUIRED,
+            self::FILE_INVALID,
+            self::FILE_EXCEL_INVALID_FORMAT,
+            self::FILE_SIZE_EXCEEDED,
+
+                //resident
+            self::RESIDENT_EXISTED,
             => 400,
         };
     }
