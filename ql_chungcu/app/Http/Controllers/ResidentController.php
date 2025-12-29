@@ -38,9 +38,8 @@ class ResidentController extends Controller
 
     public function findByOrgId($orgId)
     {
-        $perPage = intval(request('perPage', 50));
-        $perPage = max(1, min($perPage, 50));
-        return $this->residentService->findByOrgId($orgId, $perPage);
+        $res = $this->residentService->findByOrgId($orgId);
+        return APIResponse::success(ResidentResource::collection($res));
     }
 
     public function findResidentByBuildingId(Request $request)

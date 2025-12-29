@@ -71,8 +71,29 @@ class ApartmentService implements IApartmentService
                 $existingBuildings->keys()->toArray()
             );
 
-            if ($missingBuildings) {
-                throw new AppException(ErrorCode::NOT_FOUND);
+            if (count($missingBuildings) > 0) {
+                $rowsErrors = [];
+                foreach ($data as $index => $row) {
+                    $errors = false;
+                    $rowNumber = $index + $this->startRow();
+                    $stringError = "Dòng\n" . $rowNumber . ":\n";
+
+                    if (in_array($row['toa_nha'], $missingBuildings)) {
+                        $stringError = $stringError . "Tòa nhà\n";
+                        $errors = true;
+                    }
+
+                    if ($errors) {
+                        $rowsErrors[] = [
+                            $stringError . "không tồn tại.\n"
+                        ];
+                    }
+                }
+                return [
+                    'success' => false,
+                    'message' => $rowsErrors,
+                    'errors' => $rowsErrors,
+                ];
             }
 
             $dataApt = [];
@@ -120,5 +141,9 @@ class ApartmentService implements IApartmentService
         }
     }
 
+    private function startRow(): int
+    {
+        return 5;
+    }
 
 }

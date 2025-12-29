@@ -57,9 +57,9 @@ class ResidentService implements IResidentService
         return $resident;
     }
 
-    public function findByOrgId($orgId, $perPage)
+    public function findByOrgId($orgId)
     {
-        return $this->residentRepository->findByOrgId($orgId, $perPage);
+        return $this->residentRepository->findByOrgId($orgId);
     }
 
     public function findResidentByBuildingId($bdId, $perPage)
@@ -109,9 +109,40 @@ class ResidentService implements IResidentService
             $existingEmails = $this->residentRepository->findByCondition('email', $emailList, $complexId);
             $existingPhones = $this->residentRepository->findByCondition('phone_number', $phoneList, $complexId);
 
+            $rowsErrors = [];
             if ($existingEmails->isNotEmpty() || $existingPhones->isNotEmpty() || $existingCCCDs->isNotEmpty()) {
-                throw new AppException(ErrorCode::RESIDENT_EXISTED);
+                foreach ($data as $index => $row) {
+                    $errors = false;
+                    $rowNumber = $index + $this->startRow();
+                    $stringError = "Dòng\n" . $rowNumber . ":\n";
+                    if ($existingCCCDs->has($row['cccd'])) {
+                        $stringError = $stringError . "CCCD,\n";
+                        $errors = true;
+                    }
+
+                    if ($existingPhones->has($row['so_dien_thoai'])) {
+                        $stringError = $stringError . "Số điện thoại,\n";
+                        $errors = true;
+                    }
+
+                    if ($existingEmails->has($row['email'])) {
+                        $stringError = $stringError . "Email\n";
+                        $errors = true;
+                    }
+
+                    if ($errors) {
+                        $rowsErrors[] = [
+                            $stringError . "đã tồn tại.\n"
+                        ];
+                    }
+                }
+                return [
+                    'success' => false,
+                    'message' => $rowsErrors,
+                    'errors' => $rowsErrors,
+                ];
             }
+
             // Nếu tất cả đều hợp lệ, bắt đầu lưu vào database
             DB::beginTransaction();
 
@@ -182,8 +213,33 @@ class ResidentService implements IResidentService
                 $existingBuildings->keys()->toArray()
             );
 
-            if ($missingCccds || $missingBuildings) {
-                throw new AppException(ErrorCode::NOT_FOUND);
+            if (count($missingCccds) > 0 || count($missingBuildings) > 0) {
+                $rowsErrors = [];
+                foreach ($data as $index => $row) {
+                    $errors = false;
+                    $rowNumber = $index + $this->startRow();
+                    $stringError = "Dòng\n" . $rowNumber . ":\n";
+                    if (in_array($row['cccd'], $missingCccds)) {
+                        $stringError = $stringError . "CCCD,\n";
+                        $errors = true;
+                    }
+
+                    if (in_array($row['toa_nha'], $missingBuildings)) {
+                        $stringError = $stringError . "Tòa nhà\n";
+                        $errors = true;
+                    }
+
+                    if ($errors) {
+                        $rowsErrors[] = [
+                            $stringError . "không tồn tại.\n"
+                        ];
+                    }
+                }
+                return [
+                    'success' => false,
+                    'message' => $rowsErrors,
+                    'errors' => $rowsErrors,
+                ];
             }
 
             //check can ho co thuoc toa nha
@@ -193,9 +249,11 @@ class ResidentService implements IResidentService
 
             foreach ($validationResult['data'] as $i => $row) {
                 $key = $row['building_name'] . '_' . $row['apt_number'];
+                $rowNumber = $i + $this->startRow();
+                $stringError = "Dòng\n" . $rowNumber . ":\n";
 
                 if (!isset($apartments[$key])) {
-                    $errorsApt[] = "Căn hộ {$row['apt_number']} không thuộc {$row['building_name']}," . " ";
+                    $errorsApt[] = $stringError . "Căn hộ {$row['apt_number']} không thuộc {$row['building_name']},\n";
                     continue;
                 }
 
@@ -243,5 +301,10 @@ class ResidentService implements IResidentService
                 'errors' => [],
             ];
         }
+    }
+
+    private function startRow(): int
+    {
+        return 5;
     }
 }

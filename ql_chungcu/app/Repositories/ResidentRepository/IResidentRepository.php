@@ -12,7 +12,7 @@ interface IResidentRepository
 
     public function updateResInOrg(array $id, string $org_id);
 
-    public function findByOrgId($orgId, $perPage);
+    public function findByOrgId($orgId);
 
     public function findByCondition($field, $listItem, $complexId);
 

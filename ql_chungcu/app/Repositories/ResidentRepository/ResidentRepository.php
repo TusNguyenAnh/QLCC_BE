@@ -12,7 +12,7 @@ class ResidentRepository implements IResidentRepository
             ->join('apartments', 'apt_res.apt_id', '=', 'apartments.id')
             ->join('buildings', 'apartments.building_id', '=', 'buildings.id')
             ->where('residents.complex_id', $complexId)
-            ->select('residents.*', 'apartments.floor', 'apartments.apt_number', 'buildings.id');
+            ->select('residents.*', 'apartments.floor', 'apartments.apt_number', 'buildings.id as building_id');
 
         //Điều kiện lọc khi có request
         $query->when(isset($filters['building_id']),
@@ -49,12 +49,12 @@ class ResidentRepository implements IResidentRepository
         return $resident;
     }
 
-    public function findByOrgId($orgId, $perPage = 10)
+    public function findByOrgId($orgId)
     {
         return Resident::where([
             ['status', '=', '0'],
             ['org_id', '=', $orgId],
-        ])->paginate($perPage);
+        ])->get();
     }
 
     public function updateResInOrg(array $id, string $org_id)

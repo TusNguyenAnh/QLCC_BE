@@ -10,7 +10,7 @@ interface IResidentService
     public function add(array $data): ?Resident;
     public function updateResInOrg(array $id, string $org_id);
 
-    public function findByOrgId($orgId, $perPage);
+    public function findByOrgId($orgId);
     public function findResidentByBuildingId($bdId, $perPage);
     public function importResFromExcel($file);
     public function importResAptFromExcel($file);

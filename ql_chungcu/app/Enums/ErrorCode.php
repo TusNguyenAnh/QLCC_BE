@@ -18,6 +18,7 @@ enum ErrorCode
     case ORG_NAME_NOT_FOUND;
     case ORG_DESCRIPTION_LENGTH;
     case ORG_NAME_UNIQUE;
+    case PARENT_ORG_EXISTED;
 
 
     case UNCATEGORIZED_EXCEPTION;
@@ -116,6 +117,8 @@ enum ErrorCode
 
     //resident
     case RESIDENT_EXISTED;
+    //staff
+    case STAFF_EXISTED;
 
     public function code(): int
     {
@@ -153,6 +156,7 @@ enum ErrorCode
             self::ORG_NAME_NOT_FOUND => 2002,
             self::ORG_DESCRIPTION_LENGTH => 2003,
             self::ORG_NAME_UNIQUE => 2004,
+            self::PARENT_ORG_EXISTED => 2005,
 
 
             //complex
@@ -225,6 +229,9 @@ enum ErrorCode
 
             //resident
             self::RESIDENT_EXISTED => 7000,
+
+            //staff
+            self::STAFF_EXISTED => 8001,
         };
     }
 
@@ -276,6 +283,7 @@ enum ErrorCode
             self::ORG_NAME_LENGTH => "Tên phòng ban dài tối thiểu 5 ký tự và tối đa 30 ký tự!",
             self::ORG_NAME_NOT_FOUND => "Phòng ban không tồn tại!",
             self::ORG_DESCRIPTION_LENGTH => "Mô tả phòng ban dài tối đa 100 ký tự",
+            self::PARENT_ORG_EXISTED => "Chỉ tồn tại 1 cấp BQT cao nhất!",
 
             //building
             self::BUILDING_NON_EXISTED => "Toà nhà không tồn tại",
@@ -333,6 +341,9 @@ enum ErrorCode
 
             //resident
             self::RESIDENT_EXISTED => "Thông tin cư dân đã tồn tại!",
+            //staff
+            self::STAFF_EXISTED => "Thông tin thành viên BQL đã tồn tại!",
+
 
         };
     }
@@ -360,6 +371,7 @@ enum ErrorCode
             self::ORG_NAME_LENGTH,
             self::ORG_NAME_NOT_FOUND,
             self::ORG_DESCRIPTION_LENGTH,
+            self::PARENT_ORG_EXISTED,
 
 
             self::CODE_NOT_EMPTY,
@@ -440,6 +452,9 @@ enum ErrorCode
 
                 //resident
             self::RESIDENT_EXISTED,
+
+                //staff
+            self::STAFF_EXISTED,
             => 400,
         };
     }
