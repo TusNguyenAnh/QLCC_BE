@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ResidentRequest\ResidentFilterRequest;
 use App\Http\Requests\UserRequest\UserRequest;
+use App\Http\Resources\ResidentResource;
 use App\Http\Resources\UserResource;
 use App\Responses\APIResponse;
 use App\Services\UserService\IUserService;
@@ -25,14 +27,20 @@ class UserController extends Controller
     public function store(UserRequest $userRequest)
     {
         $data = $userRequest->validated();
-//        $data["user_id"] = auth()->user()->id;
         $user = $this->userService->add($data);
-        return APIResponse::success(new UserResource($user));
+        return APIResponse::success($user);
     }
 
-    public function findByOrgId($orgId){
-        $perPage = intval(request('perPage', 50));
-        $perPage = max(1, min($perPage, 50));
-        return $this->userService->findByOrgId($orgId, $perPage);
+    public function findByOrgId($orgId,$type){
+//        $perPage = intval(request('perPage', 50));
+//        $perPage = max(1, min($perPage, 50));
+        return APIResponse::success($this->userService->findByOrgId($orgId,$type));
     }
+    public function findByBuildingId(ResidentFilterRequest $residentFilterRequest)
+    {
+        $filters = $residentFilterRequest->validated();
+        $users = $this->userService->findByBuildingId($filters);
+        return APIResponse::success($users);
+    }
+
 }

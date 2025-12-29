@@ -24,7 +24,8 @@ class UserRepository implements IUserRepository
 
     public function store(array $data)
     {
-        return User::create($data)->fresh();
+        $user = User::insert($data);
+        return $user;
     }
 
     public function update($id, array $data)
@@ -48,15 +49,53 @@ class UserRepository implements IUserRepository
             ->toArray();
     }
 
-    public function findByOrgId($orgId, $perPage = 10)
+    public function findByOrgId($orgId, $table)
     {
-        return User::join('residents', 'users.res_id', '=', 'residents.id')
+        $tab = $table['table'];
+        return User::join($tab, $table['left'], '=', $table['right'])
             ->where([
                 ['users.status', '=', '0'],
-                ['residents.org_id', '=', $orgId],
+                [$table['org'], '=', $orgId],
             ])
-            ->select('users.*', 'residents.email', 'residents.phone_number', 'residents.fullname')
-            ->paginate($perPage);
+            ->select('users.*', "$tab.email", "$tab.phone_number", "$tab.fullname")
+            ->get();
     }
 
+    public function findByCondition($field, $listItem, $complexId)
+    {
+        return User::whereIn($field, $listItem)
+            ->where('complex_id', $complexId)
+            ->pluck('id', $field);
+    }
+
+    public function findByBuildingId(array $filters, $complexId)
+    {
+        $query = User::join('residents', 'users.res_id', '=', 'residents.id')
+            ->join('apt_res', 'residents.id', '=', 'apt_res.resident_id')
+            ->join('apartments', 'apt_res.apt_id', '=', 'apartments.id')
+            ->join('buildings', 'apartments.building_id', '=', 'buildings.id')
+            ->where('residents.complex_id', $complexId)
+            ->select('users.*', 'residents.email', 'residents.phone_number', 'residents.fullname');
+
+        //Điều kiện lọc khi có request
+        $query->when(isset($filters['building_id']),
+            fn($q) => $q->where('buildings.id', $filters['building_id'])
+        );
+
+        $query->when(isset($filters['floor']),
+            fn($q) => $q->where('apartments.floor', $filters['floor'])
+        );
+
+        $query->when(isset($filters['apt_number']),
+            fn($q) => $q->where('apartments.apt_number', $filters['apt_number'])
+        );
+
+        $query->when(isset($filters['relationship']),
+            fn($q) => $q->where('residents.relationship', $filters['relationship'])
+        );
+
+        $query->orderBy('residents.created_at', 'desc');
+
+        return $query->get();
+    }
 }

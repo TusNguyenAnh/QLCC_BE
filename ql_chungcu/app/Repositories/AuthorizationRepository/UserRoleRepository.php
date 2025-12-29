@@ -23,6 +23,6 @@ class UserRoleRepository implements IUserRoleRepository
 
     public function delete(string $userId)
     {
-        UserRole::where('user_id', $userId)->delete();
+        UserRole::where('user_id', $userId)->forceDelete();
     }
 }

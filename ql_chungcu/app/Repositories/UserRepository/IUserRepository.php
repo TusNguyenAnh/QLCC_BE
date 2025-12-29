@@ -15,6 +15,9 @@ interface IUserRepository
     public function update($id, array $data);
 
     public function getBuildingIdsManage($userId);
-    public function findByOrgId($orgId, $perPage = 10);
+    public function findByOrgId($orgId,$table);
+
+    public function findByCondition($field, $listItem, $complexId);
+    public function findByBuildingId(array $filters, $complexId);
 
 }

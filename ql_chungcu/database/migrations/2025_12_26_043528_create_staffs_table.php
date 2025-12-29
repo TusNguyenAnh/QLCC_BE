@@ -11,21 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('staffs', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('username')->default('resident');
-            $table->string('password')->default('');
-            $table->uuid('complex_id')->default('');
-            $table->uuid('res_id')->nullable();
-            $table->uuid('staff_id')->nullable();
+            $table->uuid('complex_id');
+            $table->string('fullname');
+            $table->string('position');
+            $table->string('email')->unique();
+            $table->string('phone_number')->unique();
             $table->integer('status')->default('0');
-            $table->string('refresh_token')->default('');
-
-            $table->timestamp('email_verified_at')->nullable();
-            $table->rememberToken();
+            $table->uuid('org_id')->nullable();
             $table->timestamps(); // Created_at và updated_at
             $table->softDeletes(); // Trường để xoá mềm (soft delete)
-
         });
     }
 
@@ -34,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('staffs');
     }
 };

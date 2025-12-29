@@ -28,6 +28,8 @@ use App\Repositories\PriorityRepository\IPriorityRepository;
 use App\Repositories\PriorityRepository\PriorityRepository;
 use App\Repositories\ResidentRepository\IResidentRepository;
 use App\Repositories\ResidentRepository\ResidentRepository;
+use App\Repositories\StaffRepository\IStaffRepository;
+use App\Repositories\StaffRepository\StaffRepository;
 use App\Repositories\TaskRepository\ITaskHistoryRepository;
 use App\Repositories\TaskRepository\ITaskRepository;
 use App\Repositories\TaskRepository\ITaskTypeRepository;
@@ -70,6 +72,8 @@ use App\Services\ResidentService\IResidentService;
 use App\Services\ResidentService\ResidentService;
 use App\Services\RoleService\IRoleService;
 use App\Services\RoleService\RoleService;
+use App\Services\StaffService\IStaffService;
+use App\Services\StaffService\StaffService;
 use App\Services\TaskService\ITaskService;
 use App\Services\TaskService\ITaskTypeService;
 use App\Services\TaskService\TaskService;
@@ -177,6 +181,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ILedgerSummaryRepository::class, LedgerSummaryRepository::class);
         $this->app->bind(ILedgerSummaryService::class, LedgerSummaryService::class);
 
+        //staff
+        //ledger summary
+        $this->app->bind(IStaffRepository::class, StaffRepository::class);
+        $this->app->bind(IStaffService::class, StaffService::class);
     }
 
     /**

@@ -2,49 +2,143 @@
 
 namespace App\Services\UserService;
 
+use App\Enums\ErrorCode;
+use App\Exceptions\AppException;
+use App\Helpers\StringHelper;
+use App\Mail\GenericMail;
 use App\Models\User;
+use App\Repositories\ResidentRepository\IResidentRepository;
 use App\Repositories\UserRepository\IUserRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class UserService implements IUserService
 {
     private IUserRepository $userRepository;
+    private IResidentRepository $residentRepository;
 
-    public function __construct(IUserRepository $userRepository)
+
+    public function __construct(IUserRepository $userRepository, IResidentRepository $residentRepository)
     {
         $this->userRepository = $userRepository;
+        $this->residentRepository = $residentRepository;
     }
+
     public function show($perPage)
     {
         return $this->userRepository->show($perPage);
     }
 
-    public function add(array $data) : ?User
+    public function add(array $data)
     {
-        $username = $data["username"];
-        if ($this->userRepository->findByUsername($username)) {
-            return null;
+        $complexId = jwt_claim('complex_id');
+        $rowsCollection = collect($data['listRes']);
+
+        // kiem tra cu dan ton tai trong chung cu ?
+        $cccdList = $rowsCollection->pluck('cccd')->unique()->toArray();
+        $existingCCCD = $this->residentRepository->findByCondition('cccd', $cccdList, $complexId);
+
+        if ($existingCCCD->count() != count($cccdList)) {
+            throw new AppException(ErrorCode::NOT_FOUND);
         }
 
-//        $data = [
-//            'username' => $request->username,
-//            'fullname' => $request->fullname,
-//            'phone_number' => $request->phone_number,
-//            'address' => $request->address,
-//            'email' => $request->email,
-//            'password' => Hash::make($request->password),
-//            'is_admin' => false
-//        ];
+        // kiem tra tai khoan da ton tai chua (sdt la ten tai khoan)
+        $phoneList = $rowsCollection->pluck('phone_number')->unique()->toArray();
+        $existingUsername = $this->userRepository->findByCondition('username', $phoneList, $complexId);
 
-        $user = $this->userRepository->store($data);
+        if ($existingUsername->count() != 0) {
+            throw new AppException(ErrorCode::USER_EXISTED);
+        }
 
-        return $user;
+        $dataImport = [];
+        $dataSendEmail = [];
+
+        foreach ($data['listRes'] as &$item) {
+            $passwordRaw = StringHelper::randomStrongCode();
+            $dataImport[] = [
+                'id' => (string)Str::uuid(),
+                'username' => $item['phone_number'],
+                'res_id' => $item['id'],
+                'complex_id' => $complexId,
+                'password' => Hash::make($passwordRaw),
+                'created_at' => Date::now(),
+                'updated_at' => Date::now()
+            ];
+
+            $dataSendEmail[] = [
+                'fullname' => $item['fullname'],
+                'username' => $item['phone_number'],
+                'passwordRaw' => $passwordRaw,
+                'email' => $item['email'],
+            ];
+        }
+        unset($item);
+
+        // Nếu tất cả đều hợp lệ, bắt đầu lưu vào database
+        DB::beginTransaction();
+        try {
+            $user = $this->userRepository->store($dataImport);
+            DB::commit();
+
+            //gui thong tin
+            foreach ($dataSendEmail as $user) {
+                Mail::to($user['email'])->queue(
+                    new GenericMail(
+                        'Thông tin đăng ký tài khoản',
+                        'emails.register_account',
+                        [
+                            'name' => $user['fullname'],
+                            'username' => $user['username'],
+                            'password' => $user['passwordRaw'],
+                        ]
+                    )
+                );
+            }
+
+            return $user;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw new \Exception($e->getMessage());
+        }
     }
 
-    public function findByOrgId($orgId, $perPage = 10)
+    public function findByOrgId($orgId, $type)
     {
-        $listUser = $this->userRepository->findByOrgId($orgId, $perPage);
+        if ($type != 0 && $type != 1){
+            throw new AppException(ErrorCode::NOT_FOUND);
+        }
+
+        $type = $type == 0 ? 'res' : 'st';
+
+        $joinMap = [
+            'res' => [
+                'table' => 'residents',
+                'left' => 'users.res_id',
+                'right' => 'residents.id',
+                'org' => 'residents.org_id',
+            ],
+            'st' => [
+                'table' => 'staffs',
+                'left' => 'users.staff_id',
+                'right' => 'staffs.id',
+                'org' => 'staffs.org_id',
+            ]
+        ];
+
+        $listUser = $this->userRepository->findByOrgId($orgId, $joinMap[$type]);
         return $listUser;
     }
+
+    public function findByBuildingId(array $filters)
+    {
+        $complexId = jwt_claim('complex_id');
+        $listUser = $this->userRepository->findByBuildingId($filters, $complexId);
+        return $listUser;
+    }
+
 }

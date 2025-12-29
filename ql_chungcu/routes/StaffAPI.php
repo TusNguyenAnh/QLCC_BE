@@ -1,7 +1,6 @@
 <?php
 
-use App\Http\Controllers\UserController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\StaffController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,14 +14,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group([
-    'middleware' => 'auth:api',
-    'prefix' => '/user'
-],
+Route::group(
+    [
+        'middleware' => 'auth:api',
+        'prefix' => '/staff'
+    ],
     function () {
-        Route::get('', [UserController::class, 'index']);
-        Route::post('create', [UserController::class, 'store']);
-        Route::get('findByOrgId/{org_id}/{type}', [UserController::class, 'findByOrgId']);
-        Route::post('findByBdId', [UserController::class, 'findByBuildingId']);
-    });
-
+        Route::post('create', [StaffController::class, 'store']);
+    }
+);

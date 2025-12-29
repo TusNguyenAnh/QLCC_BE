@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 interface IUserService
 {
     public function show($perPage);
-    public function add(array $data) : ?User;
-    public function findByOrgId($orgId, $perPage = 10);
-
+    public function add(array $data);
+    public function findByOrgId($orgId,$type);
+    public function findByBuildingId(array $filters);
 }
