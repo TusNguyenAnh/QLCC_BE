@@ -30,7 +30,6 @@ return new class extends Migration
             $table->softDeletes();
 
             $table->foreign('apartment_id')->references('id')->on('apartments');
-            $table->unique(['apartment_id', 'year', 'month']);
         });
     }
 

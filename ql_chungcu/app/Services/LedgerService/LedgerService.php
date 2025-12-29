@@ -47,7 +47,7 @@ class LedgerService implements ILedgerService
     {
         $listLedger = $this->ledgerRepository->getByFilters($filters, $perPage, $complexId);
 
-        if ($listLedger) {
+        if ($listLedger->total() > 0) {
             $firstLedger = $listLedger->first();
             $transForm = $firstLedger->transaction_date;
             //thuc hien tinh balance cho tung ledger
