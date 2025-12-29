@@ -16,12 +16,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group([
-//    'middleware' => 'auth:api',
+    'middleware' => 'auth:api',
     'prefix' => '/org'],
     function () {
         Route::get('', [OrganizationController::class, 'index']);
         Route::get('/findById/{id}', [OrganizationController::class, 'findById']);
-        Route::get('/getBdIdByOrgId/{complex_id}/{parent_id}', [OrganizationController::class, 'getBdIdByParentOrgId']);
+        Route::get('/getBdIdByOrgId/{complex_id}', [OrganizationController::class, 'getBdIdByParentOrgId']);
         Route::get('/getTopLevel/{complex_id}', [OrganizationController::class, 'getTopLevel']);
         Route::get('/getAllWithoutChild/{parent_org_id}/{complex_id}', [OrganizationController::class, 'getAllWithoutChild']);
         Route::post('/create', [OrganizationController::class, 'store']);

@@ -7,13 +7,16 @@ use Illuminate\Support\Facades\DB;
 
 class OrgRepository implements IOrgRepository
 {
-    public function show($perPage = 10)
+    public function show($complexId, $perPage = 10)
     {
         return Organization::with(['children', 'buildings'])
-            ->where('parent_org_id',"null") // chỉ bản ghi cha
-            ->paginate($perPage);
+            ->where('complex_id', $complexId)
+            ->where('parent_org_id', "null") // chỉ bản ghi cha
+            ->get();
     }
 
+
+    //phuc vu viec update 1 to chuc thi cap cha k the lam con cua cap con hoạc con cua cap chau cua cap hien tại
     public function getAllWithoutChild($parentOrgId, $complexId)
     {
         // Bước 1: Truy vấn CTE đệ quy để lấy ID các con cháu
@@ -44,7 +47,7 @@ class OrgRepository implements IOrgRepository
 
     public function getById(string $id)
     {
-        return Organization::with(['children','buildings'])
+        return Organization::with(['children', 'buildings'])
             ->where('id', $id)->first();
     }
 
@@ -52,8 +55,7 @@ class OrgRepository implements IOrgRepository
     {
         return Organization::where('complex_id', $complex_id)
             ->orderBy('level', 'desc')
-            ->first()
-            ->value('level');
+            ->value('level') ?? 0;
     }
 
     public function store(array $data)
@@ -74,5 +76,12 @@ class OrgRepository implements IOrgRepository
     public function delete(array $listOrg)
     {
         Organization::whereIn('id', $listOrg)->update(['status' => '1']);
+    }
+
+    public function findByCondition($field, $listItem, $complexId)
+    {
+        return Organization::whereIn($field, $listItem)
+            ->where('complex_id', $complexId)
+            ->pluck('id', $field);
     }
 }

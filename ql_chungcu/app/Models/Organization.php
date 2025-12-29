@@ -18,6 +18,7 @@ class Organization extends Model
     protected $fillable = [
         'org_code',
         'org_name',
+        'complex_id',
         'parent_org_id',
         'description',
         'status',

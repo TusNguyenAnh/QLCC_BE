@@ -22,6 +22,13 @@ class ComplexController extends Controller
         $this->mediaFileService = $mediaFileService;
     }
 
+    public function findById(string $id)
+    {
+        $complex = $this->complexService->findById($id);
+        return APIResponse::success(new ComplexResource($complex));
+    }
+
+
     public function store(ComplexRequest $complexRequest)
     {
         $data = $complexRequest->validated();

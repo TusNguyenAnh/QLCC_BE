@@ -2,6 +2,8 @@
 
 namespace App\Services\OrganizationService;
 
+use App\Enums\ErrorCode;
+use App\Exceptions\AppException;
 use App\Http\Requests\OrganizationRequest\OrganizationRequest;
 use App\Models\Organization;
 use App\Repositories\BuildingRepository\IBuildingRepository;
@@ -28,9 +30,9 @@ class OrgService implements IOrgService
         $this->buildingRepository = $buildingRepository;
     }
 
-    public function show($perPage)
+    public function show($complexId,$perPage)
     {
-        return $this->orgRepository->show($perPage);
+        return $this->orgRepository->show($complexId,$perPage);
     }
 
     public function findById(string $id): ?Organization
@@ -40,9 +42,14 @@ class OrgService implements IOrgService
 
     public function add(array $data): Organization
     {
-        if ($data['parent_org_id']) {
+        if ($data['parent_org_id'] != 'null') {
             $parentOrg = $this->orgRepository->getById($data['parent_org_id']);
             $data['level'] = $parentOrg->level + 1;
+        } else {
+            $org = $this->orgRepository->findByCondition('parent_org_id', ['null'], $data['complex_id']);
+            if ($org->count() > 0) {
+                throw new AppException(ErrorCode::PARENT_ORG_EXISTED);
+            }
         }
 
         $createdOrg = $this->orgRepository->store(Arr::except($data, ['building']));

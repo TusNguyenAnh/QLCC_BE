@@ -14,8 +14,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['prefix' => '/complex'],
+Route::group([
+    'middleware' => 'auth:api',
+    'prefix' => '/complex',
+],
     function () {
+        Route::get('/findById/{id}', [ComplexController::class, 'findById']);
         Route::post('/filterComplex/{status}', [ComplexController::class, 'filterComplex']);
         Route::post('/create', [ComplexController::class, 'store']);
         Route::post('/approveComplex', [ComplexController::class, 'approveComplex']);

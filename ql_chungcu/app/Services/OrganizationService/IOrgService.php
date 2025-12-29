@@ -7,7 +7,7 @@ use App\Models\Organization;
 
 interface IOrgService
 {
-    public function show($perPage);
+    public function show($complexId,$perPage);
     public function getAllWithoutChild($parentOrgId,$complexId);
 
     public function findById(string $id): ?Organization;

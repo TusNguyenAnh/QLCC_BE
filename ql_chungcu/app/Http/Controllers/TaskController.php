@@ -42,7 +42,7 @@ class TaskController extends Controller
         $perPage = max(1, min($perPage, 50));
         $filters = $taskFilterRequest->validated();
         $task = $this->taskService->findByOrgId($filters, $orgId, $taskStatus, $perPage);
-        return APIResponse::paginated($task);
+        return APIResponse::success($task);
     }
 
     public function findWfByTaskId(string $taskId)

@@ -89,11 +89,11 @@ class TaskHistoryRepository implements ITaskHistoryRepository
                 'apartments.apt_number', 'organization.level', 'buildings.building_name');
 
         //Điều kiện lọc khi có request
-        $query->when(!empty($filters['priority_id']),
+        $query->when(isset($filters['priority_id']),
             fn($q) => $q->whereIn('priority.id', $filters['priority_id'])
         );
 
-        $query->when(!empty($filters['taskType_id']),
+        $query->when(isset($filters['taskType_id']),
             fn($q) => $q->whereIn('task.tasktype_id', $filters['taskType_id'])
         );
 

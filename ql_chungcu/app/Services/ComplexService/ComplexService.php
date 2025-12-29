@@ -12,6 +12,8 @@ use App\Repositories\ComplexRepository\IComplexRepository;
 use App\Repositories\ResidentRepository\IResidentRepository;
 use App\Repositories\UserRepository\IUserRepository;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -44,7 +46,11 @@ class ComplexService implements IComplexService
 
     public function findById(string $id)
     {
-        // TODO: Implement findById() method.
+        $complex = $this->complexRepository->getById($id);
+        if (!$complex) {
+            throw new AppException(ErrorCode::NOT_FOUND);
+        }
+        return $complex;
     }
 
     public function add(array $data)
@@ -90,22 +96,27 @@ class ComplexService implements IComplexService
 
         $roleAdmin = $this->roleRepository->findByRoleName("admin");
 
+        DB::beginTransaction();
         foreach ($ids as $complexId) {
             try {
                 // tao account
                 $complex = $this->complexRepository->getById($complexId);
                 $passwordRaw = StringHelper::randomStrongCode();
                 $data = [
+                    'id' => (string)Str::uuid(),
                     'username' => $complex->phone_contact,
                     'complex_id' => $complex->id,
                     'password' => Hash::make($passwordRaw),
+                    'created_at' => Date::now(),
+                    'updated_at' => Date::now()
                 ];
+
                 $user = $this->userRepository->store($data);
 
                 // gan role admin cho account
                 $dataUserRole[] = [
                     'id' => (string)Str::uuid(),
-                    'user_id' => $user->id,
+                    'user_id' => $data['id'],
                     'role_id' => $roleAdmin->id
                 ];
                 $this->userRoleRepository->store($dataUserRole);
@@ -117,14 +128,18 @@ class ComplexService implements IComplexService
                         'emails.register_account',
                         [
                             'name' => $complex->name_contact,
-                            'username' => $user->username,
+                            'username' => $data['username'],
                             'password' => $passwordRaw,
                         ]
                     )
                 );
-            } catch (\Throwable $mailException) {
+                DB::commit();
+
+            } catch (\Exception $mailException) {
                 Log::error("Gửi mail thất bại cho complex ID {$complex->id}: " . $mailException->getMessage());
-                // throw new AppException(ErrorCode::MAIL_SEND_FAILED);
+                DB::rollBack();
+//                throw new AppException(ErrorCode::NOT_CREATED);
+                throw new \Exception($mailException->getMessage());
             }
         }
     }

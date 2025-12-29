@@ -21,7 +21,9 @@ class OrganizationController extends Controller
     {
         $perPage = intval(request('perPage', 50));
         $perPage = max(1, min($perPage, 50));
-        return APIResponse::paginated(OrganizationResource::collection($this->orgService->show($perPage)));
+        $complexId = jwt_claim('complex_id');
+        $org = $this->orgService->show($complexId,$perPage);
+        return APIResponse::success(OrganizationResource::collection($org));
     }
 
     public function findById(string $id)
@@ -62,8 +64,9 @@ class OrganizationController extends Controller
         return APIResponse::success($this->orgService->getTopLevel($complex_id));
     }
 
-    public function getBdIdByParentOrgId(string $complexId, string $parentId = null)
+    public function getBdIdByParentOrgId(Request $request,string $complexId)
     {
+        $parentId = $request->input('parentId');
         return APIResponse::success($this->orgService->getBdIdByParentOrgId($complexId, $parentId));
     }
 

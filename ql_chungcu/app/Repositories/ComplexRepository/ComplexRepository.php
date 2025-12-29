@@ -40,7 +40,8 @@ class ComplexRepository implements IComplexRepository
 
     public function getById(string $id)
     {
-        return Complex::where('id', $id)->first();
+        $complex = Complex::where('id', $id)->first();
+        return $complex;
     }
 
     public function store(array $data)
