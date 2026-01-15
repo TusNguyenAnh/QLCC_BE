@@ -26,6 +26,7 @@ class ResidentResource extends JsonResource
             'cccd' => $this->cccd,
             'apt_id' => $this->apt_id,
             'status' => $this->status,
+            'position' => $this->position,
         ];
     }
 }

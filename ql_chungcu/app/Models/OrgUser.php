@@ -7,25 +7,23 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
-class WorkflowStep extends Model
+class OrgUser extends Model
 {
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = 'workflow_step';
+    protected $table = 'org_user';
     public $incrementing = false; // Không tự tăng ID
     protected $keyType = 'string'; // Vì UUID là chuỗi
     protected $fillable = [
-        'workflow_id',
+        'user_id',
         'org_id',
-        'step_order',
-        'description',
-        'status',
+        'role_id',
+        "created_at",
+        "updated_at",
     ];
 
     protected $hidden = [
-        "created_at",
-        "updated_at",
         "deleted_at"
     ];
 
@@ -40,10 +38,5 @@ class WorkflowStep extends Model
                 $model->id = (string)Str::uuid();
             }
         });
-    }
-
-    public function approvers()
-    {
-        return $this->hasMany(WorkflowStepApprover::class, 'workflow_step_id', 'id');
     }
 }

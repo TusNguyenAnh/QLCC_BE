@@ -27,23 +27,7 @@ class WorkflowController
     public function store(WorkflowRequest $workflowRequest)
     {
         $data = $workflowRequest->validated();
-//        $data["user_id"] = auth()->user()->id;
         $wf = $this->workflowService->add($data);
         return APIResponse::success(new WorkflowResource($wf));
-    }
-
-    public function update(BuildingRequest $buildingRequest, string $id)
-    {
-//        $data = $buildingRequest->validated();
-////        $data["user_id"] = auth()->user()->id;
-//        $bdUpdate = $this->buildingService->update($id, $data);
-//        return APIResponse::success(new BuildingResource($bdUpdate));
-    }
-
-    public function destroy(Request $request)
-    {
-//        $listBd = $request->input('listBd');
-////        return $listOrg;
-//        $this->buildingService->delete($listBd);
     }
 }

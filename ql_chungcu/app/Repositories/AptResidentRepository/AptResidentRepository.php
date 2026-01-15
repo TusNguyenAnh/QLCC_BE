@@ -3,6 +3,7 @@
 namespace App\Repositories\AptResidentRepository;
 
 use App\Models\AptResident;
+use Illuminate\Support\Facades\DB;
 
 class AptResidentRepository implements IAptResidentRepository
 {
@@ -24,14 +25,24 @@ class AptResidentRepository implements IAptResidentRepository
     }
 
 
-    public function findResidentByBuildingId($bdId, $perPage = 10)
+    public function findResidentByBuildingId($bdId, $orgId)
     {
-        return AptResident::join('residents', 'residents.id', '=', 'resident_id')
+        $result = AptResident::join('residents', 'residents.id', '=', 'resident_id')
             ->join('apartments', 'apartments.id', '=', 'apt_id')
+            ->join('users', 'users.res_id', '=', 'residents.id')
             ->whereIn('apartments.building_id', $bdId)
-            ->where('residents.org_id', null)
-            ->select('residents.*') // chỉ lấy các cột của bảng resident
-            ->distinct()
-            ->paginate($perPage);
+            ->whereNotExists(function ($q) use ($orgId) {
+                $q->select(DB::raw(1))
+                    ->from('org_user')
+                    ->whereColumn('org_user.user_id', 'users.id')
+                    ->where('org_user.org_id', $orgId);
+            })
+            ->select(
+                'residents.*',
+                'users.id as id'
+            )
+            ->get();
+
+        return $result;
     }
 }

@@ -120,6 +120,9 @@ enum ErrorCode
     //staff
     case STAFF_EXISTED;
 
+    //task
+    case TASK_INFO_INVALID;
+
     public function code(): int
     {
         return match ($this) {
@@ -232,6 +235,9 @@ enum ErrorCode
 
             //staff
             self::STAFF_EXISTED => 8001,
+
+            //task
+            self::TASK_INFO_INVALID => 8999,
         };
     }
 
@@ -343,8 +349,8 @@ enum ErrorCode
             self::RESIDENT_EXISTED => "Thông tin cư dân đã tồn tại!",
             //staff
             self::STAFF_EXISTED => "Thông tin thành viên BQL đã tồn tại!",
-
-
+            //task
+            self::TASK_INFO_INVALID => "Thông tin đề xuất chưa hợp lệ. Vui lòng kiểm tra lại thông tin (loại yêu cầu,tòa nhà)"
         };
     }
 
@@ -455,6 +461,8 @@ enum ErrorCode
 
                 //staff
             self::STAFF_EXISTED,
+                //task
+            self::TASK_INFO_INVALID,
             => 400,
         };
     }

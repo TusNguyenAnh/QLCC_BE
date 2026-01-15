@@ -16,7 +16,7 @@ class Resident extends Model
     public $incrementing = false; // Không tự tăng ID
     protected $keyType = 'string'; // Vì UUID là chuỗi
     protected $fillable = [
-        'org_id',
+//        'org_id',
         'complex_id',
         'fullname',
         'gender',

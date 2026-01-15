@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('task_history', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('task_id');
-            $table->uuid('user_id')->nullable();
+            $table->uuid('approver_id')->nullable(); //id cua nguoi duyet task
             $table->uuid('org_id');
             $table->integer('step_order')->default('1');
             $table->enum('action', ['PENDING','APPROVED', 'REJECTED','UNFINISHED'])->default('APPROVED');

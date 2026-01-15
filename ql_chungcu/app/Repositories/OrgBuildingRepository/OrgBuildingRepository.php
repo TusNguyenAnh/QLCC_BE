@@ -36,11 +36,17 @@ class OrgBuildingRepository implements IOrgBuildingRepository
         OrgBuilding::where('org_id', $orgId)->delete();
     }
 
-    public function findByBuildingId(string $bdId)
+    public function findByBuildingId(array $bdId)
     {
         $listOrgBuilding = OrgBuilding::join('organization', 'organization.id', '=', 'org_building.org_id')
-            ->where('org_building.building_id', $bdId)
-            ->select('org_building.*', 'organization.org_name', 'organization.level') // chọn thêm cột từ org
+            ->whereIn('org_building.building_id', $bdId)
+            ->groupBy('org_building.org_id', 'organization.org_name', 'organization.level')
+            ->havingRaw('COUNT(DISTINCT org_building.building_id) = ?', [count($bdId)])
+            ->select(
+                'org_building.org_id',
+                'organization.org_name',
+                'organization.level'
+            )
             ->get();
         return $listOrgBuilding;
     }

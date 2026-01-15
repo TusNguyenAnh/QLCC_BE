@@ -19,8 +19,9 @@ class DatabaseSeeder extends Seeder
             PrioritySeeder::class,
             UserSeeder::class,
             RolePermissSeeder::class,
-            UserRoleSeeder::class,
-            LedgerSummarySeeder::class,
+            OrgUserSeeder::class,
+//            LedgerSummarySeeder::class,
+            FinancialModelSeeder::class,
         ]);
     }
 }

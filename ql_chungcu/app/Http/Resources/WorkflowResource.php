@@ -20,7 +20,9 @@ class WorkflowResource extends JsonResource
             'workflow_name' => $this->workflow_name,
             'status' => $this->status,
             'description' => $this->description,
-            'workflow_step' => $this->workflowStep,
+            'workflow_step' => WorkflowStepResource::collection(
+                $this->workflowStep
+            ),
             'task_type' => TaskTypeResource::collection($this->taskType),
         ];
     }

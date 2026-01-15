@@ -51,10 +51,12 @@ class ResidentRepository implements IResidentRepository
 
     public function findByOrgId($orgId)
     {
-        return Resident::where([
-            ['status', '=', '0'],
-            ['org_id', '=', $orgId],
-        ])->get();
+        return Resident::join('users', 'users.res_id', '=', 'residents.id')
+            ->leftJoin('org_user', 'users.id', '=', 'org_user.user_id')
+            ->where('org_user.org_id', $orgId)
+            ->select('residents.*', 'users.id as id')
+            ->distinct()
+            ->get();
     }
 
     public function updateResInOrg(array $id, string $org_id)

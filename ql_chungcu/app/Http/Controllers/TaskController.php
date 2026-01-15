@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Constant;
 use App\Http\Requests\TaskRequest\TaskFilterRequest;
 use App\Http\Requests\TaskRequest\TaskRequest;
 use App\Http\Requests\TaskRequest\TaskUpdateRequest;
@@ -26,13 +27,13 @@ class TaskController extends Controller
     public function store(TaskRequest $taskRequest)
     {
         $data = $taskRequest->validated();
-        $data["user_id"] = auth()->user()->id;
-        $data["res_id"] = auth()->user()->res_id;
+        $data["creator"] = jwt_claim('sub');
+        $data["complex_id"] = jwt_claim('complex_id');
         $data["owner_type"] = "task";
         $data["files"] = $taskRequest->file('files');
 
         $task = $this->taskService->add($data);
-        $mediaFile = $this->mediaFileService->add($data,$task["id"]);
+        $mediaFile = $this->mediaFileService->add($data, $task["id"]);
         return APIResponse::success($task);
     }
 
@@ -61,7 +62,8 @@ class TaskController extends Controller
     public function approveTask(TaskUpdateRequest $taskUpdateRequest, string $id)
     {
         $data = $taskUpdateRequest->validated();
-        $data["user_id"] = jwt_claim('sub');
+        $data["approver_id"] = jwt_claim('sub');
+        $data["complex_id"] = jwt_claim('complex_id');
         $taskUpdate = $this->taskService->approveTask($data, $id);
         return APIResponse::success($taskUpdate);
     }
@@ -69,7 +71,8 @@ class TaskController extends Controller
     public function rejectTask(TaskUpdateRequest $taskUpdateRequest, string $id)
     {
         $data = $taskUpdateRequest->validated();
-        $data["user_id"] = jwt_claim('sub');
+        $data["approver_id"] = jwt_claim('sub');
+        $data["complex_id"] = jwt_claim('complex_id');
         $taskUpdate = $this->taskService->rejectTask($data, $id);
         return APIResponse::success($taskUpdate);
     }
@@ -79,7 +82,7 @@ class TaskController extends Controller
         $perPage = intval(request('perPage', 50));
         $perPage = max(1, min($perPage, 50));
         $filters = $taskFilterRequest->validated();
-        $taskApproved = $this->taskService->filterTaskApproved($orgId, "APPROVED", $filters, $perPage);
-        return APIResponse::paginated($taskApproved);
+        $taskApproved = $this->taskService->filterTaskApproved($orgId, Constant::APPROVED->value, $filters, $perPage);
+        return APIResponse::success($taskApproved);
     }
 }

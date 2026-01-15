@@ -17,7 +17,7 @@ return new class extends Migration
             $table->uuid('tasktype_id')->default('');
             $table->uuid('current_org_id');
 
-            $table->uuid('user_id');
+            $table->uuid('creator');// ng tao task
 
             $table->integer('current_step')->nullable();
             $table->string('task_name');

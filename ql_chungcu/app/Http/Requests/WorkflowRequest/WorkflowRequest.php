@@ -29,7 +29,20 @@ class WorkflowRequest extends FormRequest
             'workflow_name' => 'required',
             'description' => 'required',
             'status' => 'required',
-            'workflow_step' => 'required',
+            // workflow_step
+            'workflow_step' => 'required|array|min:1',
+
+            // từng object trong workflow_step
+            'workflow_step.*.org_level' => 'required',
+            'workflow_step.*.step_order' => 'required',
+            'workflow_step.*.description' => 'required',
+            'workflow_step.*.status' => 'required',
+
+            // position là mảng
+            'workflow_step.*.position' => 'required|array',
+
+            // từng phần tử trong position
+            'workflow_step.*.position.*' => 'required',
         ];
     }
 

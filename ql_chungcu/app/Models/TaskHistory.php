@@ -19,7 +19,7 @@ class TaskHistory extends Model
     protected $fillable = [
         'task_id',
         'step_id',
-        'user_id',
+        'approver_id',
         'action',
         'org_id',
         'comment',

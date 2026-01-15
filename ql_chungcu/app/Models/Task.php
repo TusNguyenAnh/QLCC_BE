@@ -20,7 +20,7 @@ class Task extends Model
         'tasktype_id',
         'current_step',
         'current_org_id',
-        'user_id',
+        'creator',
         'description',
         'task_name',
         'status',

@@ -25,7 +25,6 @@ class TaskTypeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'complex_id' => 'required',
             'workflow_id' => 'required',
             'priority_id' => 'required',
             'type_name' => 'required',

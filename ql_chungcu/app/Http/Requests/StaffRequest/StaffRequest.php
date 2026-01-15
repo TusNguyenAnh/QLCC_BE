@@ -25,8 +25,8 @@ class StaffRequest extends FormRequest
             'fullname' => 'required',
             'email' => 'required',
             'phone_number' => 'required',
-            'org_id' => 'nullable',
-            'position' => 'nullable',
+            'org_id' => 'required',
+            'role_id' => 'required',
         ];
     }
 

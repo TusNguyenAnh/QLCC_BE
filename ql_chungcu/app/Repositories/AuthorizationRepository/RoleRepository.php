@@ -23,4 +23,10 @@ class RoleRepository implements IRoleRepository
         return Role::where('role_name', $roleName)
             ->first();
     }
+
+    public function findByRoleId(string $roleId)
+    {
+        return Role::where('id', $roleId)
+            ->first();
+    }
 }

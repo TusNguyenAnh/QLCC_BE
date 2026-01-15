@@ -6,8 +6,10 @@ use App\Enums\ErrorCode;
 use App\Exceptions\AppException;
 use App\Helpers\StringHelper;
 use App\Mail\GenericMail;
+use App\Repositories\OrgUserRepository\IOrgUserRepository;
 use App\Repositories\StaffRepository\IStaffRepository;
 use App\Repositories\UserRepository\IUserRepository;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -18,11 +20,14 @@ class StaffService implements IStaffService
 {
     private IStaffRepository $staffRepository;
     private IUserRepository $userRepository;
+    private IOrgUserRepository $orgUserRepository;
 
-    public function __construct(IStaffRepository $staffRepository, IUserRepository $userRepository)
+    public function __construct(IStaffRepository   $staffRepository, IUserRepository $userRepository,
+                                IOrgUserRepository $orgUserRepository)
     {
         $this->staffRepository = $staffRepository;
         $this->userRepository = $userRepository;
+        $this->orgUserRepository = $orgUserRepository;
     }
 
     public function add(array $data)
@@ -46,11 +51,12 @@ class StaffService implements IStaffService
         // Nếu tất cả đều hợp lệ, bắt đầu lưu vào database
         DB::beginTransaction();
         try {
-            $staff = $this->staffRepository->store($data);
+            $staff = $this->staffRepository->store(Arr::except($data, ['org_id', 'role_id']));
 
             $passwordRaw = StringHelper::randomStrongCode();
+            $userId = (string)Str::uuid();
             $dataUser[] = [
-                'id' => (string)Str::uuid(),
+                'id' => $userId,
                 'username' => $staff->phone_number,
                 'staff_id' => $staff->id,
                 'complex_id' => $staff->complex_id,
@@ -59,7 +65,16 @@ class StaffService implements IStaffService
                 'updated_at' => Date::now()
             ];
 
-            $this->userRepository->store($dataUser);
+            $user = $this->userRepository->store($dataUser);
+
+            $orgUser = $this->orgUserRepository->store([
+                'id' => (string)Str::uuid(),
+                'org_id' => $data['org_id'],
+                'user_id' => $userId,
+                'role_id' => $data['role_id'],
+                'created_at' => Date::now(),
+                'updated_at' => Date::now()
+            ]);
             DB::commit();
 
             //gui thong tin

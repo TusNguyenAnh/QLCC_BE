@@ -16,7 +16,9 @@ class CheckRoleOrPermission
     public function handle($request, Closure $next, $permission)
     {
         $user = auth()->user();
-        if (!in_array($permission, $user->getJWTCustomClaims()['permissions'] ?? [])) {
+        $payload = auth()->payload();
+
+        if (!in_array($permission, $payload->get('permissions', []))) {
             return response()->json([
                 'message' => 'Bạn không có quyền truy cập vào tài nguyên',
                 'code' => '0000'

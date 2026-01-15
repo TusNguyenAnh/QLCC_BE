@@ -9,7 +9,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-class UserRoleSeeder extends Seeder
+class OrgUserSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -32,10 +32,13 @@ class UserRoleSeeder extends Seeder
         )->first();
 
         // Gán tất cả quyền admin
-        DB::table('user_role')->insert([
+        DB::table('org_user')->insert([
                 'id' => (string)Str::uuid(),
                 'role_id' => $role->id,
                 'user_id' => $admin->id,
+                'org_id' => "",
+                'created_at' => now(),
+                'updated_at' => now(),
             ]
         );
     }

@@ -23,12 +23,12 @@ Route::group([
         Route::get('/findById/{id}', [OrganizationController::class, 'findById']);
         Route::get('/getBdIdByOrgId/{complex_id}', [OrganizationController::class, 'getBdIdByParentOrgId']);
         Route::get('/getTopLevel/{complex_id}', [OrganizationController::class, 'getTopLevel']);
-        Route::get('/getAllWithoutChild/{parent_org_id}/{complex_id}', [OrganizationController::class, 'getAllWithoutChild']);
         Route::post('/create', [OrganizationController::class, 'store']);
         Route::post('/update/{org_id}', [OrganizationController::class, 'update']);
         Route::post('/delete', [OrganizationController::class, 'destroy']);
     });
 
+Route::get('org/getAllWithoutChild/{parent_org_id}/{complex_id}', [OrganizationController::class, 'getAllWithoutChild']);
 
 
 

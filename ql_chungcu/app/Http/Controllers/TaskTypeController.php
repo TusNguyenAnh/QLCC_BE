@@ -27,7 +27,7 @@ class TaskTypeController extends Controller
     public function store(TaskTypeRequest $taskTypeRequest)
     {
         $data = $taskTypeRequest->validated();
-//        $data["user_id"] = auth()->user()->id;
+        $data["complex_id"] = jwt_claim('complex_id');
         $tt = $this->taskTypeService->add($data);
         return APIResponse::success(new TaskTypeResource($tt));
     }

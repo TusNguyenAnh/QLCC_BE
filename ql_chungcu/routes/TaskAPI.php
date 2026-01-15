@@ -16,7 +16,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['prefix' => '/task'],
+Route::group([
+    'middleware' => 'auth:api',
+    'prefix' => '/task'
+],
     function () {
         Route::get('/taskActionSummary', [TaskController::class, 'taskActionSummary']);
         Route::get('/findWfByTaskId/{task_id}', [TaskController::class, 'findWfByTaskId']);

@@ -17,9 +17,11 @@ class UserRepository implements IUserRepository
         return User::find($id) ?? null;
     }
 
-    public function findByUsername($username)
+    public function findByUsername($username,$complexId)
     {
-        return User::where('username', $username)->first();
+        return User::where('username', $username)
+            ->where('complex_id', $complexId)
+            ->first();
     }
 
     public function store(array $data)
@@ -53,9 +55,10 @@ class UserRepository implements IUserRepository
     {
         $tab = $table['table'];
         return User::join($tab, $table['left'], '=', $table['right'])
+            ->join('org_user', 'users.id', '=', 'org_user.user_id')
             ->where([
                 ['users.status', '=', '0'],
-                [$table['org'], '=', $orgId],
+                ['org_user.org_id', '=', $orgId],
             ])
             ->select('users.*', "$tab.email", "$tab.phone_number", "$tab.fullname")
             ->get();

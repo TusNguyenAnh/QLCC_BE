@@ -8,7 +8,7 @@ interface IUserRepository
 
     public function findById($id);
 
-    public function findByUsername($username);
+    public function findByUsername($username,$complexId);
 
     public function store(array $data);
 

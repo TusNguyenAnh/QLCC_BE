@@ -44,14 +44,23 @@ class ResidentController extends Controller
 
     public function findResidentByBuildingId(Request $request)
     {
-        $perPage = intval(request('perPage', 50));
-        $perPage = max(1, min($perPage, 50));
-        return $this->residentService->findResidentByBuildingId($request["building_id"], $perPage);
+        $res = $this->residentService->findResidentByBuildingId($request["building_id"], $request["org_id"]);
+        return APIResponse::success(ResidentResource::collection($res));
     }
 
-    public function updateResInOrg(Request $request, string $org_id)
+    public function addResInOrg(Request $request, string $org_id)
     {
-        return $this->residentService->updateResInOrg($request["res_id"], $org_id);
+        return $this->residentService->addResInOrg($request["user_id"], $org_id);
+    }
+
+    public function removeResInOrg(Request $request, string $org_id)
+    {
+        return $this->residentService->removeResInOrg($request["user_id"], $org_id);
+    }
+
+    public function updatePosition(Request $request)
+    {
+        return $this->residentService->updatePosition($request['userId'], $request['orgId'], $request['role_id']);
     }
 
     /**

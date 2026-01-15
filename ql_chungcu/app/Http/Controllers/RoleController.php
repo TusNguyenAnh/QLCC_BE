@@ -30,6 +30,8 @@ class RoleController extends Controller
     {
         $data = $roleAssignRequest->validated();
 
+        $data['org_id'] = $data['org_id'] ?? "";
+
         $roleAssign = $this->roleService->assignRole($data);
         return APIResponse::success($roleAssign);
     }
@@ -41,10 +43,9 @@ class RoleController extends Controller
         return APIResponse::paginated(RoleResource::collection($this->roleService->findByComplexId($complexId, $perPage)));
     }
 
-    public function getRoleByUserId($userId)
+    public function getRoleByUserId(Request $request,$userId)
     {
-        return APIResponse::success($this->roleService->getRoleByUserId($userId));
+        $orgId = $request->input('orgId') ?? "";
+        return APIResponse::success($this->roleService->getRoleByUserId($userId, $orgId));
     }
-
-
 }

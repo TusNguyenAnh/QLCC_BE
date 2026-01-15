@@ -64,12 +64,12 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [
-            'roles' => $this->roles()->pluck('roles.role_name')->toArray(), // hoặc 'name'
-            'org_id' => $this->resident ? $this->resident->org_id : null,
-            'complex_id' => $this->complex_id,
-            'permissions' => $this->roles->flatMap(function ($role) {
-                return $role->permissions->pluck('name'); // Hoặc pluck('id') nếu muốn ID
-            })->unique()->values()->toArray(),
+//            'roles' => $this->roles()->pluck('roles.role_name')->toArray(), // hoặc 'name'
+//            'org_id' => $this->resident ? $this->resident->org_id : null,
+//            'complex_id' => $this->complex_id,
+//            'permissions' => $this->roles->flatMap(function ($role) {
+//                return $role->permissions->pluck('name'); // Hoặc pluck('id') nếu muốn ID
+//            })->unique()->values()->toArray(),
 //            'buildings' => $this->getBuildingIdsManage(), // dùng accessor ở trên
         ];
     }

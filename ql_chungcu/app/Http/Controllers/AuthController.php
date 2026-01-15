@@ -21,7 +21,7 @@ class AuthController extends Controller
 
     public function login() //on
     {
-        $credentials = request(['username', 'password']);
+        $credentials = request(['username', 'password','complex_id','org_id']);
         return $this->authService->login($credentials);
     }
 

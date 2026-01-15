@@ -26,6 +26,9 @@ Route::group(
         Route::post('create', [ResidentController::class, 'store']);
         Route::post('import-excel', [ResidentController::class, 'importResExcel']);
         Route::post('import-excelAptRes', [ResidentController::class, 'importResAptExcel']);
-        Route::post('updateResInOrg/{org_id}', [ResidentController::class, 'updateResInOrg']);
+        Route::post('addResInOrg/{org_id}', [ResidentController::class, 'addResInOrg']);
+        Route::post('removeResInOrg/{org_id}', [ResidentController::class, 'removeResInOrg']);
+        Route::post('updatePosition', [ResidentController::class, 'updatePosition']);
+
     }
 );

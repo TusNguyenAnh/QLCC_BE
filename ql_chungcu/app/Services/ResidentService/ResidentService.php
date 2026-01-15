@@ -2,6 +2,7 @@
 
 namespace App\Services\ResidentService;
 
+use App\Enums\Constant;
 use App\Enums\ErrorCode;
 use App\Exceptions\AppException;
 use App\Imports\AptResidentImport;
@@ -9,6 +10,7 @@ use App\Models\Resident;
 use App\Repositories\ApartmentRepository\IApartmentRepository;
 use App\Repositories\AptResidentRepository\IAptResidentRepository;
 use App\Repositories\BuildingRepository\IBuildingRepository;
+use App\Repositories\OrgUserRepository\IOrgUserRepository;
 use App\Repositories\ResidentRepository\IResidentRepository;
 use App\Imports\ResidentImport;
 use Illuminate\Support\Arr;
@@ -23,16 +25,19 @@ class ResidentService implements IResidentService
     private IBuildingRepository $buildingRepository;
     private IApartmentRepository $apartmentRepository;
     private IAptResidentRepository $aptResidentRepository;
+    private IOrgUserRepository $orgUserRepository;
 
 
     public function __construct(IResidentRepository $residentRepository, IAptResidentRepository $aptResidentRepository,
                                 IBuildingRepository $buildingRepository, IApartmentRepository $apartmentRepository,
+                                IOrgUserRepository  $orgUserRepository
     )
     {
         $this->residentRepository = $residentRepository;
         $this->aptResidentRepository = $aptResidentRepository;
         $this->buildingRepository = $buildingRepository;
         $this->apartmentRepository = $apartmentRepository;
+        $this->orgUserRepository = $orgUserRepository;
     }
 
     public function show(array $filters)
@@ -62,14 +67,54 @@ class ResidentService implements IResidentService
         return $this->residentRepository->findByOrgId($orgId);
     }
 
-    public function findResidentByBuildingId($bdId, $perPage)
+    public function findResidentByBuildingId($bdId,$orgId)
     {
-        return $this->aptResidentRepository->findResidentByBuildingId($bdId, $perPage);
+        return $this->aptResidentRepository->findResidentByBuildingId($bdId,$orgId);
     }
 
-    public function updateResInOrg(array $id, string $org_id)
+    public function addResInOrg(array $ids, string $org_id)
     {
-        return $this->residentRepository->updateResInOrg($id, $org_id);
+        DB::beginTransaction();
+        try {
+            $orgUser = [];
+            foreach ($ids as $id) {
+                $orgUser[] = [
+                    'id' => (string)Str::uuid(),
+                    'org_id' => $org_id,
+                    'user_id' => $id,
+//                    'position' => Constant::MEMBER->value,
+                    'created_at' => Date::now(),
+                    'updated_at' => Date::now()
+                ];
+            }
+
+            $response = $this->orgUserRepository->store($orgUser);
+            DB::commit();
+
+            return $response;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw new \Exception($e->getMessage());
+        }
+    }
+
+    public function removeResInOrg(array $ids, string $org_id)
+    {
+        DB::beginTransaction();
+        try {
+            $response = $this->orgUserRepository->delete($ids, $org_id);
+            DB::commit();
+
+            return $response;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw new \Exception($e->getMessage());
+        }
+    }
+
+    public function updatePosition($userId, $orgId, $roleId)
+    {
+        return $this->orgUserRepository->update($userId, $orgId, $roleId);
     }
 
     /**

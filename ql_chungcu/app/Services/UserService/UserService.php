@@ -7,6 +7,7 @@ use App\Exceptions\AppException;
 use App\Helpers\StringHelper;
 use App\Mail\GenericMail;
 use App\Models\User;
+use App\Repositories\OrgUserRepository\IOrgUserRepository;
 use App\Repositories\ResidentRepository\IResidentRepository;
 use App\Repositories\UserRepository\IUserRepository;
 use Illuminate\Http\Request;
@@ -21,12 +22,16 @@ class UserService implements IUserService
 {
     private IUserRepository $userRepository;
     private IResidentRepository $residentRepository;
+    private IOrgUserRepository $orgUserRepository;
 
 
-    public function __construct(IUserRepository $userRepository, IResidentRepository $residentRepository)
+    public function __construct(IUserRepository    $userRepository, IResidentRepository $residentRepository,
+                                IOrgUserRepository $orgUserRepository,
+    )
     {
         $this->userRepository = $userRepository;
         $this->residentRepository = $residentRepository;
+        $this->orgUserRepository = $orgUserRepository;
     }
 
     public function show($perPage)
@@ -57,15 +62,28 @@ class UserService implements IUserService
 
         $dataImport = [];
         $dataSendEmail = [];
+        $dataOrgUser = [];
+
 
         foreach ($data['listRes'] as &$item) {
-            $passwordRaw = StringHelper::randomStrongCode();
+//            $passwordRaw = StringHelper::randomStrongCode();
+            $passwordRaw = "1";
+
+            $userId = (string)Str::uuid();
             $dataImport[] = [
-                'id' => (string)Str::uuid(),
+                'id' => $userId,
                 'username' => $item['phone_number'],
                 'res_id' => $item['id'],
                 'complex_id' => $complexId,
                 'password' => Hash::make($passwordRaw),
+                'created_at' => Date::now(),
+                'updated_at' => Date::now()
+            ];
+
+            $dataOrgUser[] = [
+                'id' => (string)Str::uuid(),
+                'org_id' => "",
+                'user_id' => $userId,
                 'created_at' => Date::now(),
                 'updated_at' => Date::now()
             ];
@@ -83,6 +101,8 @@ class UserService implements IUserService
         DB::beginTransaction();
         try {
             $user = $this->userRepository->store($dataImport);
+            $orgUser = $this->orgUserRepository->store($dataOrgUser);
+
             DB::commit();
 
             //gui thong tin
@@ -109,7 +129,7 @@ class UserService implements IUserService
 
     public function findByOrgId($orgId, $type)
     {
-        if ($type != 0 && $type != 1){
+        if ($type != 0 && $type != 1) {
             throw new AppException(ErrorCode::NOT_FOUND);
         }
 

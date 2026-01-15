@@ -25,14 +25,12 @@ class TaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'complex_id' => 'required',
             'tasktype_id' => 'required',
             'building_id' => 'required',
             'task_name' => 'required',
             'description' => 'required',
-            'files' => 'required|array',
-            'files.*' => 'file|mimes:jpeg,png,jpg,gif,webp,mp4,mov,avi|max:51200',
-
+//            'files' => 'required|array',
+//            'files.*' => 'file|mimes:jpeg,png,jpg,gif,webp,mp4,mov,avi,pdf,docx|max:51200',
         ];
     }
 
