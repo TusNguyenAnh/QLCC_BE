@@ -25,10 +25,11 @@ class RevenueFilterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'apartment_id' => 'nullable|uuid',
-            'year' => 'nullable|integer|min:1900|max:2100',
-            'month' => 'nullable|integer|min:1|max:12',
-            'status' => 'nullable|in:unpaid,partial,paid,overpaid',
+            'status' => 'nullable|string',
+            'approved' => 'nullable|integer',
+            'proposed_from' => 'nullable|date',
+            'proposed_to' => 'nullable|date|after_or_equal:proposed_from',
+            'building_id' => 'nullable|string',
         ];
     }
 

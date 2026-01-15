@@ -27,12 +27,15 @@ class ExpenseRequest extends FormRequest
         // Expense chỉ lưu METADATA (thông tin đề xuất, ước tính)
         // Thông tin thanh toán thực tế (paid_at) nằm trong ledgers
         return [
-            '*.title' => 'required|string|max:255',
-            '*.category' => 'required|string|in:purchase,service,utilities,repair,salary,other',
-            '*.original_amount' => 'required|numeric|min:0',  // Chỉ là ước tính
-            '*.status' => 'nullable|string',
-            '*.vendor' => 'nullable|string|max:255',
-            '*.description' => 'nullable|string|max:1000',
+            'task_id' => 'nullable|string|max:255',
+            'title' => 'required|string|max:255',
+            'category' => 'required|string|in:purchase,service,utilities,repair,salary,other',
+            'original_amount' => 'required|numeric|min:0',  // Chỉ là ước tính
+            'status' => 'nullable|string',
+            'vendor' => 'nullable|string|max:255',
+            'description' => 'nullable|string|max:1000',
+            'building_id' => 'nullable|array',
+            'expense_type' => 'required|numeric',
         ];
     }
 

@@ -6,7 +6,7 @@ use App\Models\Building;
 
 interface IBuildingService
 {
-    public function show($complexId,$perPage);
+    public function show($complexId);
 
     public function findById(string $id): ?Building;
 

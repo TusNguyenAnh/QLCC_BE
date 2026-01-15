@@ -5,9 +5,13 @@ namespace App\Services\AdjustmentTransactionService;
 use App\Enums\Constant;
 use App\Enums\ErrorCode;
 use App\Exceptions\AppException;
+use App\Factory\LedgerSummaryFactory;
 use App\Models\AdjustmentTransaction;
+use App\Models\Expense;
 use App\Models\Ledger;
+use App\Models\Revenue;
 use App\Repositories\AdjustmentTransactionRepository\IAdjustmentTransactionRepository;
+use App\Repositories\ComplexRepository\IComplexRepository;
 use App\Repositories\ExpenseRepository\IExpenseRepository;
 use App\Repositories\LedgerRepository\ILedgerRepository;
 use App\Repositories\RevenueRepository\IRevenueRepository;
@@ -29,12 +33,16 @@ class AdjustmentTransactionService implements IAdjustmentTransactionService
     private ILedgerRepository $ledgerRepository;
     private IRevenueRepository $revenueRepository;
     private IExpenseRepository $expenseRepository;
+    protected LedgerSummaryFactory $factory;
+    private IComplexRepository $complexRepository;
 
     public function __construct(IAdjustmentTransactionRepository $adjustmentRepository,
                                 ILedgerRepository                $ledgerRepository,
                                 IRevenueRepository               $revenueRepository,
                                 IExpenseRepository               $expenseRepository,
-                                ILedgerSummaryService            $ledgerSummaryService
+                                ILedgerSummaryService            $ledgerSummaryService,
+                                LedgerSummaryFactory             $factory,
+                                IComplexRepository               $complexRepository,
     )
     {
         $this->adjustmentRepository = $adjustmentRepository;
@@ -42,6 +50,8 @@ class AdjustmentTransactionService implements IAdjustmentTransactionService
         $this->revenueRepository = $revenueRepository;
         $this->expenseRepository = $expenseRepository;
         $this->ledgerSummaryService = $ledgerSummaryService;
+        $this->factory = $factory;
+        $this->complexRepository = $complexRepository;
     }
 
     public function createAdjustment(array $data)
@@ -66,7 +76,22 @@ class AdjustmentTransactionService implements IAdjustmentTransactionService
             //recalculate summary tu thang cua ledger dc bo sung but toan chinh sua
             $monthLgSummary = $ledger->transaction_date->month;
             $yearLgSummary = $ledger->transaction_date->year;
-            $this->ledgerSummaryService->updateManyLedgerSummary(['month' => $monthLgSummary, 'year' => $yearLgSummary, 'complex_id' => $data['complex_id']]);
+
+            //update ledger summary
+            $finanModel = $this->complexRepository->getById($data['complex_id'])->financial_model;
+            //tao doi tuong sd factory
+            $ledgerSummary = $this->factory->make($finanModel);
+
+            $revenueOrExpense = $ledger->type == 'revenue' ? $ledger->revenue : $ledger->expense;
+
+            $ledgerSummaryData = [
+                'complex_id' => $data['complex_id'],
+                'month' => $monthLgSummary,
+                'year' => $yearLgSummary,
+                'building_id' => $revenueOrExpense->building_id,
+            ];
+
+            $ledgerSummary->createLedgerSummary($ledgerSummaryData);
 
             DB::commit();
             return $adjustment;
@@ -90,9 +115,10 @@ class AdjustmentTransactionService implements IAdjustmentTransactionService
             //tong amount cua cac but toan dieu chinh cua cac ledger cua revenue
             $totalAdjustment = $this->adjustmentRepository->getTotalAmountByLedger($revenue->ledgers()->pluck('id')->toArray());
             $totalPaid += $totalAdjustment;
-
+            $status = $this->getStatusPay((float)$totalPaid, (float)$revenue->original_amount);
             $this->revenueRepository->update($revenue->id, [
                 'amount_paid' => $totalPaid,
+                'status' => $status,
                 'updated_at' => now()
             ]);
         }
@@ -108,9 +134,10 @@ class AdjustmentTransactionService implements IAdjustmentTransactionService
             $totalAdjustment = $this->adjustmentRepository->getTotalAmountByLedger($expense->ledgers()->pluck('id')->toArray());
 
             $totalPaid += $totalAdjustment;
-
+            $status = $this->getStatusPay((float)$totalPaid, (float)$expense->original_amount);
             $this->expenseRepository->update($expense->id, [
                 'amount_paid' => $totalPaid,
+                'status' => $status,
                 'updated_at' => now()
             ]);
         }
@@ -119,5 +146,19 @@ class AdjustmentTransactionService implements IAdjustmentTransactionService
     public function getAdjustmentsByLedger(string $ledgerId)
     {
         return $this->adjustmentRepository->getByLedgerId($ledgerId);
+    }
+
+    private function getStatusPay(float $totalPaid, float $expected)
+    {
+        if ($totalPaid <= 0) {
+            $status = 'unpaid';
+        } elseif ($totalPaid < $expected) {
+            $status = 'partial';
+        } elseif ($totalPaid == $expected) {
+            $status = 'paid';
+        } else {
+            $status = 'overpaid';
+        }
+        return $status;
     }
 }

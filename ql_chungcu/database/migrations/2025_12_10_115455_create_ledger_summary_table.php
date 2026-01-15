@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('ledger_summary', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('complex_id');
-
+            $table->uuid('building_id')->nullable();
             $table->integer('year');
             $table->integer('month');
 

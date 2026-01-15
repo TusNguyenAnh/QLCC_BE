@@ -3,6 +3,7 @@
 namespace App\Repositories\RevenueRepository;
 
 use App\Models\Revenue;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class RevenueRepository implements IRevenueRepository
@@ -12,41 +13,55 @@ class RevenueRepository implements IRevenueRepository
         return Revenue::find($id);
     }
 
-    public function getByFilters(array $filters, int $perPage = 50)
+    public function findByTaskId(string $taskId)
     {
-        $query = Revenue::query();
+        $revenue = Revenue::where('task_id', $taskId)->get();
+        return $revenue;
+    }
 
-        if (isset($filters['apartment_id'])) {
-            $query->where('apartment_id', $filters['apartment_id']);
-        }
+    public function getByFilters(array $filters, int $perPage, string $complexId)
+    {
+        $query = Revenue::join('task', 'task.id', '=', 'revenues.task_id')
+            ->where('task.complex_id', $complexId);
 
-        if (isset($filters['year'])) {
-            $query->where('year', $filters['year']);
-        }
-
-        if (isset($filters['month'])) {
-            $query->where('month', $filters['month']);
+        if (isset($filters['building_id'])) {
+            $query->where('building_id', $filters['building_id']);
         }
 
         if (isset($filters['status'])) {
-            $query->where('status', $filters['status']);
+            $query->where('revenues.status', $filters['status']);
         }
 
-        $query->orderBy('year', 'desc')
-            ->orderBy('month', 'desc');
+        if (isset($filters['approved'])) {
+            $query->where('approved', $filters['approved']);
+        }
+
+        $query->when($filters['proposed_from'] ?? null,
+            fn($q, $v) => $q->whereDate('approved_at', '>=', $v)
+        );
+
+        $query->when($filters['proposed_to'] ?? null,
+            fn($q, $v) => $q->whereDate('approved_at', '<=', $v)
+        );
+
+        $query->orderBy('approved_at', 'desc');
 
         $summary = (clone $query)->selectRaw(
             'SUM(amount_paid) as paid,
             SUM(original_amount) as total_expect')->first();
 
-        $revenues = $query->paginate($perPage);
+        $revenues = $query
+            ->select('revenues.*')
+            ->paginate($perPage);
 
         return [
             'revenues' => $revenues,
             'summary' => $summary,
         ];
     }
-    public function getApartmentsWithoutRevenueByMonth(string $buildingId, int $year, int $month){
+
+    public function getApartmentsWithoutRevenueByMonth(string $buildingId, int $year, int $month)
+    {
         $apartmentIds = DB::table('apartments as a')
             ->leftJoin('revenues as r', function ($join) use ($year, $month) {
                 $join->on('r.apartment_id', '=', 'a.id')
@@ -60,7 +75,6 @@ class RevenueRepository implements IRevenueRepository
 
         return $apartmentIds;
     }
-
 
 
     public function store(array $data)
@@ -86,5 +100,17 @@ class RevenueRepository implements IRevenueRepository
         if (!$revenue) return false;
 
         return $revenue->delete();
+    }
+
+    public function approveRevenue(array $listRevenue, string $approvedBy)
+    {
+        return DB::transaction(function () use ($listRevenue, $approvedBy) {
+            return Revenue::whereIn('task_id', $listRevenue)
+                ->update([
+                    'approved_by' => $approvedBy,
+                    'approved_at' => Carbon::now(),
+                    'approved' => 1,
+                ]);
+        });
     }
 }

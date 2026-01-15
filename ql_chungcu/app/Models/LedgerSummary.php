@@ -25,6 +25,7 @@ class LedgerSummary extends Model
         'closing_balance',
         "created_at",
         'complex_id',
+        'building_id',
     ];
 
     protected $hidden = [

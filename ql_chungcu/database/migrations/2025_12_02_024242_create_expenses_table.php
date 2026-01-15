@@ -12,6 +12,8 @@ return new class extends Migration {
     {
         Schema::create('expenses', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->uuid('task_id');
+            $table->uuid('building_id')->nullable();
 
             // Lớp 1: Nghĩa vụ phải chi (khoản phải chi)
             $table->string('title')->comment('Tiêu đề khoản chi');

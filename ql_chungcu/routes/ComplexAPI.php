@@ -20,9 +20,10 @@ Route::group([
 ],
     function () {
         Route::get('/findById/{id}', [ComplexController::class, 'findById']);
-        Route::post('/filterComplex/{status}', [ComplexController::class, 'filterComplex']);
-        Route::post('/create', [ComplexController::class, 'store']);
+        Route::get('/showFinancialModel', [ComplexController::class, 'showFinancialModel']);
         Route::post('/approveComplex', [ComplexController::class, 'approveComplex']);
         Route::post('/rejectComplex', [ComplexController::class, 'rejectComplex']);
     });
 
+Route::post('complex/create', [ComplexController::class, 'store']);
+Route::post('complex/filterComplex/{status}', [ComplexController::class, 'filterComplex']);

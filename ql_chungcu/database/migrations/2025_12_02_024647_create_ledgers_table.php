@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -15,21 +14,12 @@ return new class extends Migration
             $table->uuid('id')->primary();
 
             // Chứng từ (Số phiếu thu/chi)
-            $table->string('voucher_number', 50)->unique()->comment('Số phiếu thu/chi (PT-2025-0001, PC-2025-0001)');
+            $table->string('voucher_number', 50)->comment('Số phiếu thu/chi (PT-2025-0001, PC-2025-0001)');
 
             // Lớp 2: Giao dịch thực tế (IMMUTABLE - KHÔNG được sửa/xóa)
             $table->enum('type', ['revenue', 'expense'])->comment('Loại: revenue (thu) | expense (chi)');
 
-            // Phân loại quỹ
-            $table->enum('fund_type', [
-                'operating_fund',
-                'maintenance_fund',
-                'reserve_fund',
-                'other_fund'
-            ])->default('operating_fund')->comment('Loại quỹ');
-
             $table->uuid('related_id')->comment('ID của revenue hoặc expense');
-            $table->uuid('building_id')->nullable()->comment('Tòa nhà (để tách quỹ riêng)');
             $table->uuid('complex_id');
 
             // Thông tin giao dịch
@@ -59,17 +49,13 @@ return new class extends Migration
 
             // Foreign keys
             $table->foreign('created_by')->references('id')->on('users');
-            $table->foreign('building_id')->references('id')->on('buildings')->onDelete('set null');
 
             // Indexes
-            $table->index('voucher_number');
             $table->index('type');
-            $table->index('fund_type');
             $table->index('transaction_date');
             $table->index('related_id');
             $table->index(['type', 'related_id']);
-            $table->index(['fund_type', 'building_id', 'transaction_date']); // Báo cáo theo quỹ
-            $table->index(['type', 'transaction_date']); // Sổ quỹ
+            $table->index(['type', 'transaction_date']);
         });
     }
 

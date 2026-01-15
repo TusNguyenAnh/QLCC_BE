@@ -23,7 +23,8 @@ class Complex extends Model
         'name_contact',
         'phone_contact',
         'email_contact',
-        'description'
+        'description',
+        'financial_model',
     ];
 
     protected $hidden = [

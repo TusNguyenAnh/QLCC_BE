@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->string('building_name');
             $table->string('address')->default('');
             $table->integer('status')->default('0');
+            $table->float('financial_ratio')->nullable();
 
             $table->timestamps(); // Created_at và updated_at
             $table->softDeletes(); // Trường để xoá mềm (soft delete)

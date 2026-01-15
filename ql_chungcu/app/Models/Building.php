@@ -19,6 +19,7 @@ class Building extends Model
         'complex_id',
         'building_name',
         'address',
+        'financial_ratio',
     ];
 
     protected $hidden = [

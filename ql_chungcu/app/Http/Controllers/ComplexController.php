@@ -60,4 +60,9 @@ class ComplexController extends Controller
         $cpls = $request->get("ids");
         return APIResponse::success($this->complexService->rejectComplex($cpls));
     }
+
+    public function showFinancialModel()
+    {
+        return APIResponse::success($this->complexService->showFinancialModel());
+    }
 }

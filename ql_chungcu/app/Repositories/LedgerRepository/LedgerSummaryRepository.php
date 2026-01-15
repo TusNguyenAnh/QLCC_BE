@@ -31,6 +31,15 @@ class LedgerSummaryRepository implements ILedgerSummaryRepository
             ->first();
     }
 
+    public function findByMonthAndBuilding(int $month, int $year, string $complexId, string $buildingId)
+    {
+        return LedgerSummary::where('month', $month)
+            ->where('year', $year)
+            ->where('building_id', $buildingId)
+            ->where('complex_id', $complexId)
+            ->first();
+    }
+
     public function updateManySummary(array $data)
     {
         //upsert neu chua co thi se insert

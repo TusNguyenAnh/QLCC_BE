@@ -2,21 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Factory\ExpenseFactory;
 use App\Http\Requests\ExpenseRequest\ExpenseFilterRequest;
 use App\Http\Requests\ExpenseRequest\ExpenseRequest;
 use App\Http\Resources\ExpenseResource;
 use App\Models\Expense;
 use App\Responses\APIResponse;
+use App\Services\ComplexService\IComplexService;
 use App\Services\ExpenseService\IExpenseService;
 use Illuminate\Http\Request;
 
 class ExpenseController extends Controller
 {
-    protected IExpenseService $expenseService;
+    protected ExpenseFactory $factory;
+    protected IComplexService $complexService;
 
-    public function __construct(IExpenseService $expenseService)
+    public function __construct(ExpenseFactory $factory, IComplexService $complexService)
     {
-        $this->expenseService = $expenseService;
+        $this->factory = $factory;
+        $this->complexService = $complexService;
     }
 
     public function index(ExpenseFilterRequest $request)
@@ -25,7 +29,13 @@ class ExpenseController extends Controller
         $perPage = intval(request('perPage', 50));
         $perPage = max(1, min($perPage, 50));
 
-        $expenses = $this->expenseService->getExpenseByFilters($filters, $perPage);
+        $complexId = jwt_claim('complex_id');
+        //lay model
+        $finanModel = $this->complexService->findById($complexId)->financial_model;
+        //tao doi tuong sd factory
+        $expense = $this->factory->make($finanModel);
+
+        $expenses = $expense->getExpenseByFilters($filters, $perPage, $complexId);
 
         return APIResponse::paginated(ExpenseResource::collection($expenses['expenses'])->additional([
             'summary' => [
@@ -38,20 +48,35 @@ class ExpenseController extends Controller
     public function store(ExpenseRequest $request)
     {
         $data = $request->validated();
-        $expense = $this->expenseService->createExpense($data);
-        return APIResponse::success($expense);
+        //lay model
+        $finanModel = $this->complexService->findById(jwt_claim('complex_id'))->financial_model;
+        //tao doi tuong sd factory
+        $expense = $this->factory->make($finanModel);
+
+        $expenses = $expense->createExpense($data);
+        return APIResponse::success($expenses);
     }
 
     public function update(ExpenseRequest $request, string $id)
     {
         $data = $request->validated();
-        $expense = $this->expenseService->updateExpense($id, $data);
+        //lay model
+        $finanModel = $this->complexService->findById(jwt_claim('complex_id'))->financial_model;
+        //tao doi tuong sd factory
+        $expense = $this->factory->make($finanModel);
+
+        $expense = $expense->updateExpense($id, $data);
         return APIResponse::success(new ExpenseResource($expense));
     }
 
     public function delete(string $id)
     {
-        $result = $this->expenseService->deleteExpense($id);
+        //lay model
+        $finanModel = $this->complexService->findById(jwt_claim('complex_id'))->financial_model;
+        //tao doi tuong sd factory
+        $expense = $this->factory->make($finanModel);
+
+        $result = $expense->deleteExpense($id);
         return APIResponse::success('Xóa thành công');
     }
 
@@ -59,9 +84,13 @@ class ExpenseController extends Controller
     {
         $approvedBy = jwt_claim('sub');
         $listExpense = $request->input('listExpense');
-        $expense = $this->expenseService->approveExpense($listExpense, $approvedBy);
+        //lay model
+        $finanModel = $this->complexService->findById(jwt_claim('complex_id'))->financial_model;
+        //tao doi tuong sd factory
+        $expense = $this->factory->make($finanModel);
+
+        $expense = $expense->approveExpense($listExpense, $approvedBy);
 
         return APIResponse::success($expense);
     }
-
 }

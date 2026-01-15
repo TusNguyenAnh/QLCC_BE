@@ -8,9 +8,10 @@ use Illuminate\Support\Facades\DB;
 
 class ExpenseRepository implements IExpenseRepository
 {
-    public function getByFilters(array $filters, int $perPage = 50)
+    public function getByFilters(array $filters, int $perPage, string $complexId)
     {
-        $query = Expense::query();
+        $query = Expense::join('task', 'expenses.task_id', '=', 'task.id')
+            ->where('task.complex_id', $complexId);
 
         if (isset($filters['category'])) {
             $query->where('category', $filters['category']);
@@ -21,11 +22,15 @@ class ExpenseRepository implements IExpenseRepository
         }
 
         if (isset($filters['status'])) {
-            $query->where('status', $filters['status']);
+            $query->where('expenses.status', $filters['status']);
         }
 
         if (isset($filters['approved'])) {
             $query->where('approved', $filters['approved']);
+        }
+
+        if (isset($filters['building_id'])) {
+            $query->where('building_id', $filters['building_id']);
         }
 
         // Filter theo thời gian phê duyệt
@@ -41,7 +46,9 @@ class ExpenseRepository implements IExpenseRepository
             SUM(amount_paid) as paid,
             SUM(original_amount) as total_expect')->first();
 
-        $expenses = $query->paginate($perPage);
+        $expenses = $query
+            ->select('expenses.*')
+            ->paginate($perPage);
 
         return [
             'expenses' => $expenses,
@@ -77,10 +84,16 @@ class ExpenseRepository implements IExpenseRepository
         return Expense::where('id', $id)->first();
     }
 
+    public function findByTaskId(string $taskId)
+    {
+        $expense = Expense::where('task_id', $taskId)->get();
+        return $expense;
+    }
+
     public function approveExpense(array $listExpense, string $approvedBy)
     {
         return DB::transaction(function () use ($listExpense, $approvedBy) {
-            return Expense::whereIn('id', $listExpense)
+            return Expense::whereIn('task_id', $listExpense)
                 ->update([
                     'approved_by' => $approvedBy,
                     'approved_at' => Carbon::now(),

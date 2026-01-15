@@ -11,11 +11,12 @@ use App\Repositories\RevenueRepository\IRevenueRepository;
 use App\Repositories\ServiceUnitPriceRepository\IServiceUnitPriceRepository;
 use App\Services\LedgerService\ILedgerService;
 use App\Services\AdjustmentTransactionService\IAdjustmentTransactionService;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use PHPUnit\TextUI\CliArguments\Exception;
 
-class RevenueService implements IRevenueService
+class CentralizedRevenueService implements IRevenueService
 {
     private IRevenueRepository $revenueRepository;
     private IServiceUnitPriceRepository $serviceUnitPriceRepository;
@@ -32,15 +33,31 @@ class RevenueService implements IRevenueService
         $this->serviceUnitPriceRepository = $serviceUnitPriceRepository;
     }
 
-    public function getRevenueByFilters(array $filters, int $perPage = 50)
+    public function getRevenueByFilters(array $filters, int $perPage, $complexId)
     {
-        return $this->revenueRepository->getByFilters($filters, $perPage);
+        return $this->revenueRepository->getByFilters($filters, $perPage, $complexId);
     }
 
     public function createRevenue(array $data)
     {
-        $data["id"] = Str::uuid();
-        return $this->revenueRepository->store($data);
+        $dataRevenue = [];
+        $revenueType = $data['revenue_type'];
+
+        $bdId = $revenueType != 0 ? $data['building_id'][0] : null;
+        $aptId = $revenueType != 0 ? $data['apartment_id'] : null;
+        $dataRevenue[] = [
+            'id' => (string)Str::uuid(),
+            'task_id' => $data['task_id'],
+            'title' => $data['title'],
+            'original_amount' => $data['original_amount'],
+            'description' => $data['description'],
+            'building_id' => $bdId,
+            'apartment_id' => $aptId,
+            'created_by' => jwt_claim('sub'),
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ];
+        return $this->revenueRepository->store($dataRevenue);
     }
 
     // neu muon sua, xoa thi chua phat sinh ledger
@@ -88,7 +105,7 @@ class RevenueService implements IRevenueService
                     'original_amount' => (float)$amount * (float)$apartmentId->apt_area,   // tiền mặc định
                     'amount_paid' => 0.0,
                     'status' => 'UNPAID',
-                    'description' => "Thu phí dịch vụ tháng ".$month."/".$year,
+                    'description' => "Thu phí dịch vụ tháng " . $month . "/" . $year,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
@@ -105,6 +122,15 @@ class RevenueService implements IRevenueService
             ];
         } catch (\Exception $e) {
             throw new Exception($e->getMessage());
+        }
+    }
+
+    public function approveRevenue(array $ids, string $approvedBy)
+    {
+        try {
+            return $this->revenueRepository->approveRevenue($ids, $approvedBy);
+        } catch (Exception $exception) {
+            throw new AppException(ErrorCode::EXPENSE_NOT_UPDATE);
         }
     }
 }

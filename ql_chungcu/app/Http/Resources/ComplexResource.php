@@ -24,6 +24,7 @@ class ComplexResource extends JsonResource
             'phone_contact' => $this->phone_contact,
             'email_contact' => $this->email_contact,
             'description' => $this->description,
+            'financial_model' => $this->financial_model,
         ];
     }
 }

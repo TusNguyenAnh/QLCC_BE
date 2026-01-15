@@ -5,9 +5,11 @@ namespace App\Services\LedgerService;
 use App\Enums\Constant;
 use App\Enums\ErrorCode;
 use App\Exceptions\AppException;
+use App\Factory\LedgerSummaryFactory;
 use App\Models\Expense;
 use App\Models\Ledger;
 use App\Models\Revenue;
+use App\Repositories\ComplexRepository\IComplexRepository;
 use App\Repositories\ExpenseRepository\IExpenseRepository;
 use App\Repositories\LedgerRepository\ILedgerRepository;
 use App\Repositories\LedgerRepository\ILedgerSummaryRepository;
@@ -29,23 +31,29 @@ class LedgerService implements ILedgerService
     private ILedgerSummaryRepository $ledgerSummaryRepository;
     private IRevenueRepository $revenueRepository;
     private IExpenseRepository $expenseRepository;
+    protected LedgerSummaryFactory $factory;
+    private IComplexRepository $complexRepository;
 
     public function __construct(
         ILedgerRepository        $ledgerRepository,
         ILedgerSummaryRepository $ledgerSummaryRepository,
         IRevenueRepository       $revenueRepository,
-        IExpenseRepository       $expenseRepository
+        IExpenseRepository       $expenseRepository,
+        LedgerSummaryFactory     $factory,
+        IComplexRepository       $complexRepository
     )
     {
         $this->ledgerRepository = $ledgerRepository;
         $this->revenueRepository = $revenueRepository;
         $this->expenseRepository = $expenseRepository;
         $this->ledgerSummaryRepository = $ledgerSummaryRepository;
+        $this->factory = $factory;
+        $this->complexRepository = $complexRepository;
     }
 
     public function getLedgerByFilters(array $filters, int $perPage, string $complexId)
     {
-        $listLedger = $this->ledgerRepository->getByFilters($filters, $perPage, $complexId);
+        $listLedger = $this->ledgerRepository->getByFiltersAndBdId($filters, $perPage, $complexId);
 
         if ($listLedger->total() > 0) {
             $firstLedger = $listLedger->first();
@@ -88,6 +96,21 @@ class LedgerService implements ILedgerService
             $revenue->refresh();
             $this->updateRevenueStatusFromCache($revenue);
 
+            //update ledger summary
+            $finanModel = $this->complexRepository->getById($data['complex_id'])->financial_model;
+            //tao doi tuong sd factory
+            $ledgerSummary = $this->factory->make($finanModel);
+
+            $carbon = Carbon::parse($data['transaction_date']);
+            $ledgerSummaryData = [
+                'complex_id' => $data['complex_id'],
+                'month' => $carbon->month,
+                'year' => $carbon->year,
+                'building_id' => $revenue->building_id,
+            ];
+
+            $ledgerSummary->createLedgerSummary($ledgerSummaryData);
+
             DB::commit();
             return $ledger;
         } catch (\Exception $e) {
@@ -128,6 +151,20 @@ class LedgerService implements ILedgerService
             $expense->refresh();
             $this->updateExpenseStatusFromCache($expense);
 
+            //update ledger summary
+            $finanModel = $this->complexRepository->getById($data['complex_id'])->financial_model;
+            //tao doi tuong sd factory
+            $ledgerSummary = $this->factory->make($finanModel);
+
+            $carbon = Carbon::parse($data['transaction_date']);
+            $ledgerSummaryData = [
+                'complex_id' => $data['complex_id'],
+                'month' => $carbon->month,
+                'year' => $carbon->year,
+                'building_id' => $expense->building_id,
+            ];
+
+            $ledgerSummary->createLedgerSummary($ledgerSummaryData);
             DB::commit();
             return $ledger;
         } catch (\Exception $e) {
@@ -185,16 +222,31 @@ class LedgerService implements ILedgerService
         $from = Carbon::parse($transFrom);
         $month = $from->month;
         $year = $from->year;
+        $finanModel = $this->complexRepository->getById($complexId)->financial_model;
+        if ($finanModel == 'centralized') {
+            $ledgerSummary = $this->ledgerSummaryRepository->findByMonth($month, $year, $complexId);
+        } else {
+            $reOrEx = $ledgers[0]->type == 'revenue' ? $ledgers[0]->revenue : $ledgers[0]->expense;
+            $buildingId = $reOrEx->building_id;
+            $ledgerSummary = $this->ledgerSummaryRepository->findByMonthAndBuilding($month, $year, $complexId, $buildingId);
+        }
         // lay so du dau ky cua khoang thoi gian dang filter
-        $ledgerSummary = $this->ledgerSummaryRepository->findByMonth($month, $year, $complexId);
         if (!$ledgerSummary) {
             throw new AppException(ErrorCode::LEDGER_SUMMARY_NOT_EXISTED);
         }
         $openingBalance = $ledgerSummary->opening_balance;
 
-        // lay ra tong thu chi tu dau ky den thoi diem loc
-        $totalRevenue = $this->ledgerRepository->getTotalLedgerAmountByTime(Constant::REVENUE->value, $from->copy()->startOfMonth(), $from->copy()->subDay(), $complexId);
-        $totalExpense = $this->ledgerRepository->getTotalLedgerAmountByTime(Constant::EXPENSE->value, $from->copy()->startOfMonth(), $from->copy()->subDay(), $complexId);
+        if ($finanModel == 'centralized') {
+            // lay ra tong thu chi tu dau ky den thoi diem loc
+            $totalRevenue = $this->ledgerRepository->getTotalLedgerAmountByTime(Constant::REVENUE->value, $from->copy()->startOfMonth(), $from->copy()->subDay(), $complexId);
+            $totalExpense = $this->ledgerRepository->getTotalLedgerAmountByTime(Constant::EXPENSE->value, $from->copy()->startOfMonth(), $from->copy()->subDay(), $complexId);
+        } else {
+            // lay ra tong thu chi tu dau ky den thoi diem loc
+            $reOrEx = $ledgers[0]->type == 'revenue' ? $ledgers[0]->revenue : $ledgers[0]->expense;
+            $buildingId = $reOrEx->building_id;
+            $totalRevenue = $this->ledgerRepository->getTotalLedgerAmountByTimeAndBd(Constant::REVENUE->value, $from->copy()->startOfMonth(), $from->copy()->subDay(), $complexId, $buildingId);
+            $totalExpense = $this->ledgerRepository->getTotalLedgerAmountByTimeAndBd(Constant::EXPENSE->value, $from->copy()->startOfMonth(), $from->copy()->subDay(), $complexId, $buildingId);
+        }
 
         //so du cuoi cung den truoc thoi diem loc
         $realOpeningBalance = (float)$openingBalance + (float)$totalRevenue - (float)$totalExpense;

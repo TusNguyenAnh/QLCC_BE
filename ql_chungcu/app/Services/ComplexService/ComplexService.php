@@ -9,6 +9,8 @@ use App\Mail\GenericMail;
 use App\Repositories\AuthorizationRepository\IRoleRepository;
 use App\Repositories\AuthorizationRepository\IUserRoleRepository;
 use App\Repositories\ComplexRepository\IComplexRepository;
+use App\Repositories\FinancialModelRepository\IFinancialModelRepository;
+use App\Repositories\OrgUserRepository\IOrgUserRepository;
 use App\Repositories\ResidentRepository\IResidentRepository;
 use App\Repositories\UserRepository\IUserRepository;
 use Illuminate\Support\Arr;
@@ -24,19 +26,22 @@ class ComplexService implements IComplexService
 {
     protected IComplexRepository $complexRepository;
     protected IUserRepository $userRepository;
-    private IUserRoleRepository $userRoleRepository;
+    private IOrgUserRepository $orgUserRepository;
     private IRoleRepository $roleRepository;
+    private IFinancialModelRepository $financialModelRepository;
 
 
     public function __construct(IComplexRepository  $complexRepository,
                                 IUserRepository     $userRepository,
                                 IRoleRepository     $roleRepository,
-                                IUserRoleRepository $userRoleRepository)
+                                IOrgUserRepository $orgUserRepository,
+    IFinancialModelRepository $financialModelRepository)
     {
         $this->complexRepository = $complexRepository;
         $this->userRepository = $userRepository;
-        $this->userRoleRepository = $userRoleRepository;
+        $this->orgUserRepository = $orgUserRepository;
         $this->roleRepository = $roleRepository;
+        $this->financialModelRepository = $financialModelRepository;
     }
 
     public function show($complexFilterRequest, $status, $perPage)
@@ -114,12 +119,12 @@ class ComplexService implements IComplexService
                 $user = $this->userRepository->store($data);
 
                 // gan role admin cho account
-                $dataUserRole[] = [
+                $dataOrgUser[] = [
                     'id' => (string)Str::uuid(),
                     'user_id' => $data['id'],
                     'role_id' => $roleAdmin->id
                 ];
-                $this->userRoleRepository->store($dataUserRole);
+                $this->orgUserRepository->store($dataOrgUser);
 
                 //gui thong tin
                 Mail::to($complex->email_contact)->queue(
@@ -147,5 +152,10 @@ class ComplexService implements IComplexService
     public function rejectComplex(array $ids)
     {
         return $this->complexRepository->delete($ids);
+    }
+
+    public function showFinancialModel()
+    {
+        return $this->financialModelRepository->show();
     }
 }

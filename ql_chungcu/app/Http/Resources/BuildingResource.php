@@ -21,6 +21,7 @@ class BuildingResource extends JsonResource
             'description' => $this->description,
             'address' => $this->address,
             'status' => $this->status,
+            'financial_ratio' => $this->financial_ratio
         ];
     }
 }

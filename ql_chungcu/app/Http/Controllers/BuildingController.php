@@ -20,11 +20,8 @@ class BuildingController extends Controller
 
     public function index(Request $request)
     {
-        $perPage = intval(request('perPage', 50));
-        $perPage = max(1, min($perPage, 50));
         $complexId = jwt_claim('complex_id');
-
-        return APIResponse::paginated(BuildingResource::collection($this->buildingService->show($complexId,$perPage)));
+        return APIResponse::success(BuildingResource::collection($this->buildingService->show($complexId)));
     }
 
     public function store(BuildingRequest $buildingRequest)

@@ -4,7 +4,7 @@ use App\Http\Controllers\RevenueController;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
-//    'middleware' => 'auth:api',
+    'middleware' => 'auth:api',
     'prefix' => '/revenues'],
     function () {
         // Lấy danh sách khoản thu

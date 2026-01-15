@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use PHPUnit\Exception;
 
-class ExpenseService implements IExpenseService
+class CentralizedExpenseService implements IExpenseService
 {
     private IExpenseRepository $expenseRepository;
 
@@ -23,23 +23,30 @@ class ExpenseService implements IExpenseService
         $this->expenseRepository = $expenseRepository;
     }
 
-    public function getExpenseByFilters(array $filters, int $perPage = 50)
+    public function getExpenseByFilters(array $filters, int $perPage, string $complexId)
     {
-        return $this->expenseRepository->getByFilters($filters, $perPage);
+        return $this->expenseRepository->getByFilters($filters, $perPage, $complexId);
     }
 
     public function createExpense(array $data)
     {
         $dataExpense = [];
+        $expenseType = $data['expense_type'];
 
-        foreach ($data as $item) {
-            $item['id'] = (string)Str::uuid();
-            $item['created_by'] = jwt_claim('sub');
-            $item['created_at'] = Carbon::now();
-            $item['updated_at'] = Carbon::now();
-
-            $dataExpense[] = $item;
-        }
+        $bdId = $expenseType != 0 ? $data['building_id'][0] : null;
+        $dataExpense[] = [
+            'id' => (string)Str::uuid(),
+            'task_id' => $data['task_id'],
+            'title' => $data['title'],
+            'category' => $data['category'],
+            'original_amount' => $data['original_amount'],
+            'description' => $data['description'],
+            'vendor' => $data['vendor'],
+            'building_id' => $bdId,
+            'created_by' => jwt_claim('sub'),
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ];
 
         return $this->expenseRepository->store($dataExpense);
     }

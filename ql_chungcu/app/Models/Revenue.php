@@ -19,13 +19,17 @@ class Revenue extends Model
     // Revenue = Khoản phải thu (KHÔNG phải giao dịch tiền)
     // amount_paid là CACHE tự động từ ledgers để tăng performance
     protected $fillable = [
+        'task_id',
+        'title',
         'apartment_id',
-        'year',
-        'month',
+        'building_id',
         'original_amount',  // Số tiền GỐC phải thu (KHÔNG đổi)
         'amount_paid',      // Cache tổng đã thu (TỰ ĐỘNG từ ledgers)
         'status',           // unpaid | partial | paid | overpaid
         'description',
+        'approved_by',
+        'approved_at',
+        'approved'
     ];
 
     protected $casts = [

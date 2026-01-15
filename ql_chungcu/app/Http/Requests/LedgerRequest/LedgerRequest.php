@@ -22,9 +22,6 @@ class LedgerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'building_id' => 'required|exists:buildings,id',
-
-            'fund_type' => 'required|string|in:operating_fund,maintenance_fund,reserve_fund,other_fund',
             'amount' => 'required|numeric|min:0',
             'payment_method' => 'required|string|in:cash,bank_transfer',
             'description' => 'nullable|string|max:1000',

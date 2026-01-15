@@ -27,12 +27,14 @@ class RevenueRequest extends FormRequest
         // LớP 1 - NGHĨA VỤ PHẢI THU (METADATA)
         // Thông tin thanh toán thực tế nằm trong ledgers (LớP 2)
         return [
-            'apartment_id' => 'required|string|exists:apartments,id',
-            'year' => 'required|integer|min:1900|max:2100',
-            'month' => 'required|integer|min:1|max:12',
+            'task_id' => 'nullable|string|max:255',
+            'title' => 'required|string|max:255',
+            'building_id' => 'nullable|array',
+            'apartment_id' => 'nullable|string|exists:apartments,id',
             'original_amount' => 'required|numeric|min:0',
-            'status' => 'nullable|string|in:unpaid,partial,paid,overpaid',
+            'status' => 'nullable|string',
             'description' => 'nullable|string|max:1000',
+            'revenue_type' => 'required|numeric',
         ];
     }
 

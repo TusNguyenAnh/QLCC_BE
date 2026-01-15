@@ -20,10 +20,14 @@ use App\Repositories\BuildingRepository\BuildingRepository;
 use App\Repositories\BuildingRepository\IBuildingRepository;
 use App\Repositories\ComplexRepository\ComplexRepository;
 use App\Repositories\ComplexRepository\IComplexRepository;
+use App\Repositories\FinancialModelRepository\FinancialModelRepository;
+use App\Repositories\FinancialModelRepository\IFinancialModelRepository;
 use App\Repositories\LedgerRepository\ILedgerSummaryRepository;
 use App\Repositories\LedgerRepository\LedgerSummaryRepository;
 use App\Repositories\MediaFileRepository\IMediaFileRepository;
 use App\Repositories\MediaFileRepository\MediaFileRepository;
+use App\Repositories\OrgUserRepository\IOrgUserRepository;
+use App\Repositories\OrgUserRepository\OrgUserRepository;
 use App\Repositories\PriorityRepository\IPriorityRepository;
 use App\Repositories\PriorityRepository\PriorityRepository;
 use App\Repositories\ResidentRepository\IResidentRepository;
@@ -39,8 +43,10 @@ use App\Repositories\TaskRepository\TaskTypeRepository;
 use App\Repositories\UserRepository\IUserRepository;
 use App\Repositories\UserRepository\UserRepository;
 use App\Repositories\WorkflowRepository\IWorkflowRepository;
+use App\Repositories\WorkflowRepository\IWorkflowStepApproverRepository;
 use App\Repositories\WorkflowRepository\IWorkflowStepRepository;
 use App\Repositories\WorkflowRepository\WorkflowRepository;
+use App\Repositories\WorkflowRepository\WorkflowStepApproverRepository;
 use App\Repositories\WorkflowRepository\WorkflowStepRepository;
 use App\Repositories\ServiceUnitPriceRepository\IServiceUnitPriceRepository;
 use App\Repositories\ServiceUnitPriceRepository\ServiceUnitPriceRepository;
@@ -61,7 +67,7 @@ use App\Services\BuildingService\IBuildingService;
 use App\Services\ComplexService\ComplexService;
 use App\Services\ComplexService\IComplexService;
 use App\Services\LedgerService\ILedgerSummaryService;
-use App\Services\LedgerService\LedgerSummaryService;
+use App\Services\LedgerService\CentralizedLedgerSummaryService;
 use App\Services\MediaFileService\IMediaFileService;
 use App\Services\MediaFileService\MediaFileService;
 use App\Services\PermissionService\IPermissionService;
@@ -85,9 +91,9 @@ use App\Services\WorkflowService\WorkflowService;
 use App\Services\ServiceUnitPriceService\IServiceUnitPriceService;
 use App\Services\ServiceUnitPriceService\ServiceUnitPriceService;
 use App\Services\RevenueService\IRevenueService;
-use App\Services\RevenueService\RevenueService;
+use App\Services\RevenueService\CentralizedRevenueService;
 use App\Services\ExpenseService\IExpenseService;
-use App\Services\ExpenseService\ExpenseService;
+use App\Services\ExpenseService\CentralizedExpenseService;
 use App\Services\LedgerService\ILedgerService;
 use App\Services\LedgerService\LedgerService;
 use Illuminate\Support\ServiceProvider;
@@ -119,7 +125,9 @@ class AppServiceProvider extends ServiceProvider
         //workflow
         $this->app->bind(IWorkflowRepository::class, WorkflowRepository::class);
         $this->app->bind(IWorkflowStepRepository::class, WorkflowStepRepository::class);
+        $this->app->bind(IWorkflowStepApproverRepository::class, WorkflowStepApproverRepository::class);
         $this->app->bind(IWorkflowService::class, WorkflowService::class);
+
 
         //task
         $this->app->bind(ITaskRepository::class, TaskRepository::class);
@@ -163,11 +171,10 @@ class AppServiceProvider extends ServiceProvider
 
         //revenue
         $this->app->bind(IRevenueRepository::class, RevenueRepository::class);
-        $this->app->bind(IRevenueService::class, RevenueService::class);
+        $this->app->bind(IRevenueService::class, CentralizedRevenueService::class);
 
         //expense
         $this->app->bind(IExpenseRepository::class, ExpenseRepository::class);
-        $this->app->bind(IExpenseService::class, ExpenseService::class);
 
         //ledger
         $this->app->bind(ILedgerRepository::class, LedgerRepository::class);
@@ -179,12 +186,16 @@ class AppServiceProvider extends ServiceProvider
 
         //ledger summary
         $this->app->bind(ILedgerSummaryRepository::class, LedgerSummaryRepository::class);
-        $this->app->bind(ILedgerSummaryService::class, LedgerSummaryService::class);
+        $this->app->bind(ILedgerSummaryService::class, CentralizedLedgerSummaryService::class);
 
         //staff
-        //ledger summary
         $this->app->bind(IStaffRepository::class, StaffRepository::class);
         $this->app->bind(IStaffService::class, StaffService::class);
+
+        //org_user
+        $this->app->bind(IOrgUserRepository::class, OrgUserRepository::class);
+        $this->app->bind(IFinancialModelRepository::class, FinancialModelRepository::class);
+
     }
 
     /**

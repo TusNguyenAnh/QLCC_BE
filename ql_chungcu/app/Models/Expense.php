@@ -19,6 +19,7 @@ class Expense extends Model
     // Expense = Khoản phải chi (KHÔNG phải giao dịch tiền)
     // amount_paid là CACHE tự động từ ledgers để tăng performance
     protected $fillable = [
+        'task_id',
         'title',
         'category',         // mua_sắm | dịch_vụ | điện_nước | sửa_chữa | lương | khác
         'original_amount',  // Số tiền GỐC phải chi (KHÔNG đổi)
@@ -29,6 +30,7 @@ class Expense extends Model
         'created_by',
         'approved_by',
         'approved_at',
+        'approved'
     ];
 
     protected $casts = [

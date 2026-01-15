@@ -31,6 +31,7 @@ class ExpenseFilterRequest extends FormRequest
             'approved' => 'nullable|integer',
             'proposed_from' => 'nullable|date',
             'proposed_to' => 'nullable|date|after_or_equal:proposed_from',
+            'building_id' => 'nullable|string',
         ];
     }
 

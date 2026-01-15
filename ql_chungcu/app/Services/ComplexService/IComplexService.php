@@ -5,6 +5,7 @@ namespace App\Services\ComplexService;
 interface IComplexService
 {
     public function show($complexFilterRequest,$status,$perPage);
+    public function showFinancialModel();
     public function findById(string $id);
     public function add(array $data);
     public function update(string $id, array $data);
