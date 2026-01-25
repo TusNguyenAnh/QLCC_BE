@@ -16,13 +16,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group([
-//    'middleware' => 'auth:api',
+    'middleware' => 'auth:api',
     'prefix' => '/role'],
     function () {
         Route::get('/findByComplexId/{complex_id}', [RoleController::class, 'findByComplexId']);
         Route::post('/getRoleByUserId/{user_id}', [RoleController::class, 'getRoleByUserId']);
-        Route::post('/create', [RoleController::class, 'store']);
-        Route::post('/assignRole', [RoleController::class, 'assignRole']);
+        Route::post('/create', [RoleController::class, 'store'])->middleware('role_permission:manage:role');
+        Route::post('/assignRole', [RoleController::class, 'assignRole'])->middleware('role_permission:assign:role');
 
 //        Route::post('/update/{bd_id}', [RoleController::class, 'update']);
 //        Route::post('/delete', [RoleController::class, 'destroy']);

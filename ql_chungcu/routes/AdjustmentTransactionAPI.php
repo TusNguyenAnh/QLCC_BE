@@ -4,7 +4,7 @@ use App\Http\Controllers\AdjustmentTransactionController;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
-//    'middleware' => 'auth:api',
+    'middleware' => 'auth:api',
     'prefix' => '/adjustments'],
     function () {
         // Lấy bút toán điều chỉnh theo revenue/expense ID

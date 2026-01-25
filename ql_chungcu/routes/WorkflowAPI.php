@@ -15,13 +15,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group([
-//    'middleware' => 'auth:api',
+    'middleware' => 'auth:api',
     'prefix' => '/wf'],
     function () {
         Route::get('/{complex_id}', [WorkflowController::class, 'index']);
-        Route::post('/create', [WorkflowController::class, 'store']);
-        Route::post('/update/{bd_id}', [WorkflowController::class, 'update']);
-        Route::post('/delete', [WorkflowController::class, 'destroy']);
+        Route::post('/create', [WorkflowController::class, 'store'])->middleware('role_permission:manage:workflow');
+        Route::post('/update/{bd_id}', [WorkflowController::class, 'update'])->middleware('role_permission:manage:workflow');
+        Route::post('/delete', [WorkflowController::class, 'destroy'])->middleware('role_permission:manage:workflow');
     });
 
 

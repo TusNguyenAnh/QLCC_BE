@@ -15,14 +15,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group([
-//    'middleware' => 'auth:api',
+    'middleware' => 'auth:api',
     'prefix' => '/apt'],
     function () {
-        Route::get('/findByBuilding/{bd_id}', [ApartmentController::class, 'findByBuildingId']);
-        Route::post('/create', [ApartmentController::class, 'store']);
-        Route::post('/update/{apt_id}', [ApartmentController::class, 'update']);
+        Route::get('/findByBuilding/{bd_id}', [ApartmentController::class, 'findByBuildingId'])->middleware('role_permission:view:apartment');
+        Route::post('/create', [ApartmentController::class, 'store'])->middleware('role_permission:manage:apartment');
+        Route::post('/update/{apt_id}', [ApartmentController::class, 'update'])->middleware('role_permission:manage:apartment');
 //        Route::post('/delete', [BuildingController::class, 'destroy']);
-        Route::post('import-excel', [ApartmentController::class, 'importAptExcel']);
+        Route::post('import-excel', [ApartmentController::class, 'importAptExcel'])->middleware('role_permission:manage:apartment');
     });
 
 

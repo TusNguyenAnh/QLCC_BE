@@ -19,8 +19,9 @@ Route::group([
     'prefix' => '/bd'],
     function () {
         Route::get('', [BuildingController::class, 'index']);
-        Route::post('/create', [BuildingController::class, 'store']);
-        Route::post('/update/{bd_id}', [BuildingController::class, 'update']);
+        Route::post('/create', [BuildingController::class, 'store'])->middleware('role_permission:manage:building');
+        Route::post('/update/{bd_id}', [BuildingController::class, 'update'])->middleware('role_permission:manage:building');
+        Route::post('/updateRatio', [BuildingController::class, 'updateRatio'])->middleware('role_permission:manage:building');
         Route::post('/delete', [BuildingController::class, 'destroy']);
     });
 

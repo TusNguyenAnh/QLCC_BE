@@ -23,8 +23,8 @@ Route::group([
         Route::get('/findById/{id}', [OrganizationController::class, 'findById']);
         Route::get('/getBdIdByOrgId/{complex_id}', [OrganizationController::class, 'getBdIdByParentOrgId']);
         Route::get('/getTopLevel/{complex_id}', [OrganizationController::class, 'getTopLevel']);
-        Route::post('/create', [OrganizationController::class, 'store']);
-        Route::post('/update/{org_id}', [OrganizationController::class, 'update']);
+        Route::post('/create', [OrganizationController::class, 'store'])->middleware('role_permission:manage:organization');
+        Route::post('/update/{org_id}', [OrganizationController::class, 'update'])->middleware('role_permission:manage:organization');
         Route::post('/delete', [OrganizationController::class, 'destroy']);
     });
 

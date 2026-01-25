@@ -18,7 +18,7 @@ return new class extends Migration
             $table->uuid('org_id');
             $table->integer('step_order')->default('1');
             $table->enum('action', ['PENDING','APPROVED', 'REJECTED','UNFINISHED'])->default('APPROVED');
-            $table->string('comment')->default('');
+            $table->string('comment')->nullable();
 
             $table->timestamps(); // Created_at và updated_at
             $table->softDeletes(); // Trường để xoá mềm (soft delete)

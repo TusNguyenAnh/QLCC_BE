@@ -4,7 +4,7 @@ use App\Http\Controllers\ExpenseController;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
-//    'middleware' => 'auth:api',
+    'middleware' => 'auth:api',
     'prefix' => '/expenses'],
     function () {
         // Lấy danh sách khoản chi

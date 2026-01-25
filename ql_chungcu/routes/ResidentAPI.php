@@ -23,12 +23,12 @@ Route::group(
         Route::post('getByFilter', [ResidentController::class, 'index']);
         Route::get('findByOrgId/{org_id}', [ResidentController::class, 'findByOrgId']);
         Route::post('findByBuildingId', [ResidentController::class, 'findResidentByBuildingId']);
-        Route::post('create', [ResidentController::class, 'store']);
-        Route::post('import-excel', [ResidentController::class, 'importResExcel']);
-        Route::post('import-excelAptRes', [ResidentController::class, 'importResAptExcel']);
-        Route::post('addResInOrg/{org_id}', [ResidentController::class, 'addResInOrg']);
-        Route::post('removeResInOrg/{org_id}', [ResidentController::class, 'removeResInOrg']);
-        Route::post('updatePosition', [ResidentController::class, 'updatePosition']);
+        Route::post('create', [ResidentController::class, 'store'])->middleware('role_permission:manage:resident');
+        Route::post('import-excel', [ResidentController::class, 'importResExcel'])->middleware('role_permission:manage:resident');
+        Route::post('import-excelAptRes', [ResidentController::class, 'importResAptExcel'])->middleware('role_permission:manage:resident');
+        Route::post('addResInOrg/{org_id}', [ResidentController::class, 'addResInOrg'])->middleware('role_permission:manage:resident');
+        Route::post('removeResInOrg/{org_id}', [ResidentController::class, 'removeResInOrg'])->middleware('role_permission:manage:resident');
+        Route::post('updatePosition', [ResidentController::class, 'updatePosition'])->middleware('role_permission:manage:resident');
 
     }
 );

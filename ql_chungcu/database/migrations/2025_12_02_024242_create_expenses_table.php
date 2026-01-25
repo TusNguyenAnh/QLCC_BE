@@ -17,14 +17,13 @@ return new class extends Migration {
 
             // Lớp 1: Nghĩa vụ phải chi (khoản phải chi)
             $table->string('title')->comment('Tiêu đề khoản chi');
-            $table->enum('category', ['purchase', 'service', 'utilities', 'repair', 'salary', 'other'])
-                ->comment('Loại chi: purchase | service | utilities | repair | salary | other');
+            $table->string('category');
             $table->decimal('original_amount', 12, 2)->comment('Số tiền gốc phải chi (KHÔNG thay đổi)');
             $table->text('description')->nullable()->comment('Mô tả chi tiết');
 
             // Cache từ ledgers (tự động tính)
             $table->decimal('amount_paid', 12, 2)->default(0)->comment('Cache: Tổng đã chi từ ledgers');
-            $table->enum('status', ['unpaid', 'partial', 'paid'])->default('unpaid');
+            $table->string('status')->default('unpaid');
             // Thông tin bổ sung
             $table->string('vendor')->nullable()->comment('Nhà cung cấp / Đơn vị nhận');
             $table->uuid('created_by')->comment('Người tạo');
