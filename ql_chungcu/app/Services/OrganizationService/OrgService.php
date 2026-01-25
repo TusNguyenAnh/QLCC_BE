@@ -30,9 +30,9 @@ class OrgService implements IOrgService
         $this->buildingRepository = $buildingRepository;
     }
 
-    public function show($complexId,$perPage)
+    public function show($complexId, $perPage)
     {
-        return $this->orgRepository->show($complexId,$perPage);
+        return $this->orgRepository->show($complexId, $perPage);
     }
 
     public function findById(string $id): ?Organization
@@ -46,10 +46,15 @@ class OrgService implements IOrgService
             $parentOrg = $this->orgRepository->getById($data['parent_org_id']);
             $data['level'] = $parentOrg->level + 1;
         } else {
+            // chi cho phep 1 cap cha
             $org = $this->orgRepository->findByCondition('parent_org_id', ['null'], $data['complex_id']);
             if ($org->count() > 0) {
                 throw new AppException(ErrorCode::PARENT_ORG_EXISTED);
             }
+        }
+
+        if (isset($data['level']) && $data['level'] > 3) {
+            throw new AppException(ErrorCode::MAX_ORG_LEVEL);
         }
 
         $createdOrg = $this->orgRepository->store(Arr::except($data, ['building']));
@@ -68,6 +73,10 @@ class OrgService implements IOrgService
 
     public function update(string $id, array $data): ?Organization
     {
+        $org = $this->orgRepository->getById($id);
+        if (!$org) {
+            throw new AppException(ErrorCode::NOT_FOUND);
+        }
         $this->orgBuildingRepository->delete($id);
 
         $dataOrgBuilding = [];

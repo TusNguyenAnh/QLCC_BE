@@ -31,11 +31,23 @@ class ApartmentService implements IApartmentService
 
     public function add(array $data): Apartment
     {
+        $apt = $this->apartmentRepository->findByBuildingAndAptNumber($data['building_id'], $data['apt_number']);
+        if ($apt) {
+            throw new AppException(ErrorCode::APT_NUMBER_EXISTED);
+        }
         return $this->apartmentRepository->store($data);
     }
 
     public function update(string $id, array $data): ?Apartment
     {
+        $apt = $this->apartmentRepository->getById($id);
+        if (!$apt) {
+            throw new AppException(ErrorCode::NOT_FOUND);
+        }
+        $aptNumber = $this->apartmentRepository->findByBuildingAndAptNumber($apt->building_id, $data['apt_number']);
+        if ($aptNumber) {
+            throw new AppException(ErrorCode::APT_NUMBER_EXISTED);
+        }
         return $this->apartmentRepository->update($data, $id);
     }
 

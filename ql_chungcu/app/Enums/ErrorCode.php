@@ -19,6 +19,7 @@ enum ErrorCode
     case ORG_DESCRIPTION_LENGTH;
     case ORG_NAME_UNIQUE;
     case PARENT_ORG_EXISTED;
+    case MAX_ORG_LEVEL;
 
 
     case UNCATEGORIZED_EXCEPTION;
@@ -61,6 +62,23 @@ enum ErrorCode
     //building
     case BUILDING_NON_EXISTED;
     case BUILDING_NOT_EMPTY;
+    case BUILDING_NAME_NOT_EMPTY;
+    case BUILDING_ADDRESS_NOT_EMPTY;
+    case COMPLEX_ID_NOT_EMPTY;
+    case FINANCIAL_TOTAL_RATIO_NOT_VALID;
+
+    //apartment
+    case FLOOR_REQUIRED;
+    case FLOOR_NOT_INTEGER;
+    case APT_NUMBER_REQUIRED;
+    case APT_NUMBER_LENGTH;
+    case APT_AREA_REQUIRED;
+    case APT_AREA_NOT_NUMERIC;
+    case APT_AREA_MIN;
+    case APT_TYPE_REQUIRED;
+    case APT_TYPE_INVALID;
+    case APT_NUMBER_EXISTED;
+
 
     //service_unit_prices
     case PRICE_NON_EXISTED;
@@ -117,11 +135,59 @@ enum ErrorCode
 
     //resident
     case RESIDENT_EXISTED;
+    case RESIDENT_GENDER_NOT_EMPTY;
+    case RESIDENT_FULLNAME_NOT_EMPTY;
+    case RESIDENT_EMAIL_NOT_EMPTY;
+    case RESIDENT_BIRTHDAY_NOT_EMPTY;
+    case RESIDENT_PHONE_NOT_EMPTY;
+    case RESIDENT_RELATIONSHIP_NOT_EMPTY;
+    case RESIDENT_CCCD_NOT_EMPTY;
     //staff
     case STAFF_EXISTED;
+    case STAFF_FULLNAME_NOT_EMPTY;
+    case STAFF_EMAIL_NOT_EMPTY;
+    case STAFF_PHONE_NOT_EMPTY;
+    case STAFF_ORG_ID_NOT_EMPTY;
+    case STAFF_ROLE_ID_NOT_EMPTY;
 
     //task
     case TASK_INFO_INVALID;
+    case TASK_TYPE_ID_NOT_EMPTY;
+    case TASK_BUILDING_ID_NOT_EMPTY;
+    case TASK_NAME_NOT_EMPTY;
+    case TASK_DESCRIPTION_NOT_EMPTY;
+
+    //task type
+    case TASKTYPE_WORKFLOW_ID_NOT_EMPTY;
+    case TASKTYPE_PRIORITY_ID_NOT_EMPTY;
+    case TASKTYPE_NAME_NOT_EMPTY;
+    case TASKTYPE_DESCRIPTION_NOT_EMPTY;
+
+    //permission
+    case PERMISSION_NAME_NOT_EMPTY;
+    case PERMISSION_MODULE_NOT_EMPTY;
+
+    //role
+    case ROLE_NAME_NOT_EMPTY;
+    case ROLE_COMPLEX_ID_NOT_EMPTY;
+    case ROLE_DESCRIPTION_NOT_EMPTY;
+    case ROLE_USER_ID_NOT_EMPTY;
+    case ROLE_ID_NOT_EMPTY;
+
+    //workflow
+    case WORKFLOW_COMPLEX_ID_NOT_EMPTY;
+    case WORKFLOW_NAME_NOT_EMPTY;
+    case WORKFLOW_DESCRIPTION_NOT_EMPTY;
+    case WORKFLOW_STATUS_NOT_EMPTY;
+    case WORKFLOW_STEP_NOT_EMPTY;
+    case WORKFLOW_STEP_MIN;
+    case WORKFLOW_STEP_ORG_LEVEL_NOT_EMPTY;
+    case WORKFLOW_STEP_ORDER_NOT_EMPTY;
+    case WORKFLOW_STEP_DESCRIPTION_NOT_EMPTY;
+    case WORKFLOW_STEP_STATUS_NOT_EMPTY;
+    case WORKFLOW_STEP_POSITION_NOT_EMPTY;
+    case WORKFLOW_STEP_POSITION_ARRAY;
+    case WORKFLOW_STEP_POSITION_ITEM_NOT_EMPTY;
 
     public function code(): int
     {
@@ -160,6 +226,7 @@ enum ErrorCode
             self::ORG_DESCRIPTION_LENGTH => 2003,
             self::ORG_NAME_UNIQUE => 2004,
             self::PARENT_ORG_EXISTED => 2005,
+            self::MAX_ORG_LEVEL => 2006,
 
 
             //complex
@@ -218,6 +285,22 @@ enum ErrorCode
             //building
             self::BUILDING_NON_EXISTED => 4099,
             self::BUILDING_NOT_EMPTY => 4098,
+            self::BUILDING_NAME_NOT_EMPTY => 4097,
+            self::BUILDING_ADDRESS_NOT_EMPTY => 4096,
+            self::COMPLEX_ID_NOT_EMPTY => 4095,
+            self::FINANCIAL_TOTAL_RATIO_NOT_VALID => 4096,
+
+            //apartment
+            self::FLOOR_REQUIRED => 4100,
+            self::FLOOR_NOT_INTEGER => 4101,
+            self::APT_NUMBER_REQUIRED => 4102,
+            self::APT_NUMBER_LENGTH => 4103,
+            self::APT_AREA_REQUIRED => 4104,
+            self::APT_AREA_NOT_NUMERIC => 4105,
+            self::APT_AREA_MIN => 4106,
+            self::APT_TYPE_REQUIRED => 4107,
+            self::APT_TYPE_INVALID => 4108,
+            self::APT_NUMBER_EXISTED => 4109,
 
             //ledger
             self::VOUCHER_NOT_VALID => 5000,
@@ -232,12 +315,60 @@ enum ErrorCode
 
             //resident
             self::RESIDENT_EXISTED => 7000,
+            self::RESIDENT_GENDER_NOT_EMPTY => 7001,
+            self::RESIDENT_FULLNAME_NOT_EMPTY => 7002,
+            self::RESIDENT_EMAIL_NOT_EMPTY => 7003,
+            self::RESIDENT_BIRTHDAY_NOT_EMPTY => 7004,
+            self::RESIDENT_PHONE_NOT_EMPTY => 7005,
+            self::RESIDENT_RELATIONSHIP_NOT_EMPTY => 7006,
+            self::RESIDENT_CCCD_NOT_EMPTY => 7007,
 
             //staff
             self::STAFF_EXISTED => 8001,
+            self::STAFF_FULLNAME_NOT_EMPTY => 8002,
+            self::STAFF_EMAIL_NOT_EMPTY => 8003,
+            self::STAFF_PHONE_NOT_EMPTY => 8004,
+            self::STAFF_ORG_ID_NOT_EMPTY => 8005,
+            self::STAFF_ROLE_ID_NOT_EMPTY => 8006,
 
             //task
             self::TASK_INFO_INVALID => 8999,
+            self::TASK_TYPE_ID_NOT_EMPTY => 8100,
+            self::TASK_BUILDING_ID_NOT_EMPTY => 8101,
+            self::TASK_NAME_NOT_EMPTY => 8102,
+            self::TASK_DESCRIPTION_NOT_EMPTY => 8103,
+
+            //task type
+            self::TASKTYPE_WORKFLOW_ID_NOT_EMPTY => 8200,
+            self::TASKTYPE_PRIORITY_ID_NOT_EMPTY => 8201,
+            self::TASKTYPE_NAME_NOT_EMPTY => 8202,
+            self::TASKTYPE_DESCRIPTION_NOT_EMPTY => 8203,
+
+            //permission
+            self::PERMISSION_NAME_NOT_EMPTY => 9000,
+            self::PERMISSION_MODULE_NOT_EMPTY => 9001,
+
+            //role
+            self::ROLE_NAME_NOT_EMPTY => 9100,
+            self::ROLE_COMPLEX_ID_NOT_EMPTY => 9101,
+            self::ROLE_DESCRIPTION_NOT_EMPTY => 9102,
+            self::ROLE_USER_ID_NOT_EMPTY => 9103,
+            self::ROLE_ID_NOT_EMPTY => 9104,
+
+            //workflow
+            self::WORKFLOW_COMPLEX_ID_NOT_EMPTY => 8300,
+            self::WORKFLOW_NAME_NOT_EMPTY => 8301,
+            self::WORKFLOW_DESCRIPTION_NOT_EMPTY => 8302,
+            self::WORKFLOW_STATUS_NOT_EMPTY => 8303,
+            self::WORKFLOW_STEP_NOT_EMPTY => 8304,
+            self::WORKFLOW_STEP_MIN => 8305,
+            self::WORKFLOW_STEP_ORG_LEVEL_NOT_EMPTY => 8306,
+            self::WORKFLOW_STEP_ORDER_NOT_EMPTY => 8307,
+            self::WORKFLOW_STEP_DESCRIPTION_NOT_EMPTY => 8308,
+            self::WORKFLOW_STEP_STATUS_NOT_EMPTY => 8309,
+            self::WORKFLOW_STEP_POSITION_NOT_EMPTY => 8310,
+            self::WORKFLOW_STEP_POSITION_ARRAY => 8311,
+            self::WORKFLOW_STEP_POSITION_ITEM_NOT_EMPTY => 8312,
         };
     }
 
@@ -290,10 +421,26 @@ enum ErrorCode
             self::ORG_NAME_NOT_FOUND => "Phòng ban không tồn tại!",
             self::ORG_DESCRIPTION_LENGTH => "Mô tả phòng ban dài tối đa 100 ký tự",
             self::PARENT_ORG_EXISTED => "Chỉ tồn tại 1 cấp BQT cao nhất!",
+            self::MAX_ORG_LEVEL => "Cấp tổ chức tối đa là cấp 3",
 
             //building
             self::BUILDING_NON_EXISTED => "Toà nhà không tồn tại",
             self::BUILDING_NOT_EMPTY => "Toà nhà không được để trống",
+            self::BUILDING_NAME_NOT_EMPTY => "Tên toà nhà không được để trống",
+            self::BUILDING_ADDRESS_NOT_EMPTY => "Địa chỉ toà nhà không được để trống",
+            self::COMPLEX_ID_NOT_EMPTY => "Chung cư không được để trống",
+            self::FINANCIAL_TOTAL_RATIO_NOT_VALID => "Tổng tỉ lệ phải bằng 100%",
+            //apartment
+            self::FLOOR_REQUIRED => "Số tầng là bắt buộc",
+            self::FLOOR_NOT_INTEGER => "Số tầng phải là số nguyên",
+            self::APT_NUMBER_REQUIRED => "Số căn hộ là bắt buộc",
+            self::APT_NUMBER_LENGTH => "Số căn hộ không vượt quá 20 ký tự",
+            self::APT_AREA_REQUIRED => "Diện tích căn hộ là bắt buộc",
+            self::APT_AREA_NOT_NUMERIC => "Diện tích căn hộ phải là số",
+            self::APT_AREA_MIN => "Diện tích căn hộ phải lớn hơn 0",
+            self::APT_TYPE_REQUIRED => "Loại căn hộ là bắt buộc",
+            self::APT_TYPE_INVALID => "Loại căn hộ không hợp lệ",
+            self::APT_NUMBER_EXISTED => "Số căn hộ đã tồn tại trong tòa nhà này",
 
             self::ADDRESS_EXISTED => "Địa chỉ đã tồn tại!",
             // prices
@@ -347,10 +494,54 @@ enum ErrorCode
 
             //resident
             self::RESIDENT_EXISTED => "Thông tin cư dân đã tồn tại!",
+            self::RESIDENT_GENDER_NOT_EMPTY => "Giới tính không được để trống",
+            self::RESIDENT_FULLNAME_NOT_EMPTY => "Họ tên không được để trống",
+            self::RESIDENT_EMAIL_NOT_EMPTY => "Email không được để trống",
+            self::RESIDENT_BIRTHDAY_NOT_EMPTY => "Ngày sinh không được để trống",
+            self::RESIDENT_PHONE_NOT_EMPTY => "Số điện thoại không được để trống",
+            self::RESIDENT_RELATIONSHIP_NOT_EMPTY => "Mối quan hệ không được để trống",
+            self::RESIDENT_CCCD_NOT_EMPTY => "Số CCCD không được để trống",
             //staff
             self::STAFF_EXISTED => "Thông tin thành viên BQL đã tồn tại!",
+            self::STAFF_FULLNAME_NOT_EMPTY => "Họ tên không được để trống",
+            self::STAFF_EMAIL_NOT_EMPTY => "Email không được để trống",
+            self::STAFF_PHONE_NOT_EMPTY => "Số điện thoại không được để trống",
+            self::STAFF_ORG_ID_NOT_EMPTY => "Phòng ban không được để trống",
+            self::STAFF_ROLE_ID_NOT_EMPTY => "Vai trò không được để trống",
             //task
-            self::TASK_INFO_INVALID => "Thông tin đề xuất chưa hợp lệ. Vui lòng kiểm tra lại thông tin (loại yêu cầu,tòa nhà)"
+            self::TASK_INFO_INVALID => "Thông tin đề xuất chưa hợp lệ. Vui lòng kiểm tra lại thông tin (loại yêu cầu,tòa nhà)",
+            self::TASK_TYPE_ID_NOT_EMPTY => "Loại yêu cầu không được để trống",
+            self::TASK_BUILDING_ID_NOT_EMPTY => "Tòa nhà không được để trống",
+            self::TASK_NAME_NOT_EMPTY => "Tên yêu cầu không được để trống",
+            self::TASK_DESCRIPTION_NOT_EMPTY => "Mô tả không được để trống",
+            //task type
+            self::TASKTYPE_WORKFLOW_ID_NOT_EMPTY => "Quy trình không được để trống",
+            self::TASKTYPE_PRIORITY_ID_NOT_EMPTY => "Độ ưu tiên không được để trống",
+            self::TASKTYPE_NAME_NOT_EMPTY => "Tên loại yêu cầu không được để trống",
+            self::TASKTYPE_DESCRIPTION_NOT_EMPTY => "Mô tả không được để trống",
+            //permission
+            self::PERMISSION_NAME_NOT_EMPTY => "Tên quyền không được để trống",
+            self::PERMISSION_MODULE_NOT_EMPTY => "Module không được để trống",
+            //role
+            self::ROLE_NAME_NOT_EMPTY => "Tên vai trò không được để trống",
+            self::ROLE_COMPLEX_ID_NOT_EMPTY => "Chung cư không được để trống",
+            self::ROLE_DESCRIPTION_NOT_EMPTY => "Mô tả không được để trống",
+            self::ROLE_USER_ID_NOT_EMPTY => "User không được để trống",
+            self::ROLE_ID_NOT_EMPTY => "Vai trò không được để trống",
+            //workflow
+            self::WORKFLOW_COMPLEX_ID_NOT_EMPTY => "Chung cư không được để trống",
+            self::WORKFLOW_NAME_NOT_EMPTY => "Tên quy trình không được để trống",
+            self::WORKFLOW_DESCRIPTION_NOT_EMPTY => "Mô tả không được để trống",
+            self::WORKFLOW_STATUS_NOT_EMPTY => "Trạng thái không được để trống",
+            self::WORKFLOW_STEP_NOT_EMPTY => "Bước quy trình không được để trống",
+            self::WORKFLOW_STEP_MIN => "Quy trình phải có ít nhất 1 bước",
+            self::WORKFLOW_STEP_ORG_LEVEL_NOT_EMPTY => "Cấp tổ chức của bước không được để trống",
+            self::WORKFLOW_STEP_ORDER_NOT_EMPTY => "Thứ tự bước không được để trống",
+            self::WORKFLOW_STEP_DESCRIPTION_NOT_EMPTY => "Mô tả bước không được để trống",
+            self::WORKFLOW_STEP_STATUS_NOT_EMPTY => "Trạng thái bước không được để trống",
+            self::WORKFLOW_STEP_POSITION_NOT_EMPTY => "Vị trí không được để trống",
+            self::WORKFLOW_STEP_POSITION_ARRAY => "Vị trí phải là một mảng",
+            self::WORKFLOW_STEP_POSITION_ITEM_NOT_EMPTY => "Phần tử vị trí không được để trống"
         };
     }
 
@@ -378,6 +569,7 @@ enum ErrorCode
             self::ORG_NAME_NOT_FOUND,
             self::ORG_DESCRIPTION_LENGTH,
             self::PARENT_ORG_EXISTED,
+            self::MAX_ORG_LEVEL,
 
 
             self::CODE_NOT_EMPTY,
@@ -444,6 +636,22 @@ enum ErrorCode
                 //building
             self::BUILDING_NON_EXISTED,
             self::BUILDING_NOT_EMPTY,
+            self::BUILDING_NAME_NOT_EMPTY,
+            self::BUILDING_ADDRESS_NOT_EMPTY,
+            self::COMPLEX_ID_NOT_EMPTY,
+            self::FINANCIAL_TOTAL_RATIO_NOT_VALID,
+
+                //apartment
+            self::FLOOR_REQUIRED,
+            self::FLOOR_NOT_INTEGER,
+            self::APT_NUMBER_REQUIRED,
+            self::APT_NUMBER_LENGTH,
+            self::APT_AREA_REQUIRED,
+            self::APT_AREA_NOT_NUMERIC,
+            self::APT_AREA_MIN,
+            self::APT_TYPE_REQUIRED,
+            self::APT_TYPE_INVALID,
+            self::APT_NUMBER_EXISTED,
 
                 //ledgers
             self::VOUCHER_NOT_VALID,
@@ -458,11 +666,55 @@ enum ErrorCode
 
                 //resident
             self::RESIDENT_EXISTED,
+            self::RESIDENT_GENDER_NOT_EMPTY,
+            self::RESIDENT_FULLNAME_NOT_EMPTY,
+            self::RESIDENT_EMAIL_NOT_EMPTY,
+            self::RESIDENT_BIRTHDAY_NOT_EMPTY,
+            self::RESIDENT_PHONE_NOT_EMPTY,
+            self::RESIDENT_RELATIONSHIP_NOT_EMPTY,
+            self::RESIDENT_CCCD_NOT_EMPTY,
 
                 //staff
             self::STAFF_EXISTED,
+            self::STAFF_FULLNAME_NOT_EMPTY,
+            self::STAFF_EMAIL_NOT_EMPTY,
+            self::STAFF_PHONE_NOT_EMPTY,
+            self::STAFF_ORG_ID_NOT_EMPTY,
+            self::STAFF_ROLE_ID_NOT_EMPTY,
                 //task
             self::TASK_INFO_INVALID,
+            self::TASK_TYPE_ID_NOT_EMPTY,
+            self::TASK_BUILDING_ID_NOT_EMPTY,
+            self::TASK_NAME_NOT_EMPTY,
+            self::TASK_DESCRIPTION_NOT_EMPTY,
+                //task type
+            self::TASKTYPE_WORKFLOW_ID_NOT_EMPTY,
+            self::TASKTYPE_PRIORITY_ID_NOT_EMPTY,
+            self::TASKTYPE_NAME_NOT_EMPTY,
+            self::TASKTYPE_DESCRIPTION_NOT_EMPTY,
+                //permission
+            self::PERMISSION_NAME_NOT_EMPTY,
+            self::PERMISSION_MODULE_NOT_EMPTY,
+                //role
+            self::ROLE_NAME_NOT_EMPTY,
+            self::ROLE_COMPLEX_ID_NOT_EMPTY,
+            self::ROLE_DESCRIPTION_NOT_EMPTY,
+            self::ROLE_USER_ID_NOT_EMPTY,
+            self::ROLE_ID_NOT_EMPTY,
+                //workflow
+            self::WORKFLOW_COMPLEX_ID_NOT_EMPTY,
+            self::WORKFLOW_NAME_NOT_EMPTY,
+            self::WORKFLOW_DESCRIPTION_NOT_EMPTY,
+            self::WORKFLOW_STATUS_NOT_EMPTY,
+            self::WORKFLOW_STEP_NOT_EMPTY,
+            self::WORKFLOW_STEP_MIN,
+            self::WORKFLOW_STEP_ORG_LEVEL_NOT_EMPTY,
+            self::WORKFLOW_STEP_ORDER_NOT_EMPTY,
+            self::WORKFLOW_STEP_DESCRIPTION_NOT_EMPTY,
+            self::WORKFLOW_STEP_STATUS_NOT_EMPTY,
+            self::WORKFLOW_STEP_POSITION_NOT_EMPTY,
+            self::WORKFLOW_STEP_POSITION_ARRAY,
+            self::WORKFLOW_STEP_POSITION_ITEM_NOT_EMPTY,
             => 400,
         };
     }

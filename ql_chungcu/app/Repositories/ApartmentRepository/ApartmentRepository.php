@@ -6,6 +6,10 @@ use App\Models\Apartment;
 
 class ApartmentRepository implements IApartmentRepository
 {
+    public function getById(string $id)
+    {
+        return Apartment::where('id', $id)->first();
+    }
 
     public function findByBuildingId(string $bdId, string $perPage)
     {
@@ -57,4 +61,10 @@ class ApartmentRepository implements IApartmentRepository
         return $aptResident;
     }
 
+    public function findByBuildingAndAptNumber(string $bdId, string $aptNumber)
+    {
+        return Apartment::where('building_id', $bdId)
+            ->where('apt_number', $aptNumber)
+            ->first();
+    }
 }

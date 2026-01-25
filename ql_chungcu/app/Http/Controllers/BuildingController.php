@@ -46,4 +46,12 @@ class BuildingController extends Controller
 //        return $listOrg;
         $this->buildingService->delete($listBd);
     }
+
+    public function updateRatio(Request $request)
+    {
+        $data = $request->all();
+        $data['complex_id'] = jwt_claim('complex_id');
+        $this->buildingService->updateRatio($data);
+        return APIResponse::success('Cập nhật tỉ lệ thành công!');
+    }
 }
