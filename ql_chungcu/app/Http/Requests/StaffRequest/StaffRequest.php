@@ -33,6 +33,11 @@ class StaffRequest extends FormRequest
     public function messages()
     {
         return [
+            'fullname.required' => 'STAFF_FULLNAME_NOT_EMPTY',
+            'email.required' => 'STAFF_EMAIL_NOT_EMPTY',
+            'phone_number.required' => 'STAFF_PHONE_NOT_EMPTY',
+            'org_id.required' => 'STAFF_ORG_ID_NOT_EMPTY',
+            'role_id.required' => 'STAFF_ROLE_ID_NOT_EMPTY',
         ];
     }
 

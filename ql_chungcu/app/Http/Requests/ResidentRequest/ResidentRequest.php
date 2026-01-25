@@ -39,6 +39,13 @@ class ResidentRequest extends FormRequest
     public function messages()
     {
         return [
+            'gender.required' => 'RESIDENT_GENDER_NOT_EMPTY',
+            'fullname.required' => 'RESIDENT_FULLNAME_NOT_EMPTY',
+            'email.required' => 'RESIDENT_EMAIL_NOT_EMPTY',
+            'birthday.required' => 'RESIDENT_BIRTHDAY_NOT_EMPTY',
+            'phone_number.required' => 'RESIDENT_PHONE_NOT_EMPTY',
+            'relationship.required' => 'RESIDENT_RELATIONSHIP_NOT_EMPTY',
+            'cccd.required' => 'RESIDENT_CCCD_NOT_EMPTY',
         ];
     }
 

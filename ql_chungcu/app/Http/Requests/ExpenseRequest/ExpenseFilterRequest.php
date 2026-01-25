@@ -25,8 +25,8 @@ class ExpenseFilterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'category' => 'nullable|in:purchase,service,utilities,repair,salary,other',
-            'status' => 'nullable|in:unpaid,partial,paid',
+            'category' => 'nullable',
+            'status' => 'nullable',
             'vendor' => 'nullable|string|max:255',
             'approved' => 'nullable|integer',
             'proposed_from' => 'nullable|date',

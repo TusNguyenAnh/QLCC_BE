@@ -29,14 +29,18 @@ class TaskRequest extends FormRequest
             'building_id' => 'required',
             'task_name' => 'required',
             'description' => 'required',
-//            'files' => 'required|array',
-//            'files.*' => 'file|mimes:jpeg,png,jpg,gif,webp,mp4,mov,avi,pdf,docx|max:51200',
+            //            'files' => 'required|array',
+            //            'files.*' => 'file|mimes:jpeg,png,jpg,gif,webp,mp4,mov,avi,pdf,docx|max:51200',
         ];
     }
 
     public function messages()
     {
         return [
+            'tasktype_id.required' => 'TASK_TYPE_ID_NOT_EMPTY',
+            'building_id.required' => 'TASK_BUILDING_ID_NOT_EMPTY',
+            'task_name.required' => 'TASK_NAME_NOT_EMPTY',
+            'description.required' => 'TASK_DESCRIPTION_NOT_EMPTY',
         ];
     }
 

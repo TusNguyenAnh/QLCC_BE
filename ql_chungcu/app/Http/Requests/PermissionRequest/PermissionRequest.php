@@ -34,6 +34,8 @@ class PermissionRequest extends FormRequest
     public function messages()
     {
         return [
+            'name.required' => 'PERMISSION_NAME_NOT_EMPTY',
+            'module.required' => 'PERMISSION_MODULE_NOT_EMPTY',
         ];
     }
 

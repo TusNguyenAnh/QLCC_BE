@@ -25,7 +25,7 @@ class AdjustmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'amount' => 'required|numeric',  // Chỉ là ước tính
+            'amount' => 'required|numeric',
             'reason' => 'nullable|string|max:1000',
         ];
     }

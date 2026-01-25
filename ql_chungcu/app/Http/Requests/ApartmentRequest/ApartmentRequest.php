@@ -26,18 +26,26 @@ class ApartmentRequest extends FormRequest
     {
         return [
             'building_id' => 'required',
-            'floor' => 'required',
-            'apt_number' => 'required',
-            'apt_area' => 'required',
+            'floor' => 'required|integer',
+            'apt_number' => 'required|max:20',
+            'apt_area' => 'required|numeric|min:0.01',
             'apt_type' => 'required',
             'description' => 'nullable',
-
         ];
     }
 
     public function messages()
     {
         return [
+            'building_id.required' => 'BUILDING_NOT_EMPTY',
+            'floor.required' => 'FLOOR_REQUIRED',
+            'floor.integer' => 'FLOOR_NOT_INTEGER',
+            'apt_number.required' => 'APT_NUMBER_REQUIRED',
+            'apt_number.max' => 'APT_NUMBER_LENGTH',
+            'apt_area.required' => 'APT_AREA_REQUIRED',
+            'apt_area.numeric' => 'APT_AREA_NOT_NUMERIC',
+            'apt_area.min' => 'APT_AREA_MIN',
+            'apt_type.required' => 'APT_TYPE_REQUIRED',
         ];
     }
 

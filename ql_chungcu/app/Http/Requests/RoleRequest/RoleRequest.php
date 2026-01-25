@@ -34,6 +34,9 @@ class RoleRequest extends FormRequest
     public function messages()
     {
         return [
+            'role_name.required' => 'ROLE_NAME_NOT_EMPTY',
+            'complex_id.required' => 'ROLE_COMPLEX_ID_NOT_EMPTY',
+            'description.required' => 'ROLE_DESCRIPTION_NOT_EMPTY',
         ];
     }
 

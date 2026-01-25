@@ -34,6 +34,8 @@ class RoleAssignRequest extends FormRequest
     public function messages()
     {
         return [
+            'user_id.required' => 'ROLE_USER_ID_NOT_EMPTY',
+            'role_id.required' => 'ROLE_ID_NOT_EMPTY',
         ];
     }
 

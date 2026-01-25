@@ -29,6 +29,9 @@ class BuildingRequest extends FormRequest
     public function messages()
     {
         return [
+            'building_name.required' => 'BUILDING_NAME_NOT_EMPTY',
+            'address.required' => 'BUILDING_ADDRESS_NOT_EMPTY',
+            'complex_id.required' => 'COMPLEX_ID_NOT_EMPTY',
         ];
     }
 

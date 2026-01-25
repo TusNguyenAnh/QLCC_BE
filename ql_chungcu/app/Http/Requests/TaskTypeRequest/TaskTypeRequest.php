@@ -35,6 +35,10 @@ class TaskTypeRequest extends FormRequest
     public function messages()
     {
         return [
+            'workflow_id.required' => 'TASKTYPE_WORKFLOW_ID_NOT_EMPTY',
+            'priority_id.required' => 'TASKTYPE_PRIORITY_ID_NOT_EMPTY',
+            'type_name.required' => 'TASKTYPE_NAME_NOT_EMPTY',
+            'description.required' => 'TASKTYPE_DESCRIPTION_NOT_EMPTY',
         ];
     }
 
