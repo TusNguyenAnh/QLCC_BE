@@ -19,7 +19,7 @@ use App\Services\LedgerService\ILedgerSummaryService;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Mockery\Exception;
+use Throwable;
 
 /**
  * LỚP 3 - ADJUSTMENT SERVICE
@@ -95,9 +95,12 @@ class AdjustmentTransactionService implements IAdjustmentTransactionService
 
             DB::commit();
             return $adjustment;
-        } catch (\Exception $e) {
+        } catch (AppException $e) {
             DB::rollBack();
-            throw new Exception($e->getMessage());
+            throw $e;
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw $e;
         }
     }
 
