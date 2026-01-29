@@ -7,6 +7,7 @@ use App\Exceptions\AppException;
 use App\Helpers\StringHelper;
 use App\Mail\GenericMail;
 use App\Models\User;
+use App\Repositories\ComplexRepository\IComplexRepository;
 use App\Repositories\OrgUserRepository\IOrgUserRepository;
 use App\Repositories\ResidentRepository\IResidentRepository;
 use App\Repositories\UserRepository\IUserRepository;
@@ -23,15 +24,17 @@ class UserService implements IUserService
     private IUserRepository $userRepository;
     private IResidentRepository $residentRepository;
     private IOrgUserRepository $orgUserRepository;
+    private IComplexRepository $complexRepository;
 
 
     public function __construct(IUserRepository    $userRepository, IResidentRepository $residentRepository,
-                                IOrgUserRepository $orgUserRepository,
+                                IOrgUserRepository $orgUserRepository, IComplexRepository $complexRepository
     )
     {
         $this->userRepository = $userRepository;
         $this->residentRepository = $residentRepository;
         $this->orgUserRepository = $orgUserRepository;
+        $this->complexRepository = $complexRepository;
     }
 
     public function show($perPage)
@@ -43,6 +46,9 @@ class UserService implements IUserService
     {
         $complexId = jwt_claim('complex_id');
         $rowsCollection = collect($data['listRes']);
+
+        //lay thong tin complex
+        $complex = $this->complexRepository->getById($complexId);
 
         // kiem tra cu dan ton tai trong chung cu ?
         $cccdList = $rowsCollection->pluck('cccd')->unique()->toArray();
@@ -93,6 +99,7 @@ class UserService implements IUserService
                 'username' => $item['phone_number'],
                 'passwordRaw' => $passwordRaw,
                 'email' => $item['email'],
+                'complexName' => $complex->complex_name,
             ];
         }
         unset($item);
@@ -115,6 +122,7 @@ class UserService implements IUserService
                             'name' => $user['fullname'],
                             'username' => $user['username'],
                             'password' => $user['passwordRaw'],
+                            'complexName' => "Đại diện ".$user['complexName'],
                         ]
                     )
                 );

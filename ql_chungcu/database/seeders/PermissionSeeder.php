@@ -242,6 +242,38 @@ class PermissionSeeder extends Seeder
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
                 ],
+                [
+                    'id' => (string)Str::uuid(),
+                    'name' => 'view:expense',
+                    'module' => 'expense',
+                    'description' => 'Xem danh sách khoản chi',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now()
+                ],
+                [
+                    'id' => (string)Str::uuid(),
+                    'name' => 'manage:expense',
+                    'module' => 'expense',
+                    'description' => 'Thêm, sửa, xóa khoản chi',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now()
+                ],
+                [
+                    'id' => (string)Str::uuid(),
+                    'name' => 'view:revenue',
+                    'module' => 'revenue',
+                    'description' => 'Xem danh sách khoản thu',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now()
+                ],
+                [
+                    'id' => (string)Str::uuid(),
+                    'name' => 'manage:revenue',
+                    'module' => 'revenue',
+                    'description' => 'Thêm, sửa, xóa khoản thu',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now()
+                ],
 //                [
 //                    'id' => (string)Str::uuid(),
 //                    'name' => '',

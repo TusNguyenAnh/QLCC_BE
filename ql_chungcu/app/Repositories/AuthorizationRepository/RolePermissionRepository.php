@@ -14,6 +14,6 @@ class RolePermissionRepository implements IRolePermissionRepository
 
     public function delete(string $roleId)
     {
-        RolePermission::where('role_id', $roleId)->delete();
+        RolePermission::where('role_id', $roleId)->forceDelete();
     }
 }

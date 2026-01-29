@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <body>
-<h2>Xin chào {{ $name }},</h2>
+<h2>{{ $complexName }}, xin chào {{ $name }} !</h2>
 
 <p>Tài khoản của bạn đã được tạo thành công.</p>
 

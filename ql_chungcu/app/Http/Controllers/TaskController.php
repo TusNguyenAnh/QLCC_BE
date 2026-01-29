@@ -46,6 +46,16 @@ class TaskController extends Controller
         return APIResponse::success($task);
     }
 
+    public function findByCreator(TaskFilterRequest $taskFilterRequest, string $taskStatus)
+    {
+        $perPage = intval(request('perPage', 50));
+        $perPage = max(1, min($perPage, 50));
+        $filters = $taskFilterRequest->validated();
+        $creator = jwt_claim('sub');
+        $task = $this->taskService->findByCreator($filters, $taskStatus, $perPage, $creator);
+        return APIResponse::success($task);
+    }
+
     public function findWfByTaskId(string $taskId)
     {
         $taskWf = $this->taskService->findWfByTaskId($taskId);

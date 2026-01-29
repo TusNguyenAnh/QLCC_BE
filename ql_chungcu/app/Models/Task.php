@@ -22,6 +22,7 @@ class Task extends Model
         'current_org_id',
         'creator',
         'description',
+        'category',
         'task_name',
         'status',
         "created_at",

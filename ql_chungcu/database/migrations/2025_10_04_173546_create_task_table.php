@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('task_name');
             $table->string('description')->default('');
             $table->enum('status', ['PENDING', 'APPROVED', 'REJECTED','UNFINISHED'])->default('PENDING');
+            $table->string('category')->nullable();
 
             $table->timestamps(); // Created_at và updated_at
             $table->softDeletes(); // Trường để xoá mềm (soft delete)

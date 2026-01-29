@@ -10,6 +10,7 @@ interface ITaskService
     public function add(array $data);
 
     public function findByOrgId(array $filters,string $orgId, int $taskStatus,$perPage);
+    public function findByCreator(array $filters, string $taskStatus, $perPage, $creator);
 
     public function findWfByTaskId(string $taskId);
 

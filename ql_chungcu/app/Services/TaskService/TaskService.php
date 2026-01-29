@@ -212,4 +212,8 @@ class TaskService implements ITaskService
         return $this->taskHistoryRepository->filterTaskApproved($orgId, $approverId, $taskStatus, $filters, $perPage);
     }
 
+    public function findByCreator(array $filters, string $taskStatus, $perPage, $creator)
+    {
+        return $this->taskRepository->findByCreator($filters, $taskStatus, $perPage, $creator);
+    }
 }

@@ -135,6 +135,7 @@ class ComplexService implements IComplexService
                             'name' => $complex->name_contact,
                             'username' => $data['username'],
                             'password' => $passwordRaw,
+                            'complexName' => "Hệ thống quản lý chung cư",
                         ]
                     )
                 );
