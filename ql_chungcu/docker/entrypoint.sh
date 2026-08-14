@@ -17,10 +17,10 @@ fi
 # Chỉ chạy setup 1 lần duy nhất
 if [ ! -f "$SETUP_FLAG" ]; then
     echo "First run - running setup..."
-    
+
     # Create storage symlink
     php artisan storage:link 2>/dev/null || true
-    
+
     # Wait for database
     echo "Waiting for database..."
     for i in {1..10}; do
@@ -30,19 +30,15 @@ if [ ! -f "$SETUP_FLAG" ]; then
         fi
         sleep 3
     done
-    
+
     # Run migrations
     echo "Running migrations..."
-    php artisan migrate:fresh --force || echo "Migration failed"
-    
-    # Run seeders
-    echo "Running seeders..."
-    php artisan db:seed --force || echo "Seeder skipped"
-    
+    php artisan migrate --force || echo "Migration failed"
+
     # Cache config
     php artisan config:cache
     php artisan route:cache
-    
+
     # Đánh dấu đã setup xong
     touch "$SETUP_FLAG"
     echo "✓ Setup completed"
