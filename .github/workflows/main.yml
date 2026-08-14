@@ -1,0 +1,53 @@
+name: QLCC-BE Deployment
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read #đọc source code của repository.
+  packages: write #push package vào GitHub Packages(ghcr)
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4 #checkout sang nhanh kich hoat workflow (o day la main)
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_TOKEN }}
+
+      - name: Build backend image
+        run: |
+          cd ql_chungcu 
+          docker build -t ghcr.io/${{ secrets.REPOSITORY_OWNER }}/qlcc-be:${{ github.sha }} .
+
+      - name: Push backend image
+        run: docker push ghcr.io/${{ secrets.REPOSITORY_OWNER }}/qlcc-be:${{ github.sha }}
+
+      - name: Deploy backend to VPS
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: 22
+          script: |
+            cd /home/atus/qlcc_php/deploy
+            OLD_BE_IMAGE=$(docker inspect qlcc_be --format='{{.Config.Image}}' 2>/dev/null || true)
+            echo "Old image: $OLD_BE_IMAGE"
+
+            docker stop qlcc_be || true
+            docker rm qlcc_be || true
+            BACKEND_TAG=${{ github.sha }} docker compose -f docker-compose-qlcc-php.yml pull qlcc-backend
+            BACKEND_TAG=${{ github.sha }} docker compose -f docker-compose-qlcc-php.yml up -d qlcc-backend
+            docker compose -f docker-compose-qlcc-php.yml restart nginx
+            if [ -n "$OLD_BE_IMAGE" ]; then docker image rm "$OLD_BE_IMAGE" || true; fi
+            docker ps
+
+            echo "Backend deployment completed"
