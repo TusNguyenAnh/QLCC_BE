@@ -35,6 +35,9 @@ class ApartmentService implements IApartmentService
         if ($apt) {
             throw new AppException(ErrorCode::APT_NUMBER_EXISTED);
         }
+
+        $data['carpet_area'] = floatval($data['coefficient']) * floatval($data['gross_area']);
+
         return $this->apartmentRepository->store($data);
     }
 
@@ -48,6 +51,7 @@ class ApartmentService implements IApartmentService
         if ($aptNumber) {
             throw new AppException(ErrorCode::APT_NUMBER_EXISTED);
         }
+
         return $this->apartmentRepository->update($data, $id);
     }
 

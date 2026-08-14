@@ -17,7 +17,9 @@ return new class extends Migration
             $table->uuid('building_id');
 
             $table->string('apt_number')->default('');
-            $table->float('apt_area')->default(2.0);
+            $table->float('gross_area')->default(2.0); // dien tich tim tuong
+            $table->float('carpet_area')->default(2.0); //dien tich thong thuy
+            $table->float('coefficient')->default(0.1);
             $table->text('apt_type');
             $table->text('description')->nullable();
             $table->integer('floor')->default('1');
