@@ -25,8 +25,7 @@ return [
         'http://admin.mbs.id.vn:5173',
         'http://bqt.mbs.id.vn:5173',
         'https://admin.bqtsoft.vn',
-        'https://bqtsoft.vn',
-        '*'
+        'https://bqtsoft.vn'
     ],
 
     'allowed_origins_patterns' => [],
