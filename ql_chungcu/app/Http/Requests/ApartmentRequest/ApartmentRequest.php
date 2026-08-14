@@ -28,7 +28,8 @@ class ApartmentRequest extends FormRequest
             'building_id' => 'required',
             'floor' => 'required|integer',
             'apt_number' => 'required|max:20',
-            'apt_area' => 'required|numeric|min:0.01',
+            'gross_area' => 'required|numeric|min:0.01',
+            'coefficient' => 'required|numeric|min:0.01',
             'apt_type' => 'required',
             'description' => 'nullable',
         ];

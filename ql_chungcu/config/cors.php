@@ -22,6 +22,10 @@ return [
     'allowed_origins' => [
         'http://midtob.com:5173',
         'http://midtob.com:5174',
+        'http://admin.mbs.id.vn:5173',
+        'http://bqt.mbs.id.vn:5173',
+        'https://admin.bqtsoft.vn',
+        'https://bqtsoft.vn',
         '*'
     ],
 

@@ -21,14 +21,14 @@ Route::group([
     'prefix' => '/task'
 ],
     function () {
-        Route::get('/taskActionSummary', [TaskController::class, 'taskActionSummary']);
-        Route::get('/findWfByTaskId/{task_id}', [TaskController::class, 'findWfByTaskId']);
-        Route::post('/findByOrgId/{task_status}/{org_id}', [TaskController::class, 'findByOrgId']);
-        Route::post('/findByCreator/{task_status}', [TaskController::class, 'findByCreator']);
-        Route::post('/filterTaskApproved/{org_id}', [TaskController::class, 'filterTaskApproved'])->middleware('role_permission:view:task');
-        Route::post('/create', [TaskController::class, 'store'])->middleware('role_permission:manage:task');
         Route::post('/approveTask/{task_id}', [TaskController::class, 'approveTask'])->middleware('role_permission:review:task');
         Route::post('/rejectTask/{task_id}', [TaskController::class, 'rejectTask'])->middleware('role_permission:review:task');
+        Route::post('/filterTaskApproved/{org_id}', [TaskController::class, 'filterTaskApproved'])->middleware('role_permission:view:task');
+        Route::get('/taskActionSummary', [TaskController::class, 'taskActionSummary']);
+        Route::get('/findWfByTaskId/{task_id}', [TaskController::class, 'findWfByTaskId']);
+        Route::post('/findByCreator/{task_status}', [TaskController::class, 'findByCreator']);
+        Route::post('/findByOrgId/{task_status}/{org_id}', [TaskController::class, 'findByOrgId']);
+        Route::post('/create', [TaskController::class, 'store'])->middleware('role_permission:manage:task');
 
     });
 

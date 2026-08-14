@@ -1,72 +1,75 @@
 <?php
 
-namespace App\Services\ApartmentService;
+namespace App\Services\MoneyAccountService;
 
 use App\Enums\ErrorCode;
 use App\Exceptions\AppException;
-use App\Imports\ApartmentImport;
-use App\Models\Apartment;
-use App\Repositories\ApartmentRepository\IApartmentRepository;
+use App\Imports\MoneyAccountImport;
 use App\Repositories\BuildingRepository\IBuildingRepository;
+use App\Repositories\MoneyAccountRepository\IMoneyAccountRepository;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 
-class ApartmentService implements IApartmentService
+class MoneyAccountService implements IMoneyAccountService
 {
-    private IApartmentRepository $apartmentRepository;
+    private IMoneyAccountRepository $moneyAccountRepository;
     private IBuildingRepository $buildingRepository;
 
-    public function __construct(IApartmentRepository $apartmentRepository, IBuildingRepository $buildingRepository)
+    public function __construct(
+        IMoneyAccountRepository $moneyAccountRepository,
+        IBuildingRepository     $buildingRepository
+    )
     {
-        $this->apartmentRepository = $apartmentRepository;
+        $this->moneyAccountRepository = $moneyAccountRepository;
         $this->buildingRepository = $buildingRepository;
     }
 
+    /**
+     * Lấy danh sách tài khoản theo tòa nhà
+     */
     public function findByBuildingId(string $bdId, string $perPage)
     {
-        return $this->apartmentRepository->findByBuildingId($bdId, $perPage);
+        return $this->moneyAccountRepository->findByBuildingId($bdId, $perPage);
     }
 
-    public function add(array $data): Apartment
+    /**
+     * Thêm tài khoản mới
+     * Kiểm tra duplicate (building_id + account_number) trước khi tạo
+     */
+    public function add(array $data)
     {
-        $apt = $this->apartmentRepository->findByBuildingAndAptNumber($data['building_id'], $data['apt_number']);
-        if ($apt) {
-            throw new AppException(ErrorCode::APT_NUMBER_EXISTED);
+        // Kiểm tra xem tài khoản đã tồn tại chưa
+        $moneyAcc = $this->moneyAccountRepository->findByBuildingAndAccNumber(
+            $data['building_id'],
+            $data['account_number']
+        );
+
+        if ($moneyAcc) {
+            throw new AppException(ErrorCode::NOT_CREATED);
         }
 
-        $data['carpet_area'] = floatval($data['coefficient']) * floatval($data['gross_area']);
-
-        return $this->apartmentRepository->store($data);
+        $data['type'] = 'deposit';  // Mặc định loại là tiết kiệm
+        return $this->moneyAccountRepository->store($data);
     }
 
-    public function update(string $id, array $data): ?Apartment
-    {
-        $apt = $this->apartmentRepository->getById($id);
-        if (!$apt) {
-            throw new AppException(ErrorCode::NOT_FOUND);
-        }
-        $aptNumber = $this->apartmentRepository->findByBuildingAndAptNumber($apt->building_id, $data['apt_number']);
-        if ($aptNumber) {
-            throw new AppException(ErrorCode::APT_NUMBER_EXISTED);
-        }
-
-        return $this->apartmentRepository->update($data, $id);
-    }
-
-    public function importAptFromExcel($file)
+    /**
+     * Import tài khoản từ file Excel
+     */
+    public function importMoneyAccountFromExcel($file)
     {
         try {
             $complexId = jwt_claim('complex_id');
-            // Đọc file Excel
-            $aptImportEx = new ApartmentImport();
-            $data = Excel::toCollection($aptImportEx, $file)->first();
+
+            // Đọc file Excel sử dụng MoneyAccountImport
+            $moneyAccImportEx = new MoneyAccountImport();
+            $data = Excel::toCollection($moneyAccImportEx, $file)->first();
 
             // Validate tất cả các dòng
-            $validationResult = $aptImportEx->validateRows($data);
+            $validationResult = $moneyAccImportEx->validateRows($data);
 
-            // Nếu có lỗi, trả về chi tiết lỗi từng dòng
+            // Nếu có lỗi validation, trả về chi tiết lỗi
             if (!$validationResult['valid']) {
                 return [
                     'success' => false,
@@ -79,9 +82,11 @@ class ApartmentService implements IApartmentService
 
             $rowsCollection = collect($validationResult['data']);
 
-            // Check tòa nhà tồn tại k
+            // Kiểm tra tòa nhà có tồn tại không
             $buildingList = $rowsCollection->pluck('building_name')->unique()->toArray();
-            $existingBuildings = $this->buildingRepository->findByCondition('building_name', $buildingList, $complexId);
+            $existingBuildings = $this->buildingRepository
+                ->findByCondition('building_name', $buildingList, $complexId);
+
             $missingBuildings = array_diff(
                 $buildingList,
                 $existingBuildings->keys()->toArray()
@@ -92,17 +97,15 @@ class ApartmentService implements IApartmentService
                 foreach ($data as $index => $row) {
                     $errors = false;
                     $rowNumber = $index + $this->startRow();
-                    $stringError = "Dòng\n" . $rowNumber . ":\n";
+                    $stringError = "Dòng " . $rowNumber . ": ";
 
                     if (in_array($row['toa_nha'], $missingBuildings)) {
-                        $stringError = $stringError . "Tòa nhà\n";
+                        $stringError .= "Tòa nhà không tồn tại";
                         $errors = true;
                     }
 
                     if ($errors) {
-                        $rowsErrors[] = [
-                            $stringError . "không tồn tại.\n"
-                        ];
+                        $rowsErrors[] = $stringError;
                     }
                 }
                 return [
@@ -112,36 +115,33 @@ class ApartmentService implements IApartmentService
                 ];
             }
 
-            $dataApt = [];
-
+            // Chuẩn bị dữ liệu để lưu
+            $dataMoneyAcc = [];
             foreach ($validationResult['data'] as $i => $row) {
-                $dataApt[] = [
+                $dataMoneyAcc[] = [
                     'id' => (string)Str::uuid(),
                     'building_id' => $existingBuildings[$row['building_name']],
-                    'complex_id' => $complexId,
-                    'apt_number' => $row['apt_number'],
-                    'floor' => $row['floor'],
-                    'apt_area' => $row['apt_area'],
-                    'apt_type' => $row['apt_type'],
-                    'description' => $row['description'],
-                    'status' => 0,
+                    'bank_name' => $row['bank_name'],
+                    'account_number' => $row['account_number'],
+                    'term' => $row['term'],
+                    'deposit_date' => $row['deposit_date'],
+                    'maturity_date' => $row['maturity_date'],
+                    'interest_rate' => $row['interest_rate'],
+                    'money' => $row['money'],
+                    'type' => 'deposit',
                     'created_at' => Date::now(),
                     'updated_at' => Date::now()
                 ];
             }
 
-            // Nếu tất cả đều hợp lệ, bắt đầu lưu vào database
+            // Lưu dữ liệu với transaction
             DB::beginTransaction();
-
             try {
-                $result = $this->apartmentRepository->storeFromFile($dataApt);
+                $result = $this->moneyAccountRepository->storeFromFile($dataMoneyAcc);
                 DB::commit();
-                return [
-                    'success' => true,
-                ];
+                return ['success' => true];
             } catch (\Exception $e) {
                 DB::rollBack();
-
                 return [
                     'success' => false,
                     'message' => 'Lỗi khi lưu dữ liệu vào database: ' . $e->getMessage(),
@@ -159,7 +159,7 @@ class ApartmentService implements IApartmentService
 
     private function startRow(): int
     {
-        return 5;
+        return 5;  // Dữ liệu bắt đầu từ dòng 5
     }
 
 }

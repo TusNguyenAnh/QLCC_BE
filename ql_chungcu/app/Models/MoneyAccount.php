@@ -7,30 +7,30 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
-class Apartment extends Model
+class MoneyAccount extends Model
 {
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = 'apartments';
+    protected $table = 'money_account';
     public $incrementing = false; // Không tự tăng ID
     protected $keyType = 'string'; // Vì UUID là chuỗi
     protected $fillable = [
         'building_id',
-        'complex_id',
-        'floor',
-        'apt_number',
-        'gross_area',
-        'carpet_area',
-        'coefficient',
-        'apt_type',
-        'description',
-        'status',
-        "created_at",
-        "updated_at",
+        'bank_name',
+        'account_number',
+        'term',
+        'deposit_date',
+        'maturity_date',
+        'interest_rate',
+        'money',
+        'type',
+        'sent'
     ];
 
     protected $hidden = [
+        "created_at",
+        "updated_at",
         "deleted_at"
     ];
 

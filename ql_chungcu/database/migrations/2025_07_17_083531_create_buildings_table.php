@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->uuid('complex_id');
 
             $table->string('building_name');
-            $table->string('address')->default('');
+//            $table->string('address')->default('');
             $table->integer('status')->default('0');
             $table->float('financial_ratio')->nullable();
 
