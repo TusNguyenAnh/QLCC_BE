@@ -52,6 +52,7 @@ class ApartmentService implements IApartmentService
             throw new AppException(ErrorCode::APT_NUMBER_EXISTED);
         }
 
+        $data['carpet_area'] = floatval($data['coefficient']) * floatval($data['gross_area']);
         return $this->apartmentRepository->update($data, $id);
     }
 
@@ -121,7 +122,9 @@ class ApartmentService implements IApartmentService
                     'complex_id' => $complexId,
                     'apt_number' => $row['apt_number'],
                     'floor' => $row['floor'],
-                    'apt_area' => $row['apt_area'],
+                    'gross_area' => $row['gross_area'],
+                    'coefficient' => $row['coefficient'],
+                    'carpet_area' => floatval($row['coefficient']) * floatval($row['gross_area']),
                     'apt_type' => $row['apt_type'],
                     'description' => $row['description'],
                     'status' => 0,

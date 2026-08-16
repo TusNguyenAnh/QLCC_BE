@@ -68,8 +68,12 @@ class ApartmentImport implements ToCollection, WithHeadingRow, SkipsOnFailure, W
                 $rowErrors[] = 'Số tầng không được để trống';
             }
 
-            if (empty($row['dien_tich']) || trim($row['dien_tich']) === '') {
-                $rowErrors[] = 'Diện tích căn hộ không được để trống';
+            if (empty($row['dien_tich_tim_tuong']) || trim($row['dien_tich_tim_tuong']) === '') {
+                $rowErrors[] = 'Diện tích tim tường không được để trống';
+            }
+
+            if (empty($row['he_so_quy_doi']) || trim($row['he_so_quy_doi']) === '') {
+                $rowErrors[] = 'Hệ số quy đổi không được để trống';
             }
 
             if (empty($row['loai_can_ho']) || trim($row['loai_can_ho']) === '') {
@@ -88,7 +92,8 @@ class ApartmentImport implements ToCollection, WithHeadingRow, SkipsOnFailure, W
                     'building_name' => trim($row['toa_nha']),
                     'apt_number' => trim($row['so_can_ho']),
                     'floor' => trim($row['tang']),
-                    'apt_area' => trim($row['dien_tich']),
+                    'gross_area' => trim($row['dien_tich_tim_tuong']),
+                    'coefficient' => trim($row['he_so_quy_doi']),
                     'apt_type' => trim($row['loai_can_ho']),
                     'description' => trim($row['mo_ta']),
                 ];

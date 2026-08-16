@@ -21,7 +21,6 @@ class BuildingRequest extends FormRequest
     {
         return [
             'building_name' => 'required',
-            'address' => 'required',
             'complex_id' => 'required',
         ];
     }
@@ -30,7 +29,6 @@ class BuildingRequest extends FormRequest
     {
         return [
             'building_name.required' => 'BUILDING_NAME_NOT_EMPTY',
-            'address.required' => 'BUILDING_ADDRESS_NOT_EMPTY',
             'complex_id.required' => 'COMPLEX_ID_NOT_EMPTY',
         ];
     }
